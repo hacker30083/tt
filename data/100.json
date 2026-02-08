@@ -1,0 +1,4134 @@
+{
+  "teachersMap": {
+    "-135": {
+      "id": "-135",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Konksi Karin",
+      "short": "KK",
+      "bell": "",
+      "color": "#FFCCFF",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "-135",
+      "classids": []
+    },
+    "-138": {
+      "id": "-138",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Falilejev Helena",
+      "short": "FH",
+      "bell": "",
+      "color": "#a8e9ff",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "-138",
+      "classids": []
+    },
+    "*3": {
+      "id": "*3",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Kaur Maria",
+      "short": "KM",
+      "bell": "",
+      "color": "#99FF99",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "",
+      "classids": [
+        "*2"
+      ]
+    },
+    "*4": {
+      "id": "*4",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Ojala Anna-Liisa",
+      "short": "OA",
+      "bell": "",
+      "color": "#b8b8ff",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "",
+      "classids": [
+        "*3"
+      ]
+    },
+    "*5": {
+      "id": "*5",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Teder Kerli",
+      "short": "TK",
+      "bell": "",
+      "color": "#98ece2",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "",
+      "classids": [
+        "*1"
+      ]
+    },
+    "-111": {
+      "id": "-111",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Ott Valdek",
+      "short": "OV",
+      "bell": "",
+      "color": "#FFCC99",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "-111",
+      "classids": []
+    },
+    "-150": {
+      "id": "-150",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Kuusk Maie",
+      "short": "KM",
+      "bell": "",
+      "color": "#eeb4c6",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "-150",
+      "classids": []
+    },
+    "-149": {
+      "id": "-149",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Hiiesalu Tuuli",
+      "short": "HT",
+      "bell": "",
+      "color": "#e0dce5",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "-149",
+      "classids": []
+    },
+    "*9": {
+      "id": "*9",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Reinart Karl Robert",
+      "short": "RK",
+      "bell": "",
+      "color": "#c3c2ff",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "",
+      "classids": []
+    },
+    "*10": {
+      "id": "*10",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Kaiv Karl-Markus",
+      "short": "KK",
+      "bell": "",
+      "color": "#FFFFCC",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "",
+      "classids": []
+    },
+    "-14": {
+      "id": "-14",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Sallert Helena",
+      "short": "SH",
+      "bell": "",
+      "color": "#d4bcf0",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "-14",
+      "classids": []
+    },
+    "-57": {
+      "id": "-57",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Ridaliste Erika",
+      "short": "RE",
+      "bell": "",
+      "color": "#f4becb",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "-57",
+      "classids": []
+    },
+    "*13": {
+      "id": "*13",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Kullerkann Linda",
+      "short": "KL",
+      "bell": "",
+      "color": "#FF99FF",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "",
+      "classids": []
+    },
+    "*14": {
+      "id": "*14",
+      "nameprefix": "",
+      "namesuffix": "",
+      "name": "Eriksoo Pille",
+      "short": "EP",
+      "bell": "",
+      "color": "#FFCC00",
+      "fontcolorprint": "",
+      "fontcolorprint2": "",
+      "customfields": [],
+      "edupageid": "",
+      "classids": []
+    }
+  },
+  "classroomsMap": {},
+  "classesMap": {
+    "*1": {
+      "id": "*1",
+      "name": "1. S ",
+      "short": "1. S ",
+      "teacherid": "*5",
+      "classroomids": [],
+      "bell": "0",
+      "color": "#990099",
+      "customfields": [],
+      "printsubjectpictures": true,
+      "edupageid": "",
+      "classroomid": "",
+      "teacherids": [
+        "*5"
+      ]
+    },
+    "*2": {
+      "id": "*2",
+      "name": "2. S",
+      "short": "2. S",
+      "teacherid": "*3",
+      "classroomids": [],
+      "bell": "0",
+      "color": "#00CC00",
+      "customfields": [],
+      "printsubjectpictures": true,
+      "edupageid": "",
+      "classroomid": "",
+      "teacherids": [
+        "*3"
+      ]
+    },
+    "*3": {
+      "id": "*3",
+      "name": "3. S",
+      "short": "3. S",
+      "teacherid": "*4",
+      "classroomids": [],
+      "bell": "0",
+      "color": "#A0A0A0",
+      "customfields": [],
+      "printsubjectpictures": true,
+      "edupageid": "",
+      "classroomid": "",
+      "teacherids": [
+        "*4"
+      ]
+    },
+    "*4": {
+      "id": "*4",
+      "name": "4. S",
+      "short": "4. S",
+      "teacherid": "",
+      "classroomids": [],
+      "bell": "0",
+      "color": "#80C020",
+      "customfields": [],
+      "printsubjectpictures": true,
+      "edupageid": "",
+      "classroomid": "",
+      "teacherids": []
+    },
+    "*5": {
+      "id": "*5",
+      "name": "5. S",
+      "short": "5. S",
+      "teacherid": "",
+      "classroomids": [],
+      "bell": "0",
+      "color": "#FFFF66",
+      "customfields": [],
+      "printsubjectpictures": true,
+      "edupageid": "",
+      "classroomid": "",
+      "teacherids": []
+    }
+  },
+  "groupsMap": {
+    "*1": {
+      "id": "*1",
+      "name": "Terve klass",
+      "classid": "*1",
+      "entireclass": true,
+      "ascttdivision": "",
+      "divisionid": "*1:",
+      "color": "#FF0000"
+    },
+    "*2": {
+      "id": "*2",
+      "name": "Grupp 1",
+      "classid": "*1",
+      "entireclass": false,
+      "ascttdivision": "1",
+      "divisionid": "*1:1",
+      "color": "#00FF00"
+    },
+    "*3": {
+      "id": "*3",
+      "name": "Grupp 2",
+      "classid": "*1",
+      "entireclass": false,
+      "ascttdivision": "1",
+      "divisionid": "*1:1",
+      "color": "#0000FF"
+    },
+    "*4": {
+      "id": "*4",
+      "name": "Poisid",
+      "classid": "*1",
+      "entireclass": false,
+      "ascttdivision": "2",
+      "divisionid": "*1:2",
+      "color": "#FF00CC"
+    },
+    "*5": {
+      "id": "*5",
+      "name": "Tüdrukud",
+      "classid": "*1",
+      "entireclass": false,
+      "ascttdivision": "2",
+      "divisionid": "*1:2",
+      "color": "#FFCCFF"
+    },
+    "*6": {
+      "id": "*6",
+      "name": "Terve klass",
+      "classid": "*2",
+      "entireclass": true,
+      "ascttdivision": "",
+      "divisionid": "*2:",
+      "color": "#FF0000"
+    },
+    "*7": {
+      "id": "*7",
+      "name": "Grupp 1",
+      "classid": "*2",
+      "entireclass": false,
+      "ascttdivision": "1",
+      "divisionid": "*2:1",
+      "color": "#00FF00"
+    },
+    "*8": {
+      "id": "*8",
+      "name": "Grupp 2",
+      "classid": "*2",
+      "entireclass": false,
+      "ascttdivision": "1",
+      "divisionid": "*2:1",
+      "color": "#0000FF"
+    },
+    "*9": {
+      "id": "*9",
+      "name": "Poisid",
+      "classid": "*2",
+      "entireclass": false,
+      "ascttdivision": "2",
+      "divisionid": "*2:2",
+      "color": "#FF00CC"
+    },
+    "*10": {
+      "id": "*10",
+      "name": "Tüdrukud",
+      "classid": "*2",
+      "entireclass": false,
+      "ascttdivision": "2",
+      "divisionid": "*2:2",
+      "color": "#FFCCFF"
+    },
+    "*11": {
+      "id": "*11",
+      "name": "Terve klass",
+      "classid": "*3",
+      "entireclass": true,
+      "ascttdivision": "",
+      "divisionid": "*3:",
+      "color": "#FF0000"
+    },
+    "*12": {
+      "id": "*12",
+      "name": "Grupp 1",
+      "classid": "*3",
+      "entireclass": false,
+      "ascttdivision": "1",
+      "divisionid": "*3:1",
+      "color": "#00FF00"
+    },
+    "*13": {
+      "id": "*13",
+      "name": "Grupp 2",
+      "classid": "*3",
+      "entireclass": false,
+      "ascttdivision": "1",
+      "divisionid": "*3:1",
+      "color": "#0000FF"
+    },
+    "*14": {
+      "id": "*14",
+      "name": "Poisid",
+      "classid": "*3",
+      "entireclass": false,
+      "ascttdivision": "2",
+      "divisionid": "*3:2",
+      "color": "#FF00CC"
+    },
+    "*15": {
+      "id": "*15",
+      "name": "Tüdrukud",
+      "classid": "*3",
+      "entireclass": false,
+      "ascttdivision": "2",
+      "divisionid": "*3:2",
+      "color": "#FFCCFF"
+    },
+    "*16": {
+      "id": "*16",
+      "name": "Terve klass",
+      "classid": "*4",
+      "entireclass": true,
+      "ascttdivision": "",
+      "divisionid": "*4:",
+      "color": "#FF0000"
+    },
+    "*17": {
+      "id": "*17",
+      "name": "Grupp 1",
+      "classid": "*4",
+      "entireclass": false,
+      "ascttdivision": "1",
+      "divisionid": "*4:1",
+      "color": "#00FF00"
+    },
+    "*18": {
+      "id": "*18",
+      "name": "Grupp 2",
+      "classid": "*4",
+      "entireclass": false,
+      "ascttdivision": "1",
+      "divisionid": "*4:1",
+      "color": "#0000FF"
+    },
+    "*19": {
+      "id": "*19",
+      "name": "Poisid",
+      "classid": "*4",
+      "entireclass": false,
+      "ascttdivision": "2",
+      "divisionid": "*4:2",
+      "color": "#FF00CC"
+    },
+    "*20": {
+      "id": "*20",
+      "name": "Tüdrukud",
+      "classid": "*4",
+      "entireclass": false,
+      "ascttdivision": "2",
+      "divisionid": "*4:2",
+      "color": "#FFCCFF"
+    },
+    "*21": {
+      "id": "*21",
+      "name": "Terve klass",
+      "classid": "*5",
+      "entireclass": true,
+      "ascttdivision": "",
+      "divisionid": "*5:",
+      "color": "#FF0000"
+    },
+    "*22": {
+      "id": "*22",
+      "name": "Grupp 1",
+      "classid": "*5",
+      "entireclass": false,
+      "ascttdivision": "1",
+      "divisionid": "*5:1",
+      "color": "#00FF00"
+    },
+    "*23": {
+      "id": "*23",
+      "name": "Grupp 2",
+      "classid": "*5",
+      "entireclass": false,
+      "ascttdivision": "1",
+      "divisionid": "*5:1",
+      "color": "#0000FF"
+    },
+    "*24": {
+      "id": "*24",
+      "name": "Poisid",
+      "classid": "*5",
+      "entireclass": false,
+      "ascttdivision": "2",
+      "divisionid": "*5:2",
+      "color": "#FF00CC"
+    },
+    "*25": {
+      "id": "*25",
+      "name": "Tüdrukud",
+      "classid": "*5",
+      "entireclass": false,
+      "ascttdivision": "2",
+      "divisionid": "*5:2",
+      "color": "#FFCCFF"
+    }
+  },
+  "divisionsMap": {
+    "*1:": {
+      "id": "*1:",
+      "classid": "*1",
+      "ascttdivision": "",
+      "groupids": [
+        "*1"
+      ]
+    },
+    "*1:1": {
+      "id": "*1:1",
+      "classid": "*1",
+      "ascttdivision": "1",
+      "groupids": [
+        "*2",
+        "*3"
+      ]
+    },
+    "*1:2": {
+      "id": "*1:2",
+      "classid": "*1",
+      "ascttdivision": "2",
+      "groupids": [
+        "*4",
+        "*5"
+      ]
+    },
+    "*2:": {
+      "id": "*2:",
+      "classid": "*2",
+      "ascttdivision": "",
+      "groupids": [
+        "*6"
+      ]
+    },
+    "*2:1": {
+      "id": "*2:1",
+      "classid": "*2",
+      "ascttdivision": "1",
+      "groupids": [
+        "*7",
+        "*8"
+      ]
+    },
+    "*2:2": {
+      "id": "*2:2",
+      "classid": "*2",
+      "ascttdivision": "2",
+      "groupids": [
+        "*9",
+        "*10"
+      ]
+    },
+    "*3:": {
+      "id": "*3:",
+      "classid": "*3",
+      "ascttdivision": "",
+      "groupids": [
+        "*11"
+      ]
+    },
+    "*3:1": {
+      "id": "*3:1",
+      "classid": "*3",
+      "ascttdivision": "1",
+      "groupids": [
+        "*12",
+        "*13"
+      ]
+    },
+    "*3:2": {
+      "id": "*3:2",
+      "classid": "*3",
+      "ascttdivision": "2",
+      "groupids": [
+        "*14",
+        "*15"
+      ]
+    },
+    "*4:": {
+      "id": "*4:",
+      "classid": "*4",
+      "ascttdivision": "",
+      "groupids": [
+        "*16"
+      ]
+    },
+    "*4:1": {
+      "id": "*4:1",
+      "classid": "*4",
+      "ascttdivision": "1",
+      "groupids": [
+        "*17",
+        "*18"
+      ]
+    },
+    "*4:2": {
+      "id": "*4:2",
+      "classid": "*4",
+      "ascttdivision": "2",
+      "groupids": [
+        "*19",
+        "*20"
+      ]
+    },
+    "*5:": {
+      "id": "*5:",
+      "classid": "*5",
+      "ascttdivision": "",
+      "groupids": [
+        "*21"
+      ]
+    },
+    "*5:1": {
+      "id": "*5:1",
+      "classid": "*5",
+      "ascttdivision": "1",
+      "groupids": [
+        "*22",
+        "*23"
+      ]
+    },
+    "*5:2": {
+      "id": "*5:2",
+      "classid": "*5",
+      "ascttdivision": "2",
+      "groupids": [
+        "*24",
+        "*25"
+      ]
+    }
+  },
+  "divisionsJSON": [
+    {
+      "id": "*1:",
+      "classid": "*1",
+      "ascttdivision": "",
+      "groupids": [
+        "*1"
+      ]
+    },
+    {
+      "id": "*1:1",
+      "classid": "*1",
+      "ascttdivision": "1",
+      "groupids": [
+        "*2",
+        "*3"
+      ]
+    },
+    {
+      "id": "*1:2",
+      "classid": "*1",
+      "ascttdivision": "2",
+      "groupids": [
+        "*4",
+        "*5"
+      ]
+    },
+    {
+      "id": "*2:",
+      "classid": "*2",
+      "ascttdivision": "",
+      "groupids": [
+        "*6"
+      ]
+    },
+    {
+      "id": "*2:1",
+      "classid": "*2",
+      "ascttdivision": "1",
+      "groupids": [
+        "*7",
+        "*8"
+      ]
+    },
+    {
+      "id": "*2:2",
+      "classid": "*2",
+      "ascttdivision": "2",
+      "groupids": [
+        "*9",
+        "*10"
+      ]
+    },
+    {
+      "id": "*3:",
+      "classid": "*3",
+      "ascttdivision": "",
+      "groupids": [
+        "*11"
+      ]
+    },
+    {
+      "id": "*3:1",
+      "classid": "*3",
+      "ascttdivision": "1",
+      "groupids": [
+        "*12",
+        "*13"
+      ]
+    },
+    {
+      "id": "*3:2",
+      "classid": "*3",
+      "ascttdivision": "2",
+      "groupids": [
+        "*14",
+        "*15"
+      ]
+    },
+    {
+      "id": "*4:",
+      "classid": "*4",
+      "ascttdivision": "",
+      "groupids": [
+        "*16"
+      ]
+    },
+    {
+      "id": "*4:1",
+      "classid": "*4",
+      "ascttdivision": "1",
+      "groupids": [
+        "*17",
+        "*18"
+      ]
+    },
+    {
+      "id": "*4:2",
+      "classid": "*4",
+      "ascttdivision": "2",
+      "groupids": [
+        "*19",
+        "*20"
+      ]
+    },
+    {
+      "id": "*5:",
+      "classid": "*5",
+      "ascttdivision": "",
+      "groupids": [
+        "*21"
+      ]
+    },
+    {
+      "id": "*5:1",
+      "classid": "*5",
+      "ascttdivision": "1",
+      "groupids": [
+        "*22",
+        "*23"
+      ]
+    },
+    {
+      "id": "*5:2",
+      "classid": "*5",
+      "ascttdivision": "2",
+      "groupids": [
+        "*24",
+        "*25"
+      ]
+    }
+  ],
+  "subjectsMap": {
+    "-37": {
+      "id": "-37",
+      "name": "Üldõpetus",
+      "short": "Üld",
+      "color": "#CCCCCC",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": "-37"
+    },
+    "-1": {
+      "id": "-1",
+      "name": "Ajalugu",
+      "short": "Aj",
+      "color": "#C0C000",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": "-1"
+    },
+    "-68": {
+      "id": "-68",
+      "name": "Muusika",
+      "short": "M",
+      "color": "#993366",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": "-68"
+    },
+    "*4": {
+      "id": "*4",
+      "name": "Liikumisõpetus",
+      "short": "Liikum",
+      "color": "#CC99FF",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": ""
+    },
+    "-11": {
+      "id": "-11",
+      "name": "Inglise keel",
+      "short": "Ik",
+      "color": "#339966",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": "-11"
+    },
+    "*6": {
+      "id": "*6",
+      "name": "B-võõrkeel",
+      "short": "Bk",
+      "color": "#FFC0C0",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": ""
+    },
+    "*7": {
+      "id": "*7",
+      "name": "Loovusõpetus",
+      "short": "Loov",
+      "color": "#FF0000",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": ""
+    },
+    "*8": {
+      "id": "*8",
+      "name": "Käsitöö- ja tehnoloogia",
+      "short": "Kjt",
+      "color": "#CCFF66",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": ""
+    },
+    "*9": {
+      "id": "*9",
+      "name": "Matemaatika nope",
+      "short": "Mnope",
+      "color": "#A0A0A0",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": ""
+    },
+    "*10": {
+      "id": "*10",
+      "name": "Keelenope",
+      "short": "Knope",
+      "color": "#009933",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": ""
+    },
+    "-50": {
+      "id": "-50",
+      "name": "Eelkool",
+      "short": "E",
+      "color": "#CCFF66",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": "-50"
+    },
+    "-36": {
+      "id": "-36",
+      "name": "Ujumine",
+      "short": "Uj",
+      "color": "#80FF80",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": "-36"
+    },
+    "-25": {
+      "id": "-25",
+      "name": "Matemaatika",
+      "short": "M",
+      "color": "#33CC00",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": "-25"
+    },
+    "-6": {
+      "id": "-6",
+      "name": "Eesti keel",
+      "short": "Ek",
+      "color": "#FFFF99",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": "-6"
+    },
+    "-18": {
+      "id": "-18",
+      "name": "Kirjandus",
+      "short": "K",
+      "color": "#20C0C0",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": "-18"
+    },
+    "-23": {
+      "id": "-23",
+      "name": "Kunstiõpetus",
+      "short": "K",
+      "color": "#FF6666",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": "-23"
+    },
+    "-24": {
+      "id": "-24",
+      "name": "Loodusõpetus",
+      "short": "L",
+      "color": "#00C0FF",
+      "picture_url": "",
+      "customfields": [],
+      "contract_weight": 1,
+      "edupageid": "-24"
+    }
+  },
+  "daysMap": {
+    "10000": {
+      "id": "*6",
+      "vals": [
+        "10000",
+        "01000",
+        "00100",
+        "00010",
+        "00001"
+      ]
+    },
+    "11111": {
+      "id": "*7",
+      "vals": [
+        "11111"
+      ]
+    },
+    "01000": {
+      "id": "*2",
+      "vals": [
+        "01000"
+      ]
+    },
+    "00100": {
+      "id": "*3",
+      "vals": [
+        "00100"
+      ]
+    },
+    "00010": {
+      "id": "*4",
+      "vals": [
+        "00010"
+      ]
+    },
+    "00001": {
+      "id": "*5",
+      "vals": [
+        "00001"
+      ]
+    }
+  },
+  "periodsMap": {
+    "1": {
+      "id": "1",
+      "period": "1",
+      "name": "1",
+      "short": "1",
+      "starttime": "09:00",
+      "endtime": "09:45",
+      "daydata": {},
+      "printinsummary": true,
+      "printinteacher": true,
+      "printinclass": true,
+      "printinclassroom": true,
+      "printonlyinbells": []
+    },
+    "2": {
+      "id": "2",
+      "period": "2",
+      "name": "2",
+      "short": "2",
+      "starttime": "09:50",
+      "endtime": "10:35",
+      "daydata": {},
+      "printinsummary": true,
+      "printinteacher": true,
+      "printinclass": true,
+      "printinclassroom": true,
+      "printonlyinbells": []
+    },
+    "3": {
+      "id": "3",
+      "period": "3",
+      "name": "3",
+      "short": "3",
+      "starttime": "10:40",
+      "endtime": "11:25",
+      "daydata": {},
+      "printinsummary": true,
+      "printinteacher": true,
+      "printinclass": true,
+      "printinclassroom": true,
+      "printonlyinbells": []
+    },
+    "4": {
+      "id": "4",
+      "period": "4",
+      "name": "4",
+      "short": "4",
+      "starttime": "11:30",
+      "endtime": "12:15",
+      "daydata": {},
+      "printinsummary": true,
+      "printinteacher": true,
+      "printinclass": true,
+      "printinclassroom": true,
+      "printonlyinbells": []
+    },
+    "5": {
+      "id": "5",
+      "period": "5",
+      "name": "5",
+      "short": "5",
+      "starttime": "13:00",
+      "endtime": "13:45",
+      "daydata": {},
+      "printinsummary": true,
+      "printinteacher": true,
+      "printinclass": true,
+      "printinclassroom": true,
+      "printonlyinbells": []
+    },
+    "6": {
+      "id": "6",
+      "period": "6",
+      "name": "6",
+      "short": "6",
+      "starttime": "13:45",
+      "endtime": "14:30",
+      "daydata": {},
+      "printinsummary": true,
+      "printinteacher": true,
+      "printinclass": true,
+      "printinclassroom": true,
+      "printonlyinbells": []
+    },
+    "7": {
+      "id": "7",
+      "period": "7",
+      "name": "7",
+      "short": "7",
+      "starttime": "14:00",
+      "endtime": "14:45",
+      "daydata": {},
+      "printinsummary": true,
+      "printinteacher": true,
+      "printinclass": true,
+      "printinclassroom": true,
+      "printonlyinbells": []
+    }
+  },
+  "lessonsJSON": [
+    {
+      "id": "*1",
+      "subjectid": "-37",
+      "teacherids": [
+        "-135"
+      ],
+      "groupids": [
+        "*16"
+      ],
+      "classids": [
+        "*4"
+      ],
+      "count": 13,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*4": {
+          "divisionid": "*4:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*2",
+      "subjectid": "-37",
+      "teacherids": [
+        "*3"
+      ],
+      "groupids": [
+        "*6"
+      ],
+      "classids": [
+        "*2"
+      ],
+      "count": 14,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*2": {
+          "divisionid": "*2:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*3",
+      "subjectid": "-37",
+      "teacherids": [
+        "*4"
+      ],
+      "groupids": [
+        "*11"
+      ],
+      "classids": [
+        "*3"
+      ],
+      "count": 15,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*3": {
+          "divisionid": "*3:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*4",
+      "subjectid": "-37",
+      "teacherids": [
+        "*5"
+      ],
+      "groupids": [
+        "*1"
+      ],
+      "classids": [
+        "*1"
+      ],
+      "count": 12,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*1": {
+          "divisionid": "*1:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*5",
+      "subjectid": "-37",
+      "teacherids": [
+        "-138"
+      ],
+      "groupids": [
+        "*21"
+      ],
+      "classids": [
+        "*5"
+      ],
+      "count": 16,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*5": {
+          "divisionid": "*5:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*6",
+      "subjectid": "-1",
+      "teacherids": [
+        "-57"
+      ],
+      "groupids": [
+        "*21"
+      ],
+      "classids": [
+        "*5"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*5": {
+          "divisionid": "*5:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*7",
+      "subjectid": "*6",
+      "teacherids": [],
+      "groupids": [
+        "*21"
+      ],
+      "classids": [
+        "*5"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*5": {
+          "divisionid": "*5:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*8",
+      "subjectid": "*7",
+      "teacherids": [
+        "*3"
+      ],
+      "groupids": [
+        "*16"
+      ],
+      "classids": [
+        "*4"
+      ],
+      "count": 2,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*4": {
+          "divisionid": "*4:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*9",
+      "subjectid": "*7",
+      "teacherids": [
+        "*4"
+      ],
+      "groupids": [
+        "*16"
+      ],
+      "classids": [
+        "*4"
+      ],
+      "count": 2,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*4": {
+          "divisionid": "*4:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*10",
+      "subjectid": "*8",
+      "teacherids": [
+        "*3"
+      ],
+      "groupids": [
+        "*21"
+      ],
+      "classids": [
+        "*5"
+      ],
+      "count": 2,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*5": {
+          "divisionid": "*5:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*11",
+      "subjectid": "*8",
+      "teacherids": [
+        "*4"
+      ],
+      "groupids": [
+        "*21"
+      ],
+      "classids": [
+        "*5"
+      ],
+      "count": 2,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*5": {
+          "divisionid": "*5:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*12",
+      "subjectid": "-11",
+      "teacherids": [
+        "-14"
+      ],
+      "groupids": [
+        "*1"
+      ],
+      "classids": [
+        "*1"
+      ],
+      "count": 4,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*1": {
+          "divisionid": "*1:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*13",
+      "subjectid": "-11",
+      "teacherids": [
+        "-14"
+      ],
+      "groupids": [
+        "*6"
+      ],
+      "classids": [
+        "*2"
+      ],
+      "count": 5,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*2": {
+          "divisionid": "*2:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*14",
+      "subjectid": "-11",
+      "teacherids": [
+        "-14"
+      ],
+      "groupids": [
+        "*11"
+      ],
+      "classids": [
+        "*3"
+      ],
+      "count": 5,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*3": {
+          "divisionid": "*3:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*15",
+      "subjectid": "-11",
+      "teacherids": [
+        "-14"
+      ],
+      "groupids": [
+        "*16"
+      ],
+      "classids": [
+        "*4"
+      ],
+      "count": 5,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*4": {
+          "divisionid": "*4:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*16",
+      "subjectid": "-11",
+      "teacherids": [
+        "-14"
+      ],
+      "groupids": [
+        "*21"
+      ],
+      "classids": [
+        "*5"
+      ],
+      "count": 4,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*5": {
+          "divisionid": "*5:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*17",
+      "subjectid": "*4",
+      "teacherids": [
+        "*9"
+      ],
+      "groupids": [
+        "*1"
+      ],
+      "classids": [
+        "*1"
+      ],
+      "count": 3,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*1": {
+          "divisionid": "*1:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*18",
+      "subjectid": "*4",
+      "teacherids": [
+        "*9"
+      ],
+      "groupids": [
+        "*6"
+      ],
+      "classids": [
+        "*2"
+      ],
+      "count": 3,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*2": {
+          "divisionid": "*2:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*19",
+      "subjectid": "*4",
+      "teacherids": [
+        "*9"
+      ],
+      "groupids": [
+        "*11"
+      ],
+      "classids": [
+        "*3"
+      ],
+      "count": 2,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*3": {
+          "divisionid": "*3:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*20",
+      "subjectid": "*4",
+      "teacherids": [
+        "*9"
+      ],
+      "groupids": [
+        "*16"
+      ],
+      "classids": [
+        "*4"
+      ],
+      "count": 3,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*4": {
+          "divisionid": "*4:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*21",
+      "subjectid": "*4",
+      "teacherids": [
+        "*9"
+      ],
+      "groupids": [
+        "*21"
+      ],
+      "classids": [
+        "*5"
+      ],
+      "count": 2,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*5": {
+          "divisionid": "*5:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*22",
+      "subjectid": "-68",
+      "teacherids": [
+        "-111"
+      ],
+      "groupids": [
+        "*1"
+      ],
+      "classids": [
+        "*1"
+      ],
+      "count": 2,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*1": {
+          "divisionid": "*1:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*23",
+      "subjectid": "-68",
+      "teacherids": [
+        "-111"
+      ],
+      "groupids": [
+        "*6"
+      ],
+      "classids": [
+        "*2"
+      ],
+      "count": 2,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*2": {
+          "divisionid": "*2:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*24",
+      "subjectid": "-68",
+      "teacherids": [
+        "-111"
+      ],
+      "groupids": [
+        "*11"
+      ],
+      "classids": [
+        "*3"
+      ],
+      "count": 2,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*3": {
+          "divisionid": "*3:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*25",
+      "subjectid": "-68",
+      "teacherids": [
+        "-111"
+      ],
+      "groupids": [
+        "*16"
+      ],
+      "classids": [
+        "*4"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*4": {
+          "divisionid": "*4:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*26",
+      "subjectid": "-68",
+      "teacherids": [
+        "-111"
+      ],
+      "groupids": [
+        "*21"
+      ],
+      "classids": [
+        "*5"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*5": {
+          "divisionid": "*5:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*27",
+      "subjectid": "-50",
+      "teacherids": [
+        "-111"
+      ],
+      "groupids": [],
+      "classids": [],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [],
+      "classdata": {}
+    },
+    {
+      "id": "*28",
+      "subjectid": "-36",
+      "teacherids": [],
+      "groupids": [
+        "*11"
+      ],
+      "classids": [
+        "*3"
+      ],
+      "count": 1,
+      "durationperiods": 2,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*3": {
+          "divisionid": "*3:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*29",
+      "subjectid": "*9",
+      "teacherids": [
+        "-135"
+      ],
+      "groupids": [
+        "*6"
+      ],
+      "classids": [
+        "*2"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*2": {
+          "divisionid": "*2:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*30",
+      "subjectid": "*9",
+      "teacherids": [
+        "-135"
+      ],
+      "groupids": [
+        "*11"
+      ],
+      "classids": [
+        "*3"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*3": {
+          "divisionid": "*3:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*31",
+      "subjectid": "*9",
+      "teacherids": [
+        "-135"
+      ],
+      "groupids": [
+        "*16"
+      ],
+      "classids": [
+        "*4"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*4": {
+          "divisionid": "*4:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*32",
+      "subjectid": "-37",
+      "teacherids": [
+        "-135",
+        "*3"
+      ],
+      "groupids": [
+        "*6"
+      ],
+      "classids": [
+        "*2"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*2": {
+          "divisionid": "*2:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*33",
+      "subjectid": "-37",
+      "teacherids": [
+        "*5",
+        "-135"
+      ],
+      "groupids": [
+        "*1"
+      ],
+      "classids": [
+        "*1"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*1": {
+          "divisionid": "*1:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*34",
+      "subjectid": "-37",
+      "teacherids": [
+        "-135",
+        "*4"
+      ],
+      "groupids": [
+        "*11"
+      ],
+      "classids": [
+        "*3"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*3": {
+          "divisionid": "*3:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*35",
+      "subjectid": "-68",
+      "teacherids": [
+        "-135",
+        "-111"
+      ],
+      "groupids": [
+        "*16"
+      ],
+      "classids": [
+        "*4"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*4": {
+          "divisionid": "*4:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*36",
+      "subjectid": "-37",
+      "teacherids": [
+        "*5",
+        "-138"
+      ],
+      "groupids": [
+        "*1"
+      ],
+      "classids": [
+        "*1"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*1": {
+          "divisionid": "*1:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*37",
+      "subjectid": "-25",
+      "teacherids": [
+        "*10"
+      ],
+      "groupids": [
+        "*21"
+      ],
+      "classids": [
+        "*5"
+      ],
+      "count": 5,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*5": {
+          "divisionid": "*5:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*38",
+      "subjectid": "-6",
+      "teacherids": [
+        "*14"
+      ],
+      "groupids": [
+        "*21"
+      ],
+      "classids": [
+        "*5"
+      ],
+      "count": 3,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*5": {
+          "divisionid": "*5:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*39",
+      "subjectid": "-18",
+      "teacherids": [
+        "*14"
+      ],
+      "groupids": [
+        "*21"
+      ],
+      "classids": [
+        "*5"
+      ],
+      "count": 2,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*5": {
+          "divisionid": "*5:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*40",
+      "subjectid": "-37",
+      "teacherids": [
+        "*3",
+        "-138"
+      ],
+      "groupids": [
+        "*6"
+      ],
+      "classids": [
+        "*2"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*2": {
+          "divisionid": "*2:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*41",
+      "subjectid": "-37",
+      "teacherids": [
+        "-138",
+        "*4"
+      ],
+      "groupids": [
+        "*11"
+      ],
+      "classids": [
+        "*3"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*3": {
+          "divisionid": "*3:",
+          "groups": "1"
+        }
+      }
+    },
+    {
+      "id": "*42",
+      "subjectid": "-37",
+      "teacherids": [
+        "-138",
+        "-135"
+      ],
+      "groupids": [
+        "*16"
+      ],
+      "classids": [
+        "*4"
+      ],
+      "count": 1,
+      "durationperiods": 1,
+      "termsdefid": "*3",
+      "weeksdefid": "*3",
+      "daysdefid": "*6",
+      "terms": "1",
+      "seminargroup": null,
+      "bell": "",
+      "texts": null,
+      "studentids": [],
+      "groupnames": [
+        ""
+      ],
+      "classdata": {
+        "*4": {
+          "divisionid": "*4:",
+          "groups": "1"
+        }
+      }
+    }
+  ],
+  "lessonsCards": [
+    {
+      "id": "*1",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "1",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*2",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "3",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*3",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "2",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*4",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "5",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*5",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "4",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*6",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "3",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*7",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "4",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*8",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "3",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*9",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "5",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*10",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "2",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*11",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "1",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*12",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "2",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*13",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "3",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*14",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "4",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*15",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "4",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*16",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "5",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*17",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "1",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*18",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "3",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*19",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "4",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*20",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "1",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*21",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "2",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*22",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "2",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*23",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "3",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*24",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "4",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*25",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "1",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*26",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "2",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*27",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "3",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*28",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "1",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*29",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "2",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*30",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "3",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*31",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "5",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*32",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "3",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*33",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "5",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*34",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "3",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*35",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "5",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*36",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "4",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*37",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "1",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*38",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "3",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*39",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "4",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*40",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "4",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*41",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "1",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*42",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "1",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*43",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "2",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*44",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "2",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*45",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "5",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*46",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "1",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*47",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "2",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*48",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "2",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*49",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "1",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*50",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "5",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*51",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "5",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*52",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "3",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*53",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "2",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*54",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "2",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*55",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "1",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*56",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "4",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*57",
+      "lessonid": "*6",
+      "locked": false,
+      "period": "1",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*58",
+      "lessonid": "*7",
+      "locked": false,
+      "period": "6",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*59",
+      "lessonid": "*9",
+      "locked": false,
+      "period": "4",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*60",
+      "lessonid": "*9",
+      "locked": false,
+      "period": "5",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*61",
+      "lessonid": "*10",
+      "locked": false,
+      "period": "3",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*62",
+      "lessonid": "*10",
+      "locked": false,
+      "period": "4",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*63",
+      "lessonid": "*12",
+      "locked": false,
+      "period": "3",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*64",
+      "lessonid": "*12",
+      "locked": false,
+      "period": "2",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*65",
+      "lessonid": "*12",
+      "locked": false,
+      "period": "3",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*66",
+      "lessonid": "*12",
+      "locked": false,
+      "period": "4",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*67",
+      "lessonid": "*13",
+      "locked": false,
+      "period": "2",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*68",
+      "lessonid": "*13",
+      "locked": false,
+      "period": "3",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*69",
+      "lessonid": "*13",
+      "locked": false,
+      "period": "5",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*70",
+      "lessonid": "*13",
+      "locked": false,
+      "period": "5",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*71",
+      "lessonid": "*13",
+      "locked": false,
+      "period": "1",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*72",
+      "lessonid": "*14",
+      "locked": false,
+      "period": "1",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*73",
+      "lessonid": "*14",
+      "locked": false,
+      "period": "4",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*74",
+      "lessonid": "*14",
+      "locked": false,
+      "period": "1",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*75",
+      "lessonid": "*14",
+      "locked": false,
+      "period": "2",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*76",
+      "lessonid": "*14",
+      "locked": false,
+      "period": "4",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*77",
+      "lessonid": "*15",
+      "locked": false,
+      "period": "4",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*78",
+      "lessonid": "*15",
+      "locked": false,
+      "period": "1",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*79",
+      "lessonid": "*15",
+      "locked": false,
+      "period": "1",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*80",
+      "lessonid": "*15",
+      "locked": false,
+      "period": "3",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*81",
+      "lessonid": "*15",
+      "locked": false,
+      "period": "4",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*82",
+      "lessonid": "*16",
+      "locked": false,
+      "period": "5",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*83",
+      "lessonid": "*16",
+      "locked": false,
+      "period": "5",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*84",
+      "lessonid": "*16",
+      "locked": false,
+      "period": "2",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*85",
+      "lessonid": "*16",
+      "locked": false,
+      "period": "5",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*86",
+      "lessonid": "*17",
+      "locked": false,
+      "period": "4",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*87",
+      "lessonid": "*17",
+      "locked": false,
+      "period": "3",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*88",
+      "lessonid": "*17",
+      "locked": false,
+      "period": "3",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*89",
+      "lessonid": "*18",
+      "locked": false,
+      "period": "1",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*90",
+      "lessonid": "*18",
+      "locked": false,
+      "period": "2",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*91",
+      "lessonid": "*18",
+      "locked": false,
+      "period": "6",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*92",
+      "lessonid": "*20",
+      "locked": false,
+      "period": "2",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*93",
+      "lessonid": "*20",
+      "locked": false,
+      "period": "3",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*94",
+      "lessonid": "*20",
+      "locked": false,
+      "period": "5",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*95",
+      "lessonid": "*21",
+      "locked": false,
+      "period": "1",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*96",
+      "lessonid": "*21",
+      "locked": false,
+      "period": "6",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*97",
+      "lessonid": "*22",
+      "locked": false,
+      "period": "3",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*98",
+      "lessonid": "*22",
+      "locked": false,
+      "period": "4",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*99",
+      "lessonid": "*23",
+      "locked": false,
+      "period": "3",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*100",
+      "lessonid": "*23",
+      "locked": false,
+      "period": "4",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*101",
+      "lessonid": "*24",
+      "locked": false,
+      "period": "2",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*102",
+      "lessonid": "*24",
+      "locked": false,
+      "period": "1",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*103",
+      "lessonid": "*25",
+      "locked": false,
+      "period": "1",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*104",
+      "lessonid": "*26",
+      "locked": false,
+      "period": "5",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*105",
+      "lessonid": "*27",
+      "locked": false,
+      "period": "1",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*106",
+      "lessonid": "*19",
+      "locked": false,
+      "period": "2",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*107",
+      "lessonid": "*32",
+      "locked": false,
+      "period": "2",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*108",
+      "lessonid": "*33",
+      "locked": false,
+      "period": "1",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*109",
+      "lessonid": "*34",
+      "locked": false,
+      "period": "5",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*110",
+      "lessonid": "*35",
+      "locked": false,
+      "period": "2",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*111",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "1",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*112",
+      "lessonid": "*36",
+      "locked": false,
+      "period": "5",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*113",
+      "lessonid": "*28",
+      "locked": false,
+      "period": "6",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*114",
+      "lessonid": "*37",
+      "locked": false,
+      "period": "4",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*115",
+      "lessonid": "*37",
+      "locked": false,
+      "period": "4",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*116",
+      "lessonid": "*37",
+      "locked": false,
+      "period": "5",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*117",
+      "lessonid": "*37",
+      "locked": false,
+      "period": "4",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*118",
+      "lessonid": "*37",
+      "locked": false,
+      "period": "3",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*119",
+      "lessonid": "*38",
+      "locked": false,
+      "period": "1",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*120",
+      "lessonid": "*38",
+      "locked": false,
+      "period": "2",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*121",
+      "lessonid": "*38",
+      "locked": false,
+      "period": "3",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*122",
+      "lessonid": "*39",
+      "locked": false,
+      "period": "3",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*123",
+      "lessonid": "*39",
+      "locked": false,
+      "period": "2",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*124",
+      "lessonid": "*40",
+      "locked": false,
+      "period": "5",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*125",
+      "lessonid": "*41",
+      "locked": false,
+      "period": "4",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*126",
+      "lessonid": "*42",
+      "locked": false,
+      "period": "5",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    {
+      "id": "*127",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*128",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*129",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*130",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*131",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*132",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*133",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*134",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*135",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*136",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*137",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*138",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*139",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*140",
+      "lessonid": "*8",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*141",
+      "lessonid": "*8",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*142",
+      "lessonid": "*11",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*143",
+      "lessonid": "*11",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*144",
+      "lessonid": "*19",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*145",
+      "lessonid": "*29",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*146",
+      "lessonid": "*30",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    {
+      "id": "*147",
+      "lessonid": "*31",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    }
+  ],
+  "lessonsCardsMap": {
+    "*1": {
+      "id": "*127",
+      "lessonid": "*1",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    "*2": {
+      "id": "*128",
+      "lessonid": "*2",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    "*3": {
+      "id": "*129",
+      "lessonid": "*3",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    "*4": {
+      "id": "*51",
+      "lessonid": "*4",
+      "locked": false,
+      "period": "5",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*5": {
+      "id": "*139",
+      "lessonid": "*5",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    "*6": {
+      "id": "*57",
+      "lessonid": "*6",
+      "locked": false,
+      "period": "1",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*7": {
+      "id": "*58",
+      "lessonid": "*7",
+      "locked": false,
+      "period": "6",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*9": {
+      "id": "*60",
+      "lessonid": "*9",
+      "locked": false,
+      "period": "5",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*10": {
+      "id": "*62",
+      "lessonid": "*10",
+      "locked": false,
+      "period": "4",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*12": {
+      "id": "*66",
+      "lessonid": "*12",
+      "locked": false,
+      "period": "4",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*13": {
+      "id": "*71",
+      "lessonid": "*13",
+      "locked": false,
+      "period": "1",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*14": {
+      "id": "*76",
+      "lessonid": "*14",
+      "locked": false,
+      "period": "4",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*15": {
+      "id": "*81",
+      "lessonid": "*15",
+      "locked": false,
+      "period": "4",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*16": {
+      "id": "*85",
+      "lessonid": "*16",
+      "locked": false,
+      "period": "5",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*17": {
+      "id": "*88",
+      "lessonid": "*17",
+      "locked": false,
+      "period": "3",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*18": {
+      "id": "*91",
+      "lessonid": "*18",
+      "locked": false,
+      "period": "6",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*20": {
+      "id": "*94",
+      "lessonid": "*20",
+      "locked": false,
+      "period": "5",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*21": {
+      "id": "*96",
+      "lessonid": "*21",
+      "locked": false,
+      "period": "6",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*22": {
+      "id": "*98",
+      "lessonid": "*22",
+      "locked": false,
+      "period": "4",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*23": {
+      "id": "*100",
+      "lessonid": "*23",
+      "locked": false,
+      "period": "4",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*24": {
+      "id": "*102",
+      "lessonid": "*24",
+      "locked": false,
+      "period": "1",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*25": {
+      "id": "*103",
+      "lessonid": "*25",
+      "locked": false,
+      "period": "1",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*26": {
+      "id": "*104",
+      "lessonid": "*26",
+      "locked": false,
+      "period": "5",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*27": {
+      "id": "*105",
+      "lessonid": "*27",
+      "locked": false,
+      "period": "1",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*19": {
+      "id": "*144",
+      "lessonid": "*19",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    "*32": {
+      "id": "*107",
+      "lessonid": "*32",
+      "locked": false,
+      "period": "2",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*33": {
+      "id": "*108",
+      "lessonid": "*33",
+      "locked": false,
+      "period": "1",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*34": {
+      "id": "*109",
+      "lessonid": "*34",
+      "locked": false,
+      "period": "5",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*35": {
+      "id": "*110",
+      "lessonid": "*35",
+      "locked": false,
+      "period": "2",
+      "days": "00010",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*36": {
+      "id": "*112",
+      "lessonid": "*36",
+      "locked": false,
+      "period": "5",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*28": {
+      "id": "*113",
+      "lessonid": "*28",
+      "locked": false,
+      "period": "6",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*37": {
+      "id": "*118",
+      "lessonid": "*37",
+      "locked": false,
+      "period": "3",
+      "days": "00100",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*38": {
+      "id": "*121",
+      "lessonid": "*38",
+      "locked": false,
+      "period": "3",
+      "days": "00001",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*39": {
+      "id": "*123",
+      "lessonid": "*39",
+      "locked": false,
+      "period": "2",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*40": {
+      "id": "*124",
+      "lessonid": "*40",
+      "locked": false,
+      "period": "5",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*41": {
+      "id": "*125",
+      "lessonid": "*41",
+      "locked": false,
+      "period": "4",
+      "days": "10000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*42": {
+      "id": "*126",
+      "lessonid": "*42",
+      "locked": false,
+      "period": "5",
+      "days": "01000",
+      "weeks": "1",
+      "classroomids": []
+    },
+    "*8": {
+      "id": "*141",
+      "lessonid": "*8",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    "*11": {
+      "id": "*143",
+      "lessonid": "*11",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    "*29": {
+      "id": "*145",
+      "lessonid": "*29",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    "*30": {
+      "id": "*146",
+      "lessonid": "*30",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    },
+    "*31": {
+      "id": "*147",
+      "lessonid": "*31",
+      "locked": false,
+      "period": "",
+      "days": "",
+      "weeks": "",
+      "classroomids": []
+    }
+  }
+}

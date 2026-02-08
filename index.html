@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<meta charset="UTF-8" name="viewport" content="width=device-width, height=device-height, initial-scale=1.0" />
+	<title>Tunniplaan</title>
+	<link rel="stylesheet" href="/src/styles/index.css">
+</head>
+<body>
+	<div class="page" id="home">
+		<div class="pd">
+			<h1 class="gradient-text" style="--c1: var(--fg); --c2: var(--purple-fg);">ProTERA ja TERA gümnaasiumi tunniplaani koostamise rakendus</h1>
+			<p>
+				<a class="lnk" href="https://github.com/mk4i/tt/blob/main/README.md">README.md</a><br>
+				<a class="lnk" href="https://github.com/mk4i/tt">GitHub</a><br>
+				<a class="lnk" href="https://tera.edupage.org/timetable/">Alginfo</a>
+			</p>
+		</div>
+		<div class="pd">
+			<button class="primary large" onclick="setup();">Koosta →</button>
+			<!--<button class="large" onclick="setup();">Laadi</button>
+			<div class="slider" data-min="100" data-max="900" data-step="20" data-value="400">
+				<p></p>
+			</div>-->
+		</div>
+	</div>
+	
+	<div class="page" id="setup">
+		<div class="pd">
+			<div id="pre"></div>
+			<hr>
+			<div class="flex opt">
+				<!--<button>←</button>-->
+				<button id="abort">Katkesta</button>
+				<!--<button disabled>→</button>-->
+			</div>
+		</div>
+		<div class="pd">
+			<div class="flex opt" id="opt"></div>
+		</div>
+	</div>
+
+	<div class="page" id="timetable">
+		<div class="is" id="share-warning">
+			<p style="color: var(--purple-fg)">
+				Sa oled avanud tunniplaani, mis on Sinuga jagatud. Seda ei salvestata veebilehitsejasse enne, kui vajutad <strong>Salvesta</strong>.
+			</p>
+			<div class="flex">
+				<button onclick="saveTimetableCode();handleNotSharedTimetable()">Salvesta</button>
+				<button onclick="handleNotSharedTimetable()">Peida</button>
+			</div>
+		</div>
+		<dit id="tt"></dit>
+
+		<hr>
+
+		<div class="flex">
+			<button onclick="setup();">Genereeri tunniplaan</button>
+			<button onclick="clearAll();">Kustuta küpsised</button>
+			<button onclick="share();">Kopeeri link</button>
+			<button onclick="setTheme(th + 1);">Taust: <span id="theme" style="font-weight: bold;"></span></button>
+			<button onclick="setHilighting();">Markeeri tänane tunniplaan: <span id="hilighting" style="font-weight: bold;"></span></button>
+		</div>
+	</div>
+
+	<script type="module" src="/src/JS/timetableHelper.js"></script>
+	<script src="/src/JS/script.js"></script>
+</body>
+</html>
