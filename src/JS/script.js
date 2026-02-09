@@ -1,10 +1,5 @@
 const
 pages = Array.from(document.getElementsByClassName("page")),
-Pos = {
-	FIRST: "first",
-	MID: false,
-	LAST: "last"
-},
 PATH = "/src/",
 DOMAIN = "localhost:5500";
 
@@ -13,7 +8,7 @@ op = [],	// õpetajad
 pkt = [],	// praktikumid
 tt = [],
 ttc = null,
-th,			// theme
+theme,			// theme
 hilighting,
 code,
 weekday,
@@ -34,18 +29,18 @@ function getCookie(key) {
 	key += "=";
 
 	const
-	a = allCookies(),
-	l = a.length;
+	cookies = allCookies(),
+	cookiesLength = cookies.length;
 
-	for (let i=0; i<l; i++) {
-		let c = a[i];
+	for (let i=0; i<cookiesLength; i++) {
+		let cookie = cookies[i];
 
-		while (c.charAt(0) == " ") {
-			c = c.substring(1);
+		while (cookie.charAt(0) == " ") {
+			cookie = cookie.substring(1);
 		}
 
-		if (c.indexOf(key) == 0) {
-			return c.substring(key.length, c.length);
+		if (cookie.indexOf(key) == 0) {
+			return cookie.substring(key.length, cookie.length);
 		}
 	}
 
@@ -65,8 +60,8 @@ function clearAll() {
 function getURLParams(url) {
 	let obj = {};
 
-	url.searchParams??[].entries().forEach(k => {
-		obj[k[0]] = k[1];
+	url.searchParams??[].entries().forEach(key => {
+		obj[key[0]] = key[1];
 	});
 	
 	return obj;
@@ -75,13 +70,13 @@ function getURLParams(url) {
 // display functions
 
 function setTheme(a = 0) {
-	th = Math.round(a%3);
+	theme = Math.round(a%3);
 
 	const s =
-		th==0 ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? 1 : 2)
-		: th;
+		theme==0 ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? 1 : 2)
+		: theme;
 	
-	document.getElementById("theme").innerText = ["vaikimisi", "tume", "hele"][th];
+	document.getElementById("theme").innerText = ["vaikimisi", "tume", "hele"][theme];
 
 	const d = document.documentElement.style;
 
@@ -103,7 +98,7 @@ function setTheme(a = 0) {
 		d.setProperty(k[0], k[s]);
 	});
 
-	setCookie("t", th);
+	setCookie("t", theme);
 }
 
 function setHilighting(a) {
@@ -119,17 +114,19 @@ function setHilighting(a) {
 }
 
 function displayPage(n) {
-	pages.forEach(k => {
-		k.style.display = (n===k.id)
+	pages.forEach(key => {
+		key.style.display = (n===key.id)
 			? ""
 			: "none";
 	});
 }
 
 function displayTimetable() {
-	const e = document.getElementById("tt");
+	const
+	timetableElement = document.getElementById("tt"),
+	len = tt.length;
 
-	e.innerHTML = `<div class="num" style="grid-column: 2 / span 2;">1</div>
+	timetableElement.innerHTML = `<div class="num" style="grid-column: 2 / span 2;">1</div>
 <div class="num s" style="grid-column: 4;">Amps</div>
 <div class="num" style="grid-column: 5 / span 2;">2</div>
 <div class="num s" style="grid-column: 7;">Proaeg</div>
@@ -141,18 +138,29 @@ function displayTimetable() {
 <div class="wkd" style="grid-row: 5;">N</div>
 <div class="wkd" style="grid-row: 6;">R</div>`;
 
-	const len = tt.length;
-	for (let i = 0; i < len; i++) {
-		const k = tt[i];
+	let
+	firstXPos	= new Array(5).fill(Infinity),
+	lastXPos	= new Array(5).fill(0);
 
+	// Find the first and last x-position for all days
+	tt.forEach(k => {
+		const
+		x = k.x,
+		y = k.y;
+
+		if (x < firstXPos[y]	) { firstXPos[y]	= x; }
+		if (x > lastXPos[y]		) { lastXPos[y]		= x; }
+	});
+
+	tt.forEach(k => {
 		const div = document.createElement("div");
 		div.classList.add("item", k.isBreak?"break":"lesson");
 
-		if (k.position !== undefined) {
-			div.classList.add(k.position);
-		}
+		// Add positional classes if necessary
+		if (firstXPos[k.y]	== k.x	) { div.classList.add("first");	}
+		if ( lastXPos[k.y]	== k.x	) { div.classList.add("last");	}
 
-		// Use the same formula as the working version: simple x+2 column offset
+		// Calculate the grid area
 		div.style.gridArea = `${k.y+2} / ${k.x+2}${k.w>1?" / span 1 / span "+k.w:""}`;
 
 		const label = document.createElement("label");
@@ -164,7 +172,7 @@ function displayTimetable() {
 		div.appendChild(label);
 		div.appendChild(time);
 
-		e.appendChild(div);
+		timetableElement.appendChild(div);
 
 		// Defer scaling calculation until after layout is complete
 		setTimeout(() => {
@@ -220,7 +228,7 @@ function displayTimetable() {
 				}
 			}
 		}, 10);
-	}
+	});
 }
 
 function getDisplayScale(targetSize, currentSize) {
@@ -380,7 +388,7 @@ function getGroups(subject) {
 
 function pushItem(
 	x, y, title = "-", start_time = undefined, end_time = undefined,
-	location = false, name = false, isBreak = false, pos = false, w = 1
+	location = false, name = false, isBreak = false, w = 1
 ) {
 	const t_str = start_time ? (end_time ? start_time + " - " + end_time : start_time) : (end_time??"-");
 	const obj = { x: x, y: y, title: title, time: t_str, w: w };
@@ -392,9 +400,6 @@ function pushItem(
 	}
 	if (isBreak === true) {
 		obj.isBreak = true;
-	}
-	if (pos !== false) {
-		obj.position = pos;
 	}
 	
 	tt.push(obj);
@@ -438,92 +443,6 @@ function gt(sub) {
 	return mapping[sub] || sub;
 }
 
-function generateTimetable() {
-	tt = [];
-
-	if (!ttc) {
-		console.warn("generateTimetable: ttc (timetable content) is not loaded");
-		return;
-	}
-
-	ttc.split("\n").forEach(k => {
-		if (k !== "" && k[0] !== "#") {
-
-			const
-			s = k.split("|"),
-			coord = s[0].split(" "),
-			y = Number(coord[0]),
-			x = Number(coord[1]),
-			w = Number(coord[2]),
-			pos = coord[3]==="f" ? Pos.FIRST : (coord[3]==="l" ? Pos.LAST : Pos.MID),
-			startTime = s[1].trim(),
-			endTime = s[2].trim(),
-			gi = s[3].trim().split("/"),
-			gil = gi.length;
-
-			let
-			title = undefined,
-			location = false,
-			name = false,
-			isBreak = false;
-
-			for (let i = 0; i < gil; i++) {
-				const
-				dat = gi[i].trim().split(" "),
-				id = dat[0],
-				loc = dat[1],
-				gnum = id.match(/\d/),
-				sub = id.replace(/\d/, ""),
-				ag = gg(sub);
-
-				if (ag == gnum || gnum === null) {
-					title = gt(sub);
-					name = go(sub + ag);
-					location = loc;
-					break;
-				}
-			}
-
-			if (title !== undefined) {
-				pushItem(
-					x, y,
-					title,
-					startTime, endTime,
-					location, name, isBreak,
-					pos, w
-				);
-			}
-
-		}
-	});
-
-	const p = pkt[gr.pkt];
-	if (p) {
-		pushItem(8, 1, "Praktikum", p.stime, p.etime, p.loc, p.n, false, Pos.LAST, 2);
-	}
-
-	for (let i = 0; i < 5; i++) {
-		pushItem(2, i, "Amps", "10:20", "10:40", "-", false, true);
-	}
-
-	for (let i = 2; i < 5; i++) {
-		pushItem(5, i, "Pro", "12:00", "12:40", "-", false, true);
-	}
-
-	for (let i = 0; i < 5; i+=2) {
-		pushItem(8, i, "Lõuna", "14:00", "14:20", "-", false, true);
-	}
-
-	pushItem(7, 1, "Lõuna", "13:25", "13:45", "-", false, true);
-
-	if (gr.m == 2 || gr.m == 6) {
-		pushItem(6, 3, "Lõuna", "12:40", "13:00", "-", false, true);
-	} else {
-		pushItem(8, 3, "Lõuna", "14:00", "14:20", "-", false, true, Pos.LAST);
-	}
-
-	displayTimetable();
-}
 
 async function main() {
 	setTheme(0);
@@ -572,28 +491,21 @@ function genTTFromLiveData(grData) {
 	}
 
 	console.log(`Total lessons collected: ${allLessons.length}`);
-
-	// Map lessons to timetable items
-	// Group lessons by time slot to handle overlaps
-	const lessonsBySlot = new Map();
 	
 	allLessons.forEach(lessonData => {
 		if (lessonData && lessonData.lesson && lessonData.time) {
-			const lesson = lessonData.lesson;
-			const time = lessonData.time;
-			
-			const slotKey = `${time.day}-${time.period}`;
-			if (!lessonsBySlot.has(slotKey)) {
-				lessonsBySlot.set(slotKey, []);
-			}
+			const lesson = lessonData.lesson,
+			time = lessonData.time,
+			y = time.day-1,
+			x = (time.period==2 && time.length==1)
+				? 1
+				: [0, 0, 2, 3, 5, 6, 7, 9, 10, 11][time.period],
+			startTime = ["9:00", "9:35", "10:20", "10:40", "11:15", "12:00", "12:40", "13:40", "14:20"][x],
+			endTime = ["9:00", "9:35", "10:20", "10:40", "11:15", "12:00", "12:40", "13:25", "14:00", "14:20", "15:05", "15:40"][x+time.length];
 
-			lessonsBySlot.get(slotKey).push({
-				lesson,
-				time,
-				subject: lesson.subject?.name || "Unknown subject",
-				room: lessonData.room || "-",
-				teacher: lesson.teacher || "-"
-			});
+			//console.log(x, y, lesson.subject.name, "", "", lessonData.room, lesson.teacher, false, Pos.MID, time.length);
+
+			pushItem(x, y, lesson.subject.name, startTime, endTime, lessonData.room, lesson.teacher, false, time.length);
 		}
 	});
 
@@ -606,6 +518,9 @@ function genTTFromLiveData(grData) {
 		pushItem(2, i, "Amps", "10:20", "10:40", "-", false, true);
 	}
 
+	pushItem(5, 0, "Tiimitund", "12:00", "12:40", "-", false, false);
+	pushItem(5, 1, "Lugemine", "12:00", "12:40", "-", false, false);
+	
 	for (let i = 2; i < 5; i++) {
 		pushItem(5, i, "Pro", "12:00", "12:40", "-", false, true);
 	}
@@ -613,49 +528,6 @@ function genTTFromLiveData(grData) {
 	for (let i = 0; i < 5; i+=2) {
 		pushItem(8, i, "Lõuna", "14:00", "14:20", "-", false, true);
 	}
-
-	// Add lessons to timetable, handling overlaps
-	console.log("Processing lessons by slot...");
-	lessonsBySlot.forEach((slotLessons, slotKey) => {
-		const [day, period]	= slotKey.split("-").map(Number);
-		const dayIndex		= day - 1;
-		const periodIndex	= period - 1;
-		console.log(`Slot ${slotKey}: Day=${day}, Period=${period}, PeriodIndex=${periodIndex}`);
-		
-		// Raw data period values are teaching periods (which don't include breaks)
-		// We need to add break columns to get the correct grid position
-		// Grid columns: P1=2-3, Amps=4, P2=5-6, Pro=7, P3=8-9, Lõuna=10, P4=10-11
-		// Formula: x = (periodIndex * 3) + (periodIndex - 1) for 1-based period
-		// Period 1 (index 0): x = 0 + 0 = 0 → columns 2-3
-		// Period 2 (index 1): x = 3 + 1 = 4 → columns 6-7 (shifted right by 1 for Amps break)
-		// Period 3 (index 2): x = 6 + 2 = 8 → columns 10-11 (shifted right by 2 for Amps+Pro breaks)
-		const
-		x = [0, 0, 2, 3, 5, 6, 8, 9, 11, 13, 15][period],
-		y = dayIndex;
-		
-		console.log(`  → X=${x}, columns ${x+2}-${x+3}`);
-		
-		if (slotLessons.length === 1) {
-			// Single lesson - use normal positioning
-			const { subject, room, teacher, time } = slotLessons[0];
-			
-			pushItem(x, y, subject, "", "", room, teacher, false, Pos.MID, time.length);
-			console.log(`  → ${subject} at row ${y+2}, col ${x+2}-${x+3}`);
-		} else {/*
-			// Multiple lessons - combine subjects and show all teachers/rooms
-			const subjects = slotLessons.map(l => l.subject);
-			const allTeachers = slotLessons.map(l => l.teacher).filter(t => t !== "-");
-			const allRooms = slotLessons.map(l => l.room).filter(r => r !== "-");
-			
-			const combinedTitle = subjects.join("/");
-			const combinedTeacher = allTeachers.length > 0 ? allTeachers.join("/") : "-";
-			const combinedRoom = allRooms.length > 0 ? allRooms.join("/") : "-";
-			
-			pushItem(x, y, combinedTitle, "", "", combinedRoom, combinedTeacher, false, Pos.MID, 2);
-			console.log(`  → ${combinedTitle} at row ${y+2}, col ${x+2}-${x+3}`);*/
-			console.error("cannot put many lessons at the same place");
-		}
-	});
 
 	displayTimetable();
 }
