@@ -69,6 +69,24 @@ a {
 	max-width: 32rem;
 }
 
+#share-warning {
+	position: relative;
+	padding: 1rem 2.5rem 1rem 1rem;
+}
+
+#share-warning .warning-close {
+	position: absolute;
+	top: 0.35rem;
+	right: 0.35rem;
+	min-width: 1.6rem;
+	width: 1.6rem;
+	height: 1.6rem;
+	padding: 0;
+	line-height: 1;
+	border-radius: 50%;
+	font-size: 1.2rem;
+}
+
 input {
 	font-family: inherit;
 	background-color: var(--bg);

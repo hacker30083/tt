@@ -1,0 +1,7 @@
+tähis	grupp			0		1		2		3		4		5		6		7
+t		tiim			a		e		j		k		p		s
+s		suur grupp		alfa	beeta	gamam	delta	epsilon
+bvk		b-võõrkeel		saksa	vene1	vene2	vene3	vene4	pr1		pr2
+ik		inglise keel	I A		II A	III A	I B		II B	III B
+e		eesti keel				9.1		9.2		9.3		9.4		9.5		9.6
+m		matemaatika				9.1		9.2		9.3		9.4		9.5		9.6

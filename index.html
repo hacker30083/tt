@@ -40,16 +40,13 @@
 	</div>
 
 	<div class="page" id="timetable">
-		<div class="is" id="share-warning">
-			<p style="color: var(--purple-fg)">
-				Sa oled avanud tunniplaani, mis on Sinuga jagatud. Seda ei salvestata veebilehitsejasse enne, kui vajutad <strong>Salvesta</strong>.
-			</p>
-			<div class="flex">
-				<button onclick="saveTimetableCode();handleNotSharedTimetable()">Salvesta</button>
-				<button onclick="handleNotSharedTimetable()">Peida</button>
-			</div>
-		</div>
 		<dit id="tt"></dit>
+		<div class="is" id="share-warning">
+			<button class="warning-close" type="button" aria-label="Peida teade" onclick="document.getElementById('share-warning').style.display='none';">&times;</button>
+			<p style="color: var(--purple-fg)">
+				Tähelepanu! Palun kontrolli tunniplaanis olevaid kellaaegu kuna selles võivad esineda vead. (Eriti gümnaasiumi õpilaste puhul)
+			</p>
+		</div>
 
 		<hr>
 
@@ -57,7 +54,7 @@
 			<button onclick="setup();">Genereeri tunniplaan</button>
 			<button onclick="clearAll();">Kustuta küpsised</button>
 			<button onclick="share();">Kopeeri link</button>
-			<button onclick="setTheme(th + 1);">Taust: <span id="theme" style="font-weight: bold;"></span></button>
+			<button onclick="setTheme(theme + 1);">Taust: <span id="theme" style="font-weight: bold;"></span></button>
 			<button onclick="setHilighting();">Markeeri tänane tunniplaan: <span id="hilighting" style="font-weight: bold;"></span></button>
 		</div>
 	</div>

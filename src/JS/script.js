@@ -1,7 +1,11 @@
 const
 pages = Array.from(document.getElementsByClassName("page")),
 PATH = "/src/",
-DOMAIN = "localhost:5500";
+DOMAIN = "mk4i.github.io/tt",
+DEFAULT_COOKIE_DAYS = 93,
+SELECTIONS_COOKIE_KEY = "tt_selection_v1",
+SELECTIONS_COOKIE_DAYS = 7,
+SUBDOMAIN = "tera";
 
 let
 op = [],	// õpetajad
@@ -17,16 +21,20 @@ gr = null;	// grupid
 // cookie functions
 
 function allCookies() {
+	if (!document.cookie) {
+		return [];
+	}
 	return document.cookie.split(";");
 }
 
-function setCookie(key, value) {
-	// expire after roughly 3 months
-	document.cookie = String(key) + "=" + String(value) + `; path=${PATH}; SameSite=Strict; Secure; expires=` + (new Date(Date.now()+8e9)).toUTCString();
+function setCookie(key, value, expireDays = DEFAULT_COOKIE_DAYS) {
+	const expires = (new Date(Date.now() + (expireDays * 24 * 60 * 60 * 1000))).toUTCString();
+	const secure = window.location.protocol === "https:" ? "; Secure" : "";
+	document.cookie = `${encodeURIComponent(String(key))}=${encodeURIComponent(String(value))}; path=/; SameSite=Lax${secure}; expires=${expires}`;
 }
 
 function getCookie(key) {
-	key += "=";
+	key = encodeURIComponent(String(key)) + "=";
 
 	const
 	cookies = allCookies(),
@@ -40,7 +48,7 @@ function getCookie(key) {
 		}
 
 		if (cookie.indexOf(key) == 0) {
-			return cookie.substring(key.length, cookie.length);
+			return decodeURIComponent(cookie.substring(key.length, cookie.length));
 		}
 	}
 
@@ -51,20 +59,124 @@ function clearAll() {
 	const zd = (new Date(0)).toUTCString();
 
 	allCookies().forEach(cookie => {
-		document.cookie = cookie + `=;expires=${zd}`;
+		const key = cookie.split("=")[0].trim();
+		document.cookie = `${key}=; expires=${zd}; path=/`;
 	});
 }
 
 // url functions
 
 function getURLParams(url) {
+	const parsedURL = url instanceof URL ? url : new URL(url, window.location.origin);
 	let obj = {};
 
-	url.searchParams??[].entries().forEach(key => {
+	parsedURL.searchParams??[].entries().forEach(key => {
 		obj[key[0]] = key[1];
 	});
 	
 	return obj;
+}
+
+function saveSelectionCookie(selectionData) {
+	try {
+		setCookie(SELECTIONS_COOKIE_KEY, JSON.stringify(selectionData), SELECTIONS_COOKIE_DAYS);
+	} catch (error) {
+		console.warn("Failed to save timetable selection cookie:", error);
+	}
+}
+
+function loadSelectionCookie() {
+	const raw = getCookie(SELECTIONS_COOKIE_KEY);
+	if (!raw) {
+		return null;
+	}
+
+	try {
+		const parsed = JSON.parse(raw);
+		if (!parsed || typeof parsed !== "object") {
+			return null;
+		}
+		if (typeof parsed.classID !== "string" || !parsed.classID) {
+			return null;
+		}
+		const ttIDType = typeof parsed.selectedTTID;
+		if ((ttIDType !== "string" && ttIDType !== "number") || String(parsed.selectedTTID).length === 0) {
+			return null;
+		}
+		if (!parsed.groups || typeof parsed.groups !== "object") {
+			return null;
+		}
+		return parsed;
+	} catch (error) {
+		console.warn("Failed to parse timetable selection cookie:", error);
+		return null;
+	}
+}
+
+async function waitForTimetableHelper(name, timeoutMs = 4000) {
+	const startedAt = Date.now();
+	while (Date.now() - startedAt < timeoutMs) {
+		const helper = window?.[name];
+		if (typeof helper === "function") {
+			return helper;
+		}
+		await new Promise((resolve) => setTimeout(resolve, 25));
+	}
+	return null;
+}
+
+async function restoreSavedTimetable() {
+	const savedSelection = loadSelectionCookie();
+	if (!savedSelection) {
+		return false;
+	}
+
+	try {
+		const fetchTimetableByIDFn = await waitForTimetableHelper("fetchTimetableByID");
+		if (!fetchTimetableByIDFn) {
+			console.warn("Could not restore saved timetable: fetchTimetableByID helper was not loaded.");
+			return false;
+		}
+
+		const restoredStructuredData = await fetchTimetableByIDFn(savedSelection.selectedTTID);
+		if (!restoredStructuredData || Object.keys(restoredStructuredData.classesMap || {}).length === 0) {
+			return false;
+		}
+
+		const className = restoredStructuredData.classesMap?.[savedSelection.classID]?.name;
+		if (!className) {
+			return false;
+		}
+
+		const restoredGroups = {};
+		Object.entries(savedSelection.groups).forEach(([divisionID, groupID]) => {
+			if (restoredStructuredData.groupsMap?.[groupID]) {
+				restoredGroups[divisionID] = groupID;
+			}
+		});
+
+		if (Object.keys(restoredGroups).length === 0) {
+			return false;
+		}
+
+		gr = {
+			classID: savedSelection.classID,
+			className,
+			groups: restoredGroups,
+			structuredData: restoredStructuredData,
+			subDomain: savedSelection.subDomain || SUBDOMAIN,
+			timetableName: savedSelection.timetableName || "",
+			selectedTTID: savedSelection.selectedTTID,
+			useProTERATimeRules: savedSelection.useProTERATimeRules === true
+		};
+
+		genTTFromLiveData(gr);
+		displayPage("timetable");
+		return true;
+	} catch (error) {
+		console.warn("Failed to restore saved timetable from cookie:", error);
+		return false;
+	}
 }
 
 // display functions
@@ -121,10 +233,20 @@ function displayPage(n) {
 	});
 }
 
+function getCurrentWeekday() {
+	// P E T K N R L
+	return [0, 0, 1, 2, 3, 4, 0][(new Date(Date.now() + 25e6)).getDay()];
+}
+
 function displayTimetable() {
 	const
 	timetableElement = document.getElementById("tt"),
 	len = tt.length;
+	const activeWeekday = hilighting ? getCurrentWeekday() : null;
+
+	if (activeWeekday !== null) {
+		weekday = activeWeekday;
+	}
 
 	timetableElement.innerHTML = `<div class="num" style="grid-column: 2 / span 2;">1</div>
 <div class="num s" style="grid-column: 4;">Amps</div>
@@ -137,6 +259,14 @@ function displayTimetable() {
 <div class="wkd" style="grid-row: 4;">K</div>
 <div class="wkd" style="grid-row: 5;">N</div>
 <div class="wkd" style="grid-row: 6;">R</div>`;
+
+	if (activeWeekday !== null) {
+		timetableElement.querySelectorAll(".wkd").forEach((el, i) => {
+			if (i !== activeWeekday) {
+				el.classList.add("unhilighted");
+			}
+		});
+	}
 
 	let
 	firstXPos	= new Array(5).fill(Infinity),
@@ -155,6 +285,10 @@ function displayTimetable() {
 	tt.forEach(k => {
 		const div = document.createElement("div");
 		div.classList.add("item", k.isBreak?"break":"lesson");
+
+		if (activeWeekday !== null && k.y !== activeWeekday) {
+			div.classList.add("unhilighted");
+		}
 
 		// Add positional classes if necessary
 		if (firstXPos[k.y]	== k.x	) { div.classList.add("first");	}
@@ -344,8 +478,7 @@ function loadFromCode(h) {
 }
 
 function setWeekday() {
-			// P E T K N R L
-	const w = [0,0,1,2,3,4,0][(new Date(Date.now()+25e6)).getDay()];
+	const w = getCurrentWeekday();
 
 	if (w !== weekday && hilighting) {
 		weekday = w;
@@ -451,30 +584,83 @@ async function main() {
 
 	if (param.g !== undefined) {
 		// loadFromCode(param.g);
-	} else {
-		// loadFromCode(getCookie("g"));
-		document.getElementById("share-warning").style.display = "none";
 	}
 
 	setTheme(getCookie("t")??0);
-
-	displayPage("home");
+	setHilighting(getCookie("h") !== "0");
+	const restored = await restoreSavedTimetable();
+	if (!restored) {
+		displayPage("home");
+	}
 }
 
 // Generate timetable from live lesson data (using structuredData from timetableHelper)
 function genTTFromLiveData(grData) {
 	tt = [];
-
 	if (!grData || !grData.structuredData) {
 		console.warn("genTTFromLiveData: Missing grData or structuredData");
 		return;
 	}
 
 	const { structuredData, groups } = grData;
+	const useProTERATimeRules = grData?.useProTERATimeRules === true;
+	const daySlots = Array.from({ length: 5 }, () => new Array(10).fill(null));
+	const slotBoundaries = ["9:00", "9:35", "10:20", "10:40", "11:15", "12:00", "12:40", "13:25", "14:00", "14:20", "15:05"];
+	const periodToSlot = [0, 0, 2, 3, 5, 6, 7, 8, 9, 9, 9];
+	const thirdLessonByDay = new Array(5).fill(null);
+
+	function formatTime(timeStr) {
+		if (!timeStr) {
+			return null;
+		}
+		return String(timeStr).replace(/^0/, "");
+	}
+
+	const periodByNumber = new Map(
+		Object.values(structuredData.periodsMap || {})
+			.map((p) => [parseInt(p.period), p])
+			.filter((entry) => !isNaN(entry[0]))
+	);
+
+	function normText(str) {
+		return String(str ?? "")
+			.toLowerCase()
+			.normalize("NFD")
+			.replace(/[\u0300-\u036f]/g, "");
+	}
+
+	function isLiikumisopetusTitle(title) {
+		return normText(title).includes("liikumis");
+	}
+
+	function addToDay(dayIndex, startSlot, width, itemData) {
+		const slots = daySlots[dayIndex];
+		if (!slots || startSlot < 0 || startSlot >= slots.length) {
+			return false;
+		}
+
+		const span = Math.max(1, parseInt(width) || 1);
+		if (startSlot + span > slots.length) {
+			return false;
+		}
+
+		const conflict = slots
+			.slice(startSlot, startSlot + span)
+			.some((slot) => slot !== null && slot.key !== itemData.key);
+
+		if (conflict) {
+			return false;
+		}
+
+		for (let i = 0; i < span; i++) {
+			slots[startSlot + i] = itemData;
+		}
+		return true;
+	}
 
 	// Collect all lessons for all selected groups
 	const allLessons = [];
-	
+
 	// groups is now { divisionID: groupID }
 	console.log("Selected groups:", groups);
 	for (const [divisionID, groupID] of Object.entries(groups)) {
@@ -491,42 +677,226 @@ function genTTFromLiveData(grData) {
 	}
 
 	console.log(`Total lessons collected: ${allLessons.length}`);
-	
+
+	// Pre-scan day patterns so placement rules are stable regardless of lesson iteration order.
+	const dayHasLongThird = new Array(5).fill(false);
+	const dayHasShortThird = new Array(5).fill(false);
+	const dayHasLiikumisThird = new Array(5).fill(false);
+	if (useProTERATimeRules) {
+		allLessons.forEach((lessonData) => {
+			if (!lessonData || !lessonData.lesson || !lessonData.time) {
+				return;
+			}
+			const y = lessonData.time.day - 1;
+			if (y < 0 || y > 4) {
+				return;
+			}
+			const title = lessonData.lesson.subject?.name ?? "Tund";
+			const isLiikumisopetus = isLiikumisopetusTitle(title);
+			const length = Math.max(1, parseInt(lessonData.time.length) || 1);
+			const x = (lessonData.time.period == 2 && length == 1) ? 1 : periodToSlot[lessonData.time.period];
+			if (x === 6) {
+				if (isLiikumisopetus) {
+					dayHasLiikumisThird[y] = true;
+				} else if (length >= 2) {
+					dayHasLongThird[y] = true;
+				} else {
+					dayHasShortThird[y] = true;
+				}
+			}
+		});
+	}
+
 	allLessons.forEach(lessonData => {
 		if (lessonData && lessonData.lesson && lessonData.time) {
-			const lesson = lessonData.lesson,
-			time = lessonData.time,
-			y = time.day-1,
-			x = (time.period==2 && time.length==1)
-				? 1
-				: [0, 0, 2, 3, 5, 6, 7, 9, 10, 11][time.period],
-			startTime = ["9:00", "9:35", "10:20", "10:40", "11:15", "12:00", "12:40", "13:40", "14:20"][x],
-			endTime = ["9:00", "9:35", "10:20", "10:40", "11:15", "12:00", "12:40", "13:25", "14:00", "14:20", "15:05", "15:40"][x+time.length];
+			const lesson = lessonData.lesson;
+			const time = lessonData.time;
+			const y = time.day - 1;
+			const title = lesson.subject?.name ?? "Tund";
+			const isLiikumisopetus = isLiikumisopetusTitle(title);
+			let length = Math.max(1, parseInt(time.length) || 1);
+			const rawX = (time.period == 2 && length == 1) ? 1 : periodToSlot[time.period];
+			const isThirdLessonCandidate = rawX === 6;
+			let x = rawX;
 
-			//console.log(x, y, lesson.subject.name, "", "", lessonData.room, lesson.teacher, false, Pos.MID, time.length);
+			if (typeof x !== "number") {
+				return;
+			}
 
-			pushItem(x, y, lesson.subject.name, startTime, endTime, lessonData.room, lesson.teacher, false, time.length);
+			const periodNo = parseInt(time.period);
+			const startPeriod = periodByNumber.get(periodNo);
+			const endPeriod = periodByNumber.get(periodNo + length - 1);
+			let startTime = formatTime(startPeriod?.starttime) ?? slotBoundaries[x] ?? "-";
+			let endTime = formatTime(endPeriod?.endtime) ?? slotBoundaries[Math.min(x + length, slotBoundaries.length - 1)] ?? "-";
+
+			if (useProTERATimeRules) {
+				if (x === 6 && length === 2) {
+					startTime = "12:40";
+					endTime = "14:00";
+				}
+				if (x === 6 && length === 1) {
+					startTime = "12:40";
+					endTime = "13:25";
+				}
+				if (x === 8 && length === 1) {
+					if (dayHasLongThird[y]) {
+						x = 9;
+						startTime = "14:20";
+						endTime = "15:05";
+					} else {
+						startTime = "13:45";
+						endTime = "14:30";
+					}
+				}
+				if (x === 8 && length === 2 && !dayHasLongThird[y]) {
+					startTime = "13:45";
+					endTime = "15:05";
+				}
+				if (x === 9 && length === 1) {
+					startTime = "14:20";
+					endTime = "15:05";
+				}
+				if (x === 6 && isLiikumisopetus) {
+					x = 7;
+					length = Math.max(2, length + 1);
+					startTime = "13:15";
+					endTime = "14:25";
+				}
+				if (x === 7 && !isThirdLessonCandidate && dayHasShortThird[y]) {
+					// Keep 13:25-13:45 free for lunch when the 3rd lesson is short.
+					x = 8;
+					if (length === 1) {
+						startTime = "13:45";
+						endTime = "14:30";
+					} else if (length === 2) {
+						startTime = "13:45";
+						endTime = "15:05";
+					}
+				}
+			}
+			const roomText = Array.isArray(lessonData.room) ? lessonData.room.join(", ") : lessonData.room;
+			const teacherText = Array.isArray(lesson.teacher) ? lesson.teacher.join(", ") : lesson.teacher;
+
+			addToDay(y, x, length, {
+				key: `lesson-${y}-${x}-${lesson.subject?.name ?? ""}-${teacherText ?? ""}-${roomText ?? ""}`,
+				title,
+				startTime,
+				endTime,
+				location: roomText,
+				name: teacherText,
+				isBreak: false
+			});
+
+			if (useProTERATimeRules && isThirdLessonCandidate) {
+				thirdLessonByDay[y] = {
+					x: 6,
+					length,
+					title,
+					isLiikumisopetus
+				};
+			}
 		}
 	});
 
-	// Add breaks and lunch first
-	// For w=1 breaks: gridArea formula uses x+2 as column start
-	// Amps at column 4: x+2 = 4 → x = 2
-	// Pro at column 7: x+2 = 7 → x = 5
-	// Lõuna at column 10: x+2 = 10 → x = 8
-	for (let i = 0; i < 5; i++) {
-		pushItem(2, i, "Amps", "10:20", "10:40", "-", false, true);
+	// Add breaks and custom lunch only for TERA ProTERA timetables.
+	if (useProTERATimeRules) {
+		for (let i = 0; i < 5; i++) {
+			addToDay(i, 2, 1, {
+				key: `break-amps-${i}`,
+				title: "Amps",
+				startTime: "10:20",
+				endTime: "10:40",
+				location: "-",
+				name: false,
+				isBreak: true
+			});
+		}
+
+		addToDay(0, 5, 1, {
+			key: "special-tiimitund-0",
+			title: "Tiimitund",
+			startTime: "12:00",
+			endTime: "12:40",
+			location: "-",
+			name: false,
+			isBreak: false
+		});
+		addToDay(1, 5, 1, {
+			key: "special-lugemine-1",
+			title: "Lugemine",
+			startTime: "12:00",
+			endTime: "12:40",
+			location: "-",
+			name: false,
+			isBreak: false
+		});
+
+		for (let i = 2; i < 5; i++) {
+			addToDay(i, 5, 1, {
+				key: `break-pro-${i}`,
+				title: "Pro",
+				startTime: "12:00",
+				endTime: "12:40",
+				location: "-",
+				name: false,
+				isBreak: true
+			});
+		}
+
+		for (let i = 0; i < 5; i++) {
+			const thirdLesson = thirdLessonByDay[i];
+			let lunchStartSlot = 8;
+			let lunchStartTime = "14:00";
+			let lunchEndTime = "14:20";
+
+			if (thirdLesson) {
+				if (thirdLesson.isLiikumisopetus) {
+					lunchStartSlot = 6;
+					lunchStartTime = "12:40";
+					lunchEndTime = "13:00";
+				} else if (thirdLesson.x === 6 && thirdLesson.length <= 1) {
+					lunchStartSlot = 7;
+					lunchStartTime = "13:25";
+					lunchEndTime = "13:45";
+				} else if (thirdLesson.x === 6 && thirdLesson.length >= 2) {
+					lunchStartSlot = 8;
+					lunchStartTime = "14:00";
+					lunchEndTime = "14:20";
+				}
+			}
+
+			addToDay(i, lunchStartSlot, 1, {
+				key: `break-louna-${i}`,
+				title: "L\u00F5una",
+				startTime: lunchStartTime,
+				endTime: lunchEndTime,
+				location: "-",
+				name: false,
+				isBreak: true
+			});
+		}
 	}
 
-	pushItem(5, 0, "Tiimitund", "12:00", "12:40", "-", false, false);
-	pushItem(5, 1, "Lugemine", "12:00", "12:40", "-", false, false);
-	
-	for (let i = 2; i < 5; i++) {
-		pushItem(5, i, "Pro", "12:00", "12:40", "-", false, true);
-	}
+	// Flatten day slot lists into render items, joining contiguous slots automatically
+	for (let y = 0; y < daySlots.length; y++) {
+		const slots = daySlots[y];
+		let x = 0;
 
-	for (let i = 0; i < 5; i+=2) {
-		pushItem(8, i, "Lõuna", "14:00", "14:20", "-", false, true);
+		while (x < slots.length) {
+			const item = slots[x];
+			if (item === null) {
+				x++;
+				continue;
+			}
+
+			let w = 1;
+			while (x + w < slots.length && slots[x + w] && slots[x + w].key === item.key) {
+				w++;
+			}
+
+			pushItem(x, y, item.title, item.startTime, item.endTime, item.location, item.name, item.isBreak, w);
+			x += w;
+		}
 	}
 
 	displayTimetable();
@@ -535,140 +905,138 @@ function genTTFromLiveData(grData) {
 async function setup() {
 	// show page
 	displayPage("setup");
-
 	try {
 		// Step 1: Fetch and select a timetable
 		console.log("Fetching available timetables...");
-		const timetablesList = await fetchTimetables("tera");
+		const timetablesList = await fetchTimetables(SUBDOMAIN);
 		const timetables = sortTimetables(timetablesList);
-		
 		if (!timetables || timetables.length === 0) {
-			await setupPage("<h1>Viga</h1><p>Ühegi tunniplaani ei leitud.</p>", [{title: "Tagasi", value: null}]);
+			await setupPage("<h1>Viga</h1><p>\u00DChegi tunniplaani ei leitud.</p>", [{title: "Tagasi", value: null}]);
+			displayPage("home");
 			return;
 		}
-
-		let ttOptions = timetables.map(tt => ({
-			title: tt.text,
-			value: tt.tt_num
-		}));
-		const selectedTTID = await setupPage(
-			"<h1>Tunniplaani valimine</h1><p>Vali soovitud tunniplaan:</p>",
-			ttOptions
-		);
-
-		if (!selectedTTID) {
-			console.log("No timetable selected, exiting setup");
+		const proteraTimetables = timetables.filter((tt) => /protera/i.test(tt.text || ""));
+		if (proteraTimetables.length === 0) {
+			await setupPage("<h1>Viga</h1><p>ProTERA tunniplaani ei leitud.</p>", [{title: "Tagasi", value: null}]);
+			displayPage("home");
 			return;
 		}
-
+		// Force ProTERA for now: select the first matching timetable and skip timetable picker UI.
+		const selectedTTMeta = proteraTimetables[0];
+		const selectedTTID = selectedTTMeta.tt_num;
+		const selectedTTName = selectedTTMeta?.text || "";
+		const useProTERATimeRules = (String(SUBDOMAIN).toLowerCase() === "tera")
+			&& selectedTTName.toLowerCase().includes("protera");
 		// Step 2: Fetch the selected timetable's data
 		console.log("Fetching timetable data for ID:", selectedTTID);
 		const currentStructuredData = await fetchTimetableByID(selectedTTID);
-		
 		if (!currentStructuredData || Object.keys(currentStructuredData.classesMap || {}).length === 0) {
-			await setupPage("<h1>Viga</h1><p>Tunniplaani andmeid ei õnnestunud laadida.</p>", [{title: "Tagasi", value: null}]);
+			await setupPage("<h1>Viga</h1><p>Tunniplaani andmeid ei \u00F5nnestunud laadida.</p>", [{title: "Tagasi", value: null}]);
+			displayPage("home");
 			return;
 		}
-
 		// Step 3: Let user select a class/grade
 		const classOptions = Object.values(currentStructuredData.classesMap).map(cls => ({
 			title: cls.name || cls.id,
 			value: cls.id
 		}));
-
 		const selectedClassID = await setupPage(
 			"<h1>Klass</h1><p>Vali oma klass:</p>",
 			classOptions
 		);
-
-		if (!selectedClassID) return;
-
-		// Step 4: Get divisions for the selected class
-		const divisionsForClass = getDivisionsForGrade(currentStructuredData, selectedClassID);
-
-		if (divisionsForClass.length === 0) {
-			await setupPage("<h1>Viga</h1><p>Selle klassi jaoks ei leitud divisjone.</p>", [{title: "Tagasi", value: null}]);
+		if (!selectedClassID) {
+			displayPage("home");
 			return;
 		}
-
+		// Step 4: Get divisions for the selected class
+		const divisionsForClass = getDivisionsForGrade(currentStructuredData, selectedClassID);
+		if (divisionsForClass.length === 0) {
+			await setupPage("<h1>Viga</h1><p>Selle klassi jaoks ei leitud divisjone.</p>", [{title: "Tagasi", value: null}]);
+			displayPage("home");
+			return;
+		}
 		// Step 5: For each division, let user select groups
 		const selectedGroups = {};
-
 		for (const division of divisionsForClass) {
 			// Get subjects for this division
 			const subjects = getSubjectsForDivision(currentStructuredData, division);
-
 			// Get groups for this division
 			const groupsForDivision = Object.values(currentStructuredData.groupsMap).filter(
 				grp => division.groupids.includes(grp.id)
 			);
-
 			if (groupsForDivision.length === 0) continue;
-
 			// Check if this is a "Terve Klass" division (ends with ":")
 			const isTerveKlassDivision = division.id.endsWith(":");
 			const terveKlassGroup = groupsForDivision.find(grp => grp.name === "Terve klass");
-
 			if (isTerveKlassDivision && terveKlassGroup) {
 				// Automatically add "Terve Klass" without showing selection
 				selectedGroups[division.id] = terveKlassGroup.id;
 				continue;
 			}
-
 			// For other divisions, show selection screen
 			// Pick one subject to display (first one if multiple)
-			const displaySubject = subjects.length > 0 ? subjects[0] : "Üldained";
-
+			const displaySubject = subjects.length > 0 ? subjects[0] : "\u00DCldained";
 			// Create a user-friendly title for the division
 			const groupNames = groupsForDivision.map(grp => grp.name).join("/");
 			const divisionTitle = `${groupNames} - ${displaySubject}`;
-
 			// Create options for groups in this division
 			const groupOptions = groupsForDivision.map(grp => ({
 				title: grp.name || grp.id,
 				value: grp.id
 			}));
-
 			// Show division selection page
 			const selectedGroupID = await setupPage(
 				`<h1>${divisionTitle}</h1><p>Vali grupp:</p>`,
 				groupOptions
 			);
-
-			if (!selectedGroupID) return;
-
+			if (!selectedGroupID) {
+				displayPage("home");
+				return;
+			}
 			// Store selection for this division
 			selectedGroups[division.id] = selectedGroupID;
 		}
-
 		if (Object.keys(selectedGroups).length === 0) {
-			await setupPage("<h1>Viga</h1><p>Vähemalt üks grupp tuleb valida.</p>", [{title: "Tagasi", value: null}]);
+			await setupPage("<h1>Viga</h1><p>V\u00E4hemalt \u00FCks grupp tuleb valida.</p>", [{title: "Tagasi", value: null}]);
+			displayPage("home");
 			return;
 		}
-
 		// Step 6: Store selections and build timetable with live data
 		gr = {
 			classID: selectedClassID,
 			className: currentStructuredData.classesMap[selectedClassID]?.name || selectedClassID,
 			groups: selectedGroups,
-			structuredData: currentStructuredData
+			structuredData: currentStructuredData,
+			subDomain: SUBDOMAIN,
+			timetableName: selectedTTName,
+			selectedTTID,
+			useProTERATimeRules
 		};
-
+		saveSelectionCookie({
+			classID: gr.classID,
+			groups: gr.groups,
+			subDomain: gr.subDomain,
+			timetableName: gr.timetableName,
+			selectedTTID: gr.selectedTTID,
+			useProTERATimeRules: gr.useProTERATimeRules
+		});
 		// Generate timetable using live lesson data
 		genTTFromLiveData(gr);
-
 		// Hide setup page to show the generated timetable
 		displayPage("timetable");
-
 	} catch (e) {
+		if (e?.message === "Aborted") {
+			displayPage("home");
+			return;
+		}
 		console.error("Setup error:", e);
 		await setupPage(
 			"<h1>Viga</h1><p>Tunniplaani koostamisel tekkis viga: " + e.message + "</p>",
 			[{title: "Tagasi", value: null}]
 		);
+		displayPage("home");
 	}
 }
-
 // Initialize local data (pkt, ttc) from files
 async function initializeLocalData() {
 	try {
@@ -706,3 +1074,5 @@ async function initializeLocalData() {
 initializeLocalData();
 
 main();
+
+
