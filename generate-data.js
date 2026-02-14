@@ -158,8 +158,11 @@ async function main() {
 		console.log("Fetching timetables...");
 		const timetablesList = await fetchTimetables("tera");
 		const sortedTimetables = sortTimetables(timetablesList);
+		const proTeraTimetables = sortedTimetables.filter((tt) =>
+			typeof tt.text === "string" && tt.text.includes("ProTERA")
+		);
 
-		console.log(`Found ${sortedTimetables.length} timetables`);
+		console.log(`Found ${proTeraTimetables.length} ProTERA timetables`);
 
 		// Ensure data directory exists
 		const dataDir = join(__dirname, "data");
@@ -168,10 +171,10 @@ async function main() {
 		}
 
 		// Save the list of timetables
-		writeFileSync(join(dataDir, "timetables.json"), JSON.stringify(sortedTimetables, null, 2));
+		writeFileSync(join(dataDir, "timetables.json"), JSON.stringify(proTeraTimetables, null, 2));
 
 		// Fetch and save detailed data for each timetable
-		for (const tt of sortedTimetables) {
+		for (const tt of proTeraTimetables) {
 			console.log(`Fetching data for timetable ${tt.tt_num}: ${tt.text}`);
 			try {
 				const detailedData = await fetchTimetableByID(tt.tt_num);
