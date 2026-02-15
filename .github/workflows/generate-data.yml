@@ -26,8 +26,7 @@ jobs:
       run: npm ci
     
     - name: Test remote API reach
-      run: |
-      curl -vvv 'https://edupage.your-school-domain/...'
+      run: curl -vvv 'https://edupage.your-school-domain/...'
     
     - name: Generate data
       run: node generate-data.js
