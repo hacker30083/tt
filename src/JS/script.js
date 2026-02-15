@@ -68,13 +68,52 @@ function clearAll() {
 
 function getURLParams(url) {
 	const parsedURL = url instanceof URL ? url : new URL(url, window.location.origin);
-	let obj = {};
-
-	parsedURL.searchParams??[].entries().forEach(key => {
-		obj[key[0]] = key[1];
+	const obj = {};
+	parsedURL.searchParams.forEach((value, key) => {
+		obj[key] = value;
 	});
 	
 	return obj;
+}
+
+function isValidSelectionData(parsed) {
+	if (!parsed || typeof parsed !== "object") {
+		return false;
+	}
+	if (typeof parsed.classID !== "string" || !parsed.classID) {
+		return false;
+	}
+	const ttIDType = typeof parsed.selectedTTID;
+	if ((ttIDType !== "string" && ttIDType !== "number") || String(parsed.selectedTTID).length === 0) {
+		return false;
+	}
+	if (!parsed.groups || typeof parsed.groups !== "object") {
+		return false;
+	}
+	return true;
+}
+
+function encodeSelectionPayload(selectionData) {
+	const json = JSON.stringify(selectionData);
+	return btoa(unescape(encodeURIComponent(json)))
+		.replace(/\+/g, "-")
+		.replace(/\//g, "_")
+		.replace(/=+$/g, "");
+}
+
+function decodeSelectionPayload(encodedSelection) {
+	try {
+		const normalized = String(encodedSelection)
+			.replace(/-/g, "+")
+			.replace(/_/g, "/");
+		const padding = "=".repeat((4 - (normalized.length % 4)) % 4);
+		const decoded = decodeURIComponent(escape(atob(normalized + padding)));
+		const parsed = JSON.parse(decoded);
+		return isValidSelectionData(parsed) ? parsed : null;
+	} catch (error) {
+		console.warn("Failed to decode shared timetable selection payload:", error);
+		return null;
+	}
 }
 
 function saveSelectionCookie(selectionData) {
@@ -93,20 +132,7 @@ function loadSelectionCookie() {
 
 	try {
 		const parsed = JSON.parse(raw);
-		if (!parsed || typeof parsed !== "object") {
-			return null;
-		}
-		if (typeof parsed.classID !== "string" || !parsed.classID) {
-			return null;
-		}
-		const ttIDType = typeof parsed.selectedTTID;
-		if ((ttIDType !== "string" && ttIDType !== "number") || String(parsed.selectedTTID).length === 0) {
-			return null;
-		}
-		if (!parsed.groups || typeof parsed.groups !== "object") {
-			return null;
-		}
-		return parsed;
+		return isValidSelectionData(parsed) ? parsed : null;
 	} catch (error) {
 		console.warn("Failed to parse timetable selection cookie:", error);
 		return null;
@@ -125,9 +151,8 @@ async function waitForTimetableHelper(name, timeoutMs = 4000) {
 	return null;
 }
 
-async function restoreSavedTimetable() {
-	const savedSelection = loadSelectionCookie();
-	if (!savedSelection) {
+async function restoreSelection(selectionData, persistToCookie = true) {
+	if (!isValidSelectionData(selectionData)) {
 		return false;
 	}
 
@@ -138,18 +163,18 @@ async function restoreSavedTimetable() {
 			return false;
 		}
 
-		const restoredStructuredData = await fetchTimetableByIDFn(savedSelection.selectedTTID);
+		const restoredStructuredData = await fetchTimetableByIDFn(selectionData.selectedTTID);
 		if (!restoredStructuredData || Object.keys(restoredStructuredData.classesMap || {}).length === 0) {
 			return false;
 		}
 
-		const className = restoredStructuredData.classesMap?.[savedSelection.classID]?.name;
+		const className = restoredStructuredData.classesMap?.[selectionData.classID]?.name;
 		if (!className) {
 			return false;
 		}
 
 		const restoredGroups = {};
-		Object.entries(savedSelection.groups).forEach(([divisionID, groupID]) => {
+		Object.entries(selectionData.groups).forEach(([divisionID, groupID]) => {
 			if (restoredStructuredData.groupsMap?.[groupID]) {
 				restoredGroups[divisionID] = groupID;
 			}
@@ -160,16 +185,26 @@ async function restoreSavedTimetable() {
 		}
 
 		gr = {
-			classID: savedSelection.classID,
+			classID: selectionData.classID,
 			className,
 			groups: restoredGroups,
 			structuredData: restoredStructuredData,
-			subDomain: savedSelection.subDomain || SUBDOMAIN,
-			timetableName: savedSelection.timetableName || "",
-			selectedTTID: savedSelection.selectedTTID,
-			useProTERATimeRules: savedSelection.useProTERATimeRules === true
+			subDomain: selectionData.subDomain || SUBDOMAIN,
+			timetableName: selectionData.timetableName || "",
+			selectedTTID: selectionData.selectedTTID,
+			useProTERATimeRules: selectionData.useProTERATimeRules === true
 		};
 
+		if (persistToCookie) {
+			saveSelectionCookie({
+				classID: gr.classID,
+				groups: gr.groups,
+				subDomain: gr.subDomain,
+				timetableName: gr.timetableName,
+				selectedTTID: gr.selectedTTID,
+				useProTERATimeRules: gr.useProTERATimeRules
+			});
+		}
 		genTTFromLiveData(gr);
 		displayPage("timetable");
 		return true;
@@ -177,6 +212,18 @@ async function restoreSavedTimetable() {
 		console.warn("Failed to restore saved timetable from cookie:", error);
 		return false;
 	}
+}
+
+async function restoreSavedTimetable() {
+	return restoreSelection(loadSelectionCookie());
+}
+
+async function restoreSharedTimetable(encodedSelection) {
+	const decodedSelection = decodeSelectionPayload(encodedSelection);
+	if (!decodedSelection) {
+		return false;
+	}
+	return restoreSelection(decodedSelection, false);
 }
 
 // display functions
@@ -492,7 +539,23 @@ function saveTimetableCode() {
 }
 
 function share() {
-	navigator.clipboard.writeText(`${DOMAIN}${PATH}?g=${code}`);
+	const selectionData = {
+		classID: gr?.classID,
+		groups: gr?.groups,
+		subDomain: gr?.subDomain || SUBDOMAIN,
+		timetableName: gr?.timetableName || "",
+		selectedTTID: gr?.selectedTTID,
+		useProTERATimeRules: gr?.useProTERATimeRules === true
+	};
+
+	if (!isValidSelectionData(selectionData)) {
+		console.warn("Cannot share timetable before selections are available.");
+		return;
+	}
+
+	const encodedSelection = encodeSelectionPayload(selectionData);
+	const shareURL = `${window.location.origin}${window.location.pathname}?sel=${encodedSelection}`;
+	navigator.clipboard.writeText(shareURL);
 }
 
 // timetable generation functions
@@ -582,13 +645,11 @@ async function main() {
 
 	const param = getURLParams(window.location.href);
 
-	if (param.g !== undefined) {
-		// loadFromCode(param.g);
-	}
-
 	setTheme(getCookie("t")??0);
 	setHilighting(getCookie("h") !== "0");
-	const restored = await restoreSavedTimetable();
+	const restored = (param.sel !== undefined)
+		? await restoreSharedTimetable(param.sel)
+		: await restoreSavedTimetable();
 	if (!restored) {
 		displayPage("home");
 	}
