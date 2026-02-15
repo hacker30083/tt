@@ -1,0 +1,28 @@
+Anžela Lember 			|	bvk3
+Deisy Nursi			|	e6	kir3
+Egle Tamm			|	m1	m6
+Epp Ruuder			|	bio1	bio2	kem1	kem3	kem4	kem5	kem6	lg1	t1
+Hanna-Stina Vigel		|	e3	e4	kir1	kir2
+Hannes Tamm / Mari Nurklik	|	li1	li2	li3	li4	li5	li6
+Hedvy Tiitsmaa			|	bvk6
+Irmeli Tõniste			|	m4
+Jaanus Gorain			|	aj0	aj1	aj2	aj3	aj4	lg2	t2
+Jane Eskla			|	ik1
+Kaidi Menšikova			|	e2
+Karol Tšarnetski		|	bvk0	lg3	t3
+Karoliina Kurvits		|	m3
+Krista Vallimäe			|	kst0	kst1	kst2	kst3	kst4
+Kristi Kartašev			|	ik2	ik4
+Liisa Liivak			|	ik3
+Marge Lahe			|	m5
+Marie Tempel			|	m2
+Mariliis Tasuja			|	kem	lg4	t4
+Meelis Brikker			|	bio0	bio3	bio4	fys3	lg0	t0
+Merle Pindmaa			|	e1	e5	kir0	kir4
+Merli Leemet			|	ik0	ik5
+Robert Metsik			|	yh0	yh1	yh2	yh3	yh4
+Silver Aarna			|	fys1	fys2	fys4	fys5	fys6
+Susi Ann Kaljas			|	bvk5	lg5	t5
+Tanel Pärnamets			|	geo0	geo1	geo2	geo3	geo4
+Theana Teder			|	bvk2
+Tatjana Opikova			|	bvk1	bvk4

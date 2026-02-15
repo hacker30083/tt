@@ -1,0 +1,12 @@
+{
+  "name": "tt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "generate-data.js",
+  "scripts": {
+    "generate": "node generate-data.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
