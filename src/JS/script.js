@@ -787,8 +787,12 @@ function genTTFromLiveData(grData) {
 			const periodNo = parseInt(time.period);
 			const startPeriod = periodByNumber.get(periodNo);
 			const endPeriod = periodByNumber.get(periodNo + length - 1);
-			let startTime = formatTime(startPeriod?.starttime) ?? slotBoundaries[x] ?? "-";
-			let endTime = formatTime(endPeriod?.endtime) ?? slotBoundaries[Math.min(x + length, slotBoundaries.length - 1)] ?? "-";
+			const startIndex = x;
+            const endIndex = Math.min(x + length, slotBoundaries.length - 1);
+
+            let startTime = slotBoundaries[startIndex] || "-";
+            let endTime = slotBoundaries[endIndex] || "-";
+
 
 			if (useProTERATimeRules) {
 				if (x === 6 && length === 2) {
@@ -1135,6 +1139,7 @@ async function initializeLocalData() {
 initializeLocalData();
 
 main();
+
 
 
 
