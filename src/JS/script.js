@@ -1,6 +1,6 @@
 const
 pages = Array.from(document.getElementsByClassName("page")),
-PATH = "/src/",
+PATH = "./src/",
 DOMAIN = "mk4i.github.io/tt",
 DEFAULT_COOKIE_DAYS = 93,
 SELECTIONS_COOKIE_KEY = "tt_selection_v1",
@@ -1102,7 +1102,7 @@ async function setup() {
 async function initializeLocalData() {
 	try {
 		// Fetch praktikumid (pkt) data
-		const pktRes = await fetch("/src/misc/pkt.txt");
+		const pktRes = await fetch("./src/misc/pkt.txt");
 		const pktText = await pktRes.text();
 		pkt = pktText.split("\n")
 			.filter(line => line.trim() && !line.trim().startsWith("#"))
@@ -1135,5 +1135,6 @@ async function initializeLocalData() {
 initializeLocalData();
 
 main();
+
 
 
