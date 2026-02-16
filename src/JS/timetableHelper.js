@@ -1,7 +1,7 @@
 async function fetchTimetables(subDomain) {
 	// For now, assuming subDomain is "tera", load from data/timetables.json
 	try {
-		const response = await fetch("${window.location.pathname}data/timetables.json");
+		const response = await fetch(`${window.location.pathname}data/timetables.json`);
 		if (!response.ok) {
 			throw new Error("Failed to load timetables");
 		}
