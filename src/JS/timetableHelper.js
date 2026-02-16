@@ -1,7 +1,7 @@
 async function fetchTimetables(subDomain) {
 	// For now, assuming subDomain is "tera", load from data/timetables.json
 	try {
-		const response = await fetch("data/timetables.json");
+		const response = await fetch("../../data/timetables.json");
 		if (!response.ok) {
 			throw new Error("Failed to load timetables");
 		}
@@ -48,7 +48,7 @@ function sortTimetables(timetablesList) {
 
 async function fetchTimetableByID(timeTableID) {
 	try {
-		const response = await fetch(`data/${timeTableID}.json`);
+		const response = await fetch(`../../data/${timeTableID}.json`);
 		if (!response.ok) {
 			throw new Error("Failed to load timetable data");
 		}
