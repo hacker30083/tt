@@ -16,11 +16,12 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Dev Proxy Actions
-      # You may pin to the exact commit or the version.
-      # uses: dev-proxy-tools/actions@6cdc3fc600fdf7fedf8cdf4e2b97d3ce01cfd04a
-      uses: dev-proxy-tools/actions@v1
-              
+    - name: Network debug
+     run: |
+          curl -v https://tera.edupage.org/timetable/
+          nslookup https://tera.edupage.org/timetable/
+          ping -c 4 https://tera.edupage.org/timetable/
+
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -29,9 +30,6 @@ jobs:
 
     - name: Install dependencies
       run: npm ci
-    
-    - name: Test remote API reach
-      run: curl -vvv 'https://tera.edupage.org/timetable/'
     
     - name: Generate data
       run: node generate-data.js
