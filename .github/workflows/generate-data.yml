@@ -18,10 +18,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Network debug
-        run: |
-          curl -v https://tera.edupage.org/timetable/
-          nslookup tera.edupage.org
-          ping -c 4 tera.edupage.org
+        run: curl -4 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" -v https://tera.edupage.org/timetable/
+
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
