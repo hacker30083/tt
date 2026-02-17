@@ -6,13 +6,31 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-async function postEdupage(url, body) {
+function buildBrowserHeaders(referer) {
+
+	const headers = {
+		"Accept": "*/*",
+		"Accept-Language": "en-GB,en;q=0.9,et-EE;q=0.8,et;q=0.7,en-US;q=0.6",
+		"Content-Type": "application/json; charset=UTF-8",
+		"Priority": "u=1, i",
+		"Sec-CH-UA": "\"Not:A-Brand\";v=\"99\", \"Google Chrome\";v=\"145\", \"Chromium\";v=\"145\"",
+		"Sec-CH-UA-Mobile": "?0",
+		"Sec-CH-UA-Platform": "\"Windows\"",
+		"Sec-Fetch-Dest": "empty",
+		"Sec-Fetch-Mode": "cors",
+		"Sec-Fetch-Site": "same-origin",
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+		"X-Requested-With": "XMLHttpRequest",
+		"Referer": referer
+	};
+
+	return headers;
+}
+
+async function postEdupage(url, body, referer) {
 	const response = await fetch(url, {
 		method: "POST",
-		headers: {
-			"Content-Type": "application/json; charset=UTF-8",
-			"Accept": "*/*"
-		},
+		headers: buildBrowserHeaders(referer),
 		body: JSON.stringify(body)
 	});
 
@@ -36,7 +54,7 @@ async function fetchTimetables(subDomain) {
 	};
 
 	try {
-		return await postEdupage(url, body);
+		return await postEdupage(url, body, `https://${subDomain}.edupage.org/timetable/`);
 	} catch (err) {
 		console.error("fetchTimetables failed:", err);
 		throw err;
@@ -52,7 +70,7 @@ async function fetchTimetableByID(timeTableID) {
 	};
 
 	try {
-		return await postEdupage(url, body);
+		return await postEdupage(url, body, "https://tera.edupage.org/timetable/");
 	} catch (err) {
 		console.error("fetchTimetableByID failed:", err);
 		throw err;
