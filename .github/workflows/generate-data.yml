@@ -5,43 +5,43 @@ on:
     branches:
       - main
   schedule:
-    - cron: '1 0 * * 0'  # Run daily at midnight UTC
+    - cron: '1 0 * * 0' 
 
 jobs:
   generate-data:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Network debug
-     run: |
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Network debug
+        run: |
           curl -v https://tera.edupage.org/timetable/
-          nslookup https://tera.edupage.org/timetable/
-          ping -c 4 https://tera.edupage.org/timetable/
+          nslookup tera.edupage.org
+          ping -c 4 tera.edupage.org
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Generate data
-      run: node generate-data.js
+      - name: Generate data
+        run: node generate-data.js
 
-    - name: Commit and push changes
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add data/
-        if git diff --staged --quiet; then
-          echo "No changes to commit"
-        else
-          git commit -m "Update timetable data"
-          git push
-        fi
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update timetable data"
+            git push
+          fi
