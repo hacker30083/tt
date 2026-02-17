@@ -17,9 +17,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Network debug
-        run: curl -4 -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" -v https://tera.edupage.org/timetable/
-
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,7 +27,7 @@ jobs:
         run: npm ci
 
       - name: Generate data
-        run: node generate-data.js
+        run: npm run generate
 
       - name: Commit and push changes
         run: |
