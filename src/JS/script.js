@@ -724,16 +724,20 @@ function genTTFromLiveData(grData) {
 
 	// groups is now { divisionID: groupID }
 	console.log("Selected groups:", groups);
-	for (const [divisionID, groupID] of Object.entries(groups)) {
+	for (const [selectionID, groupID] of Object.entries(groups)) {
 		try {
-			const lessons = getLessonsForGroup(structuredData, groupID);
-			console.log(`Group ${groupID} in division ${divisionID}: ${lessons.length} lessons`);
+			const [divisionID, subjectID] = String(selectionID).split("::");
+			let lessons = getLessonsForGroup(structuredData, groupID);
+			if (subjectID) {
+				lessons = lessons.filter((lessonData) => String(lessonData?.lesson?.subject?.id ?? "") === subjectID);
+			}
+			console.log(`Group ${groupID} in division ${divisionID}${subjectID ? ` (subject ${subjectID})` : ""}: ${lessons.length} lessons`);
 			if (lessons.length > 0) {
 				console.log("First lesson:", lessons[0]);
 			}
 			allLessons.push(...lessons);
 		} catch (err) {
-			console.warn(`Failed to get lessons for group ${groupID}:`, err);
+			console.warn(`Failed to get lessons for selection ${selectionID} (group ${groupID}):`, err);
 		}
 	}
 
@@ -968,6 +972,39 @@ function genTTFromLiveData(grData) {
 }
 
 async function setup() {
+	function isLanguageGroupName(name) {
+		const normalized = String(name ?? "")
+			.replace(/\s+/g, "")
+			.toUpperCase();
+		return /^[IVX]+[AB]$/.test(normalized);
+	}
+
+	function getDivisionSubjects(structuredData, division) {
+		const groupIds = division?.groupids || [];
+		const subjectsByID = new Map();
+
+		(structuredData?.lessonsJSON || []).forEach((lesson) => {
+			if (!lesson || !Array.isArray(lesson.groupids)) {
+				return;
+			}
+			const includesDivisionGroup = lesson.groupids.some((groupID) => groupIds.includes(groupID));
+			if (!includesDivisionGroup) {
+				return;
+			}
+
+			const subjectID = lesson.subjectid;
+			if (!subjectID || subjectsByID.has(subjectID)) {
+				return;
+			}
+
+			const subjectName = structuredData?.subjectsMap?.[subjectID]?.name || subjectID;
+			subjectsByID.set(subjectID, { id: subjectID, name: subjectName });
+		});
+
+		return Array.from(subjectsByID.values())
+			.sort((a, b) => String(a.name).localeCompare(String(b.name)));
+	}
+
 	// show page
 	displayPage("setup");
 	try {
@@ -1030,10 +1067,12 @@ async function setup() {
 				grp => division.groupids.includes(grp.id)
 			);
 			if (groupsForDivision.length === 0) continue;
+			const isLanguageDivision = groupsForDivision.some((grp) => isLanguageGroupName(grp.name));
+			const divisionSubjects = getDivisionSubjects(currentStructuredData, division);
 			// Check if this is a "Terve Klass" division (ends with ":")
 			const isTerveKlassDivision = division.id.endsWith(":");
 			const terveKlassGroup = groupsForDivision.find(grp => grp.name === "Terve klass");
-			if (isTerveKlassDivision && terveKlassGroup) {
+			if (isTerveKlassDivision && terveKlassGroup && !isLanguageDivision) {
 				// Automatically add "Terve Klass" without showing selection
 				selectedGroups[division.id] = terveKlassGroup.id;
 				continue;
@@ -1043,12 +1082,33 @@ async function setup() {
 			const displaySubject = subjects.length > 0 ? subjects[0] : "\u00DCldained";
 			// Create a user-friendly title for the division
 			const groupNames = groupsForDivision.map(grp => grp.name).join("/");
-			const divisionTitle = `${groupNames} - ${displaySubject}`;
+			const divisionTitle = isLanguageDivision
+				? `Keelegrupp (${groupNames}) - ${displaySubject}`
+				: `${groupNames} - ${displaySubject}`;
 			// Create options for groups in this division
 			const groupOptions = groupsForDivision.map(grp => ({
-				title: grp.name || grp.id,
+				title: isLanguageGroupName(grp.name)
+					? String(grp.name).replace(/\s+/g, "")
+					: (grp.name || grp.id),
 				value: grp.id
 			}));
+
+			if (isLanguageDivision) {
+				for (const subject of divisionSubjects) {
+					const selectedGroupID = await setupPage(
+						`<h1>${subject.name}</h1><p>Vali keelegrupp:</p>`,
+						groupOptions
+					);
+					if (!selectedGroupID) {
+						displayPage("home");
+						return;
+					}
+					// Store language selections per subject (same division can be reused by multiple subjects).
+					selectedGroups[`${division.id}::${subject.id}`] = selectedGroupID;
+				}
+				continue;
+			}
+
 			// Show division selection page
 			const selectedGroupID = await setupPage(
 				`<h1>${divisionTitle}</h1><p>Vali grupp:</p>`,
