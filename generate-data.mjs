@@ -7,10 +7,99 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 /**
+ * Builds HTTP headers that emulate a browser request.
+ *
+ * @param {string} referer - Referer URL (kept for compatibility, not used).
+ * @returns {Record<string, string>} Request headers.
+ */
+function buildBrowserHeaders(referer) {
+
+	const headers = {
+		"Accept": "*/*",
+		"Accept-Language": "en-GB,en;q=0.9,et-EE;q=0.8,et;q=0.7,en-US;q=0.6",
+		"Content-Type": "application/json; charset=UTF-8",
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+	};
+
+	return headers;
+}
+
+/**
+ * Sends a POST request to an Edupage endpoint and returns parsed JSON.
+ *
+ * @param {string} url - Edupage endpoint URL.
+ * @param {object} body - JSON-serializable request payload.
+ * @param {string} referer - Referer context for header compatibility.
+ * @returns {Promise<any>} Parsed JSON response.
+ * @throws {Error} If the response is not successful.
+ */
+async function postEdupage(url, body, referer) {
+	const response = await fetch(url, {
+		method: "POST",
+		headers: buildBrowserHeaders(referer),
+		body: JSON.stringify(body)
+	});
+
+	if (!response.ok) {
+		throw new Error(`Request failed (${response.status} ${response.statusText}) for ${url}`);
+	}
+
+	return response.json();
+}
+
+
+
+
+/**
+ * Fetches timetable list metadata for a subdomain.
+ *
+ * @param {string} subDomain - Edupage subdomain (for example, "tera").
+ * @returns {Promise<any>} Raw timetable list response.
+ */
+async function fetchTimetables(subDomain) {
+	const url = `https://${subDomain}.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData`;
+
+	
+	const body = {
+		__args: [null, new Date().getFullYear()-1],
+		__gsh: "00000000",
+	};
+
+	try {
+		return await postEdupage(url, body, `https://${subDomain}.edupage.org/timetable/`);
+	} catch (err) {
+		console.error("fetchTimetables failed:", err);
+		throw err;
+	}
+}
+
+/**
+ * Fetches detailed timetable data for a specific timetable ID.
+ *
+ * @param {string|number} timeTableID - Timetable identifier.
+ * @returns {Promise<any>} Raw detailed timetable response.
+ */
+async function fetchTimetableByID(timeTableID) {
+	const url = "https://tera.edupage.org/timetable/server/regulartt.js?__func=regularttGetData";
+
+	const body = {
+		__args: [null, String(timeTableID)],
+		__gsh: "00000000",
+	};
+
+	try {
+		return await postEdupage(url, body, "https://tera.edupage.org/timetable/");
+	} catch (err) {
+		console.error("fetchTimetableByID failed:", err);
+		throw err;
+	}
+}
+
+/**
  * Selects the newest active timetable for each timetable-name prefix.
  *
- * @param {object} timetablesList - Timetable listing response.
- * @returns {Array<object>} Sorted list of latest timetables by group.
+ * @param {any} timetablesList - Raw timetable list response.
+ * @returns {Array<any>} Latest active timetables grouped by prefix.
  */
 function sortTimetables(timetablesList) {
 	const timetablesArray = timetablesList.r.regular.timetables;
@@ -46,10 +135,10 @@ function sortTimetables(timetablesList) {
 }
 
 /**
- * Normalizes detailed timetable payload into compact lookup maps for export.
+ * Normalizes raw timetable payload into exported lookup structures.
  *
- * @param {object} requestedTimetable - Raw detailed timetable payload.
- * @returns {object} Structured timetable maps and arrays.
+ * @param {any} requestedTimetable - Raw timetable detail response.
+ * @returns {object} Structured maps and arrays used by the frontend.
  */
 function filterData(requestedTimetable) {
 	if (!requestedTimetable || !requestedTimetable.r || !requestedTimetable.r.dbiAccessorRes) {
@@ -122,32 +211,14 @@ function filterData(requestedTimetable) {
 }
 
 /**
- * Generates local JSON files used by the web app.
+ * Generates timetable JSON files in the local data directory.
  *
  * @returns {Promise<void>}
  */
 async function main() {
 	try {
 		console.log("Fetching timetables...");
-		const timetablesResponse = await fetch("https://tera.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"Accept": "*/*",
-				"X-Requested-With": "XMLHttpRequest",
-				"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-			},
-			body: JSON.stringify({
-				__args: [null, new Date().getFullYear() - 1],
-				__gsh: "00000000",
-			}),
-		});
-
-		if (!timetablesResponse.ok) {
-			throw new Error(`Request failed (${timetablesResponse.status} ${timetablesResponse.statusText}) for timetable list`);
-		}
-
-		const timetablesList = await timetablesResponse.json();
+		const timetablesList = await fetchTimetables("tera");
 		const sortedTimetables = sortTimetables(timetablesList);
 		const proTeraTimetables = sortedTimetables.filter((tt) =>
 			typeof tt.text === "string" && tt.text.includes("ProTERA")
@@ -168,25 +239,7 @@ async function main() {
 		for (const tt of proTeraTimetables) {
 			console.log(`Fetching data for timetable ${tt.tt_num}: ${tt.text}`);
 			try {
-				const detailedResponse = await fetch("https://tera.edupage.org/timetable/server/regulartt.js?__func=regularttGetData", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"Accept": "*/*",
-						"X-Requested-With": "XMLHttpRequest",
-						"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-					},
-					body: JSON.stringify({
-						__args: [null, String(tt.tt_num)],
-						__gsh: "00000000",
-					}),
-				});
-
-				if (!detailedResponse.ok) {
-					throw new Error(`Request failed (${detailedResponse.status} ${detailedResponse.statusText}) for ${tt.tt_num}`);
-				}
-
-				const detailedData = await detailedResponse.json();
+				const detailedData = await fetchTimetableByID(tt.tt_num);
 				const structuredData = filterData(detailedData);
 				writeFileSync(join(dataDir, `${tt.tt_num}.json`), JSON.stringify(structuredData, null, 2));
 			} catch (err) {
