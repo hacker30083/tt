@@ -289,11 +289,24 @@ async function restoreSharedTimetable(encodedSelection) {
 /**
  * Applies one of the supported UI themes and stores the preference in cookie.
  *
- * @param {number} [a=0] - Theme selector (0 default, 1 dark, 2 light).
+ * - Passing a number selects a concrete theme (0 default, 1 dark, 2 light).
+ * - Calling without args cycles to the next theme.
+ *
+ * @param {number} [a] - Optional theme selector.
  * @returns {void}
  */
-function setTheme(a = 0) {
-	theme = Math.round(a % 3);
+function setTheme(a) {
+	if (a === undefined) {
+		const currentTheme = Number.isInteger(theme) ? theme : 0;
+		theme = (currentTheme + 1) % 3;
+	} else {
+		const parsedTheme = Number(a);
+		if (!Number.isFinite(parsedTheme)) {
+			theme = 0;
+		} else {
+			theme = ((Math.round(parsedTheme) % 3) + 3) % 3;
+		}
+	}
 
 	const s =
 		theme === 0 ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? 1 : 2)
