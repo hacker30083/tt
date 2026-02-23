@@ -7,94 +7,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 /**
- * Builds browser-like headers required by Edupage endpoints.
- *
- * @param {string} referer - Unused referer value kept for signature compatibility.
- * @returns {Record<string, string>} Header object for HTTP requests.
- */
-function buildBrowserHeaders(referer) {
-
-	const headers = {
-		"Accept": "*/*",
-		"Accept-Language": "en-GB,en;q=0.9,et-EE;q=0.8,et;q=0.7,en-US;q=0.6",
-		"Content-Type": "application/json; charset=UTF-8",
-		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-	};
-
-	return headers;
-}
-
-/**
- * Sends a JSON POST request to an Edupage endpoint.
- *
- * @param {string} url - Endpoint URL.
- * @param {object} body - Request JSON body.
- * @param {string} referer - Referer URL context.
- * @returns {Promise<object>} Parsed JSON response.
- */
-async function postEdupage(url, body, referer) {
-	const response = await fetch(url, {
-		method: "POST",
-		headers: buildBrowserHeaders(referer),
-		body: JSON.stringify(body)
-	});
-
-	if (!response.ok) {
-		throw new Error(`Request failed (${response.status} ${response.statusText}) for ${url}`);
-	}
-
-	return response.json();
-}
-
-
-
-
-/**
- * Fetches raw timetable list metadata from Edupage.
- *
- * @param {string} subDomain - Edupage subdomain.
- * @returns {Promise<object>} Raw timetable listing payload.
- */
-async function fetchTimetables(subDomain) {
-	const url = `https://${subDomain}.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData`;
-
-	
-	const body = {
-		__args: [null, new Date().getFullYear()-1],
-		__gsh: "00000000",
-	};
-
-	try {
-		return await postEdupage(url, body, `https://${subDomain}.edupage.org/timetable/`);
-	} catch (err) {
-		console.error("fetchTimetables failed:", err);
-		throw err;
-	}
-}
-
-/**
- * Fetches detailed timetable data for one timetable ID.
- *
- * @param {string|number} timeTableID - Timetable identifier.
- * @returns {Promise<object>} Raw timetable detail payload.
- */
-async function fetchTimetableByID(timeTableID) {
-	const url = "https://tera.edupage.org/timetable/server/regulartt.js?__func=regularttGetData";
-
-	const body = {
-		__args: [null, String(timeTableID)],
-		__gsh: "00000000",
-	};
-
-	try {
-		return await postEdupage(url, body, "https://tera.edupage.org/timetable/");
-	} catch (err) {
-		console.error("fetchTimetableByID failed:", err);
-		throw err;
-	}
-}
-
-/**
  * Selects the newest active timetable for each timetable-name prefix.
  *
  * @param {object} timetablesList - Timetable listing response.
@@ -217,7 +129,25 @@ function filterData(requestedTimetable) {
 async function main() {
 	try {
 		console.log("Fetching timetables...");
-		const timetablesList = await fetchTimetables("tera");
+		const timetablesResponse = await fetch("https://tera.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept": "*/*",
+				"X-Requested-With": "XMLHttpRequest",
+				"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+			},
+			body: JSON.stringify({
+				__args: [null, new Date().getFullYear() - 1],
+				__gsh: "00000000",
+			}),
+		});
+
+		if (!timetablesResponse.ok) {
+			throw new Error(`Request failed (${timetablesResponse.status} ${timetablesResponse.statusText}) for timetable list`);
+		}
+
+		const timetablesList = await timetablesResponse.json();
 		const sortedTimetables = sortTimetables(timetablesList);
 		const proTeraTimetables = sortedTimetables.filter((tt) =>
 			typeof tt.text === "string" && tt.text.includes("ProTERA")
@@ -238,7 +168,25 @@ async function main() {
 		for (const tt of proTeraTimetables) {
 			console.log(`Fetching data for timetable ${tt.tt_num}: ${tt.text}`);
 			try {
-				const detailedData = await fetchTimetableByID(tt.tt_num);
+				const detailedResponse = await fetch("https://tera.edupage.org/timetable/server/regulartt.js?__func=regularttGetData", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"Accept": "*/*",
+						"X-Requested-With": "XMLHttpRequest",
+						"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+					},
+					body: JSON.stringify({
+						__args: [null, String(tt.tt_num)],
+						__gsh: "00000000",
+					}),
+				});
+
+				if (!detailedResponse.ok) {
+					throw new Error(`Request failed (${detailedResponse.status} ${detailedResponse.statusText}) for ${tt.tt_num}`);
+				}
+
+				const detailedData = await detailedResponse.json();
 				const structuredData = filterData(detailedData);
 				writeFileSync(join(dataDir, `${tt.tt_num}.json`), JSON.stringify(structuredData, null, 2));
 			} catch (err) {
