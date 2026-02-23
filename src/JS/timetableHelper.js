@@ -1,3 +1,9 @@
+/**
+ * Fetches the available timetables list for a school subdomain.
+ *
+ * @param {string} subDomain - Edupage subdomain (currently ignored in local-data mode).
+ * @returns {Promise<object>} Timetable payload in Edupage-like format.
+ */
 async function fetchTimetables(subDomain) {
 	// For now, assuming subDomain is "tera", load from data/timetables.json
 	try {
@@ -14,6 +20,12 @@ async function fetchTimetables(subDomain) {
 	}
 }
 
+/**
+ * Selects the newest active timetable per first-word group.
+ *
+ * @param {object} timetablesList - Raw timetable list response.
+ * @returns {Array<object>} Filtered and grouped timetable metadata.
+ */
 function sortTimetables(timetablesList) {
 	// Returns all timetables, sorted
 
@@ -46,6 +58,12 @@ function sortTimetables(timetablesList) {
 	return latestPerGroup
 }
 
+/**
+ * Fetches a pre-generated structured timetable by ID.
+ *
+ * @param {string|number} timeTableID - Timetable identifier.
+ * @returns {Promise<object>} Structured timetable data.
+ */
 async function fetchTimetableByID(timeTableID) {
 	try {
 		const response = await fetch(`./data/${timeTableID}.json`);
@@ -59,9 +77,12 @@ async function fetchTimetableByID(timeTableID) {
 	}
 }
 
-/*
-	@params rawData This is is the output of fetchTimettableByID
-*/
+/**
+ * Normalizes timetable API payload into lookup maps and arrays used by the UI.
+ *
+ * @param {object} requestedTimetable - Raw or pre-structured timetable response.
+ * @returns {object} Structured timetable object with maps for quick access.
+ */
 function filterData(requestedTimetable) {
 	// Takes a timetable and makes usable objects from it
 
@@ -143,6 +164,13 @@ function filterData(requestedTimetable) {
 	return structuredData;
 }
 
+/**
+ * Returns all lessons and lesson-card timing data for one group.
+ *
+ * @param {object} structuredData - Structured timetable data.
+ * @param {string|number} groupID - Group ID to extract lessons for.
+ * @returns {Array<object>} Lesson objects enhanced with timing, room and teacher data.
+ */
 function getLessonsForGroup(structuredData, groupID) {
 	const groupLessons = structuredData.lessonsJSON.filter((lesson) =>
 		lesson.groupids.includes(groupID),
@@ -199,10 +227,24 @@ function getLessonsForGroup(structuredData, groupID) {
 	return lessonWithExtraData;
 }
 
+/**
+ * Finds all divisions belonging to a class/grade.
+ *
+ * @param {object} structuredData - Structured timetable data.
+ * @param {string|number} grade - Class ID.
+ * @returns {Array<object>} Matching divisions.
+ */
 function getDivisionsForGrade(structuredData, grade) {
 	return structuredData.divisionsJSON.filter((division) => division.classid == grade);
 }
 
+/**
+ * Finds unique subject names taught within a division.
+ *
+ * @param {object} structuredData - Structured timetable data.
+ * @param {object} division - Division object containing group IDs.
+ * @returns {Array<string>} Human-readable subject names.
+ */
 function getSubjectsForDivision(structuredData, division) {
 	// Get all group IDs for this division
 	const groupIds = division.groupids || [];

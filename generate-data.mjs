@@ -6,6 +6,12 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+/**
+ * Builds browser-like headers required by Edupage endpoints.
+ *
+ * @param {string} referer - Unused referer value kept for signature compatibility.
+ * @returns {Record<string, string>} Header object for HTTP requests.
+ */
 function buildBrowserHeaders(referer) {
 
 	const headers = {
@@ -18,6 +24,14 @@ function buildBrowserHeaders(referer) {
 	return headers;
 }
 
+/**
+ * Sends a JSON POST request to an Edupage endpoint.
+ *
+ * @param {string} url - Endpoint URL.
+ * @param {object} body - Request JSON body.
+ * @param {string} referer - Referer URL context.
+ * @returns {Promise<object>} Parsed JSON response.
+ */
 async function postEdupage(url, body, referer) {
 	const response = await fetch(url, {
 		method: "POST",
@@ -35,6 +49,12 @@ async function postEdupage(url, body, referer) {
 
 
 
+/**
+ * Fetches raw timetable list metadata from Edupage.
+ *
+ * @param {string} subDomain - Edupage subdomain.
+ * @returns {Promise<object>} Raw timetable listing payload.
+ */
 async function fetchTimetables(subDomain) {
 	const url = `https://${subDomain}.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData`;
 
@@ -52,6 +72,12 @@ async function fetchTimetables(subDomain) {
 	}
 }
 
+/**
+ * Fetches detailed timetable data for one timetable ID.
+ *
+ * @param {string|number} timeTableID - Timetable identifier.
+ * @returns {Promise<object>} Raw timetable detail payload.
+ */
 async function fetchTimetableByID(timeTableID) {
 	const url = "https://tera.edupage.org/timetable/server/regulartt.js?__func=regularttGetData";
 
@@ -68,6 +94,12 @@ async function fetchTimetableByID(timeTableID) {
 	}
 }
 
+/**
+ * Selects the newest active timetable for each timetable-name prefix.
+ *
+ * @param {object} timetablesList - Timetable listing response.
+ * @returns {Array<object>} Sorted list of latest timetables by group.
+ */
 function sortTimetables(timetablesList) {
 	const timetablesArray = timetablesList.r.regular.timetables;
 	// Step 1: Group timetables by first word in name
@@ -101,6 +133,12 @@ function sortTimetables(timetablesList) {
 	return latestPerGroup;
 }
 
+/**
+ * Normalizes detailed timetable payload into compact lookup maps for export.
+ *
+ * @param {object} requestedTimetable - Raw detailed timetable payload.
+ * @returns {object} Structured timetable maps and arrays.
+ */
 function filterData(requestedTimetable) {
 	if (!requestedTimetable || !requestedTimetable.r || !requestedTimetable.r.dbiAccessorRes) {
 		console.warn("filterData: Invalid or missing timetable data, returning empty structure");
@@ -171,6 +209,11 @@ function filterData(requestedTimetable) {
 	};
 }
 
+/**
+ * Generates local JSON files used by the web app.
+ *
+ * @returns {Promise<void>}
+ */
 async function main() {
 	try {
 		console.log("Fetching timetables...");

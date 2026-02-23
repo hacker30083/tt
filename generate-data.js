@@ -2,6 +2,12 @@ import { post } from "axios";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { join } from "path";
 
+/**
+ * Fetches raw timetable list metadata from Edupage.
+ *
+ * @param {string} subDomain - Edupage subdomain.
+ * @returns {Promise<object>} Raw timetable listing payload.
+ */
 async function fetchTimetables(subDomain) {
 	const url = `https://${subDomain}.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData`;
 
@@ -26,6 +32,12 @@ async function fetchTimetables(subDomain) {
 	}
 }
 
+/**
+ * Fetches detailed timetable data for one timetable ID.
+ *
+ * @param {string|number} timeTableID - Timetable identifier.
+ * @returns {Promise<object>} Raw timetable detail payload.
+ */
 async function fetchTimetableByID(timeTableID) {
 	const url = "https://tera.edupage.org/timetable/server/regulartt.js?__func=regularttGetData";
 
@@ -50,6 +62,12 @@ async function fetchTimetableByID(timeTableID) {
 	}
 }
 
+/**
+ * Selects the newest active timetable for each timetable-name prefix.
+ *
+ * @param {object} timetablesList - Timetable listing response.
+ * @returns {Array<object>} Sorted list of latest timetables by group.
+ */
 function sortTimetables(timetablesList) {
 	const timetablesArray = timetablesList.r.regular.timetables;
 	// Step 1: Group timetables by first word in name
@@ -83,6 +101,12 @@ function sortTimetables(timetablesList) {
 	return latestPerGroup;
 }
 
+/**
+ * Normalizes detailed timetable payload into compact lookup maps for export.
+ *
+ * @param {object} requestedTimetable - Raw detailed timetable payload.
+ * @returns {object} Structured timetable maps and arrays.
+ */
 function filterData(requestedTimetable) {
 	if (!requestedTimetable || !requestedTimetable.r || !requestedTimetable.r.dbiAccessorRes) {
 		console.warn("filterData: Invalid or missing timetable data, returning empty structure");
@@ -153,6 +177,11 @@ function filterData(requestedTimetable) {
 	};
 }
 
+/**
+ * Generates local JSON files used by the web app.
+ *
+ * @returns {Promise<void>}
+ */
 async function main() {
 	try {
 		console.log("Fetching timetables...");

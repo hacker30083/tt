@@ -20,6 +20,11 @@ gr = null;	// grupid
 
 // cookie functions
 
+/**
+ * Returns all cookie pairs from `document.cookie`.
+ *
+ * @returns {Array<string>} Raw cookie entries split by `;`.
+ */
 function allCookies() {
 	if (!document.cookie) {
 		return [];
@@ -27,12 +32,26 @@ function allCookies() {
 	return document.cookie.split(";");
 }
 
+/**
+ * Writes a cookie with sane defaults for path, SameSite and optional Secure flag.
+ *
+ * @param {string} key - Cookie key.
+ * @param {string} value - Cookie value.
+ * @param {number} [expireDays=DEFAULT_COOKIE_DAYS] - Expiration in days.
+ * @returns {void}
+ */
 function setCookie(key, value, expireDays = DEFAULT_COOKIE_DAYS) {
 	const expires = (new Date(Date.now() + (expireDays * 24 * 60 * 60 * 1000))).toUTCString();
 	const secure = window.location.protocol === "https:" ? "; Secure" : "";
 	document.cookie = `${encodeURIComponent(String(key))}=${encodeURIComponent(String(value))}; path=/; SameSite=Lax${secure}; expires=${expires}`;
 }
 
+/**
+ * Reads one cookie value by key.
+ *
+ * @param {string} key - Cookie key to lookup.
+ * @returns {string|null} Decoded cookie value or `null` if absent.
+ */
 function getCookie(key) {
 	key = encodeURIComponent(String(key)) + "=";
 
@@ -55,6 +74,11 @@ function getCookie(key) {
 	return null;
 }
 
+/**
+ * Clears all cookies currently accessible for this path.
+ *
+ * @returns {void}
+ */
 function clearAll() {
 	const zd = (new Date(0)).toUTCString();
 
@@ -66,6 +90,12 @@ function clearAll() {
 
 // url functions
 
+/**
+ * Converts URL query parameters into a plain object.
+ *
+ * @param {string|URL} url - URL instance or URL-like string.
+ * @returns {Record<string, string>} Parsed query key-value pairs.
+ */
 function getURLParams(url) {
 	const parsedURL = url instanceof URL ? url : new URL(url, window.location.origin);
 	const obj = {};
@@ -76,6 +106,12 @@ function getURLParams(url) {
 	return obj;
 }
 
+/**
+ * Validates timetable selection payload shape used for share/restore.
+ *
+ * @param {unknown} parsed - Parsed JSON payload candidate.
+ * @returns {boolean} `true` when payload matches required fields.
+ */
 function isValidSelectionData(parsed) {
 	if (!parsed || typeof parsed !== "object") {
 		return false;
@@ -93,6 +129,12 @@ function isValidSelectionData(parsed) {
 	return true;
 }
 
+/**
+ * Encodes timetable selection payload into URL-safe base64.
+ *
+ * @param {object} selectionData - Selection payload.
+ * @returns {string} URL-safe encoded payload.
+ */
 function encodeSelectionPayload(selectionData) {
 	const json = JSON.stringify(selectionData);
 	return btoa(unescape(encodeURIComponent(json)))
@@ -101,6 +143,12 @@ function encodeSelectionPayload(selectionData) {
 		.replace(/=+$/g, "");
 }
 
+/**
+ * Decodes URL-safe base64 selection payload.
+ *
+ * @param {string} encodedSelection - Encoded selection string.
+ * @returns {object|null} Parsed selection payload or `null` if invalid.
+ */
 function decodeSelectionPayload(encodedSelection) {
 	try {
 		const normalized = String(encodedSelection)
@@ -116,6 +164,12 @@ function decodeSelectionPayload(encodedSelection) {
 	}
 }
 
+/**
+ * Persists selection payload into a short-lived cookie.
+ *
+ * @param {object} selectionData - Selection payload to store.
+ * @returns {void}
+ */
 function saveSelectionCookie(selectionData) {
 	try {
 		setCookie(SELECTIONS_COOKIE_KEY, JSON.stringify(selectionData), SELECTIONS_COOKIE_DAYS);
@@ -124,6 +178,11 @@ function saveSelectionCookie(selectionData) {
 	}
 }
 
+/**
+ * Reads selection payload from cookie and validates it.
+ *
+ * @returns {object|null} Parsed valid selection payload, otherwise `null`.
+ */
 function loadSelectionCookie() {
 	const raw = getCookie(SELECTIONS_COOKIE_KEY);
 	if (!raw) {
@@ -139,6 +198,13 @@ function loadSelectionCookie() {
 	}
 }
 
+/**
+ * Waits until a timetable helper function appears on `window`.
+ *
+ * @param {string} name - Global function name to wait for.
+ * @param {number} [timeoutMs=4000] - Maximum wait time in milliseconds.
+ * @returns {Promise<Function|null>} Helper function or `null` on timeout.
+ */
 async function waitForTimetableHelper(name, timeoutMs = 4000) {
 	const startedAt = Date.now();
 	while (Date.now() - startedAt < timeoutMs) {
@@ -151,6 +217,13 @@ async function waitForTimetableHelper(name, timeoutMs = 4000) {
 	return null;
 }
 
+/**
+ * Restores user selection from shared or cookie payload and renders timetable.
+ *
+ * @param {object} selectionData - Selection payload to restore.
+ * @param {boolean} [persistToCookie=true] - Whether to save restored selection.
+ * @returns {Promise<boolean>} `true` when restore succeeds.
+ */
 async function restoreSelection(selectionData, persistToCookie = true) {
 	if (!isValidSelectionData(selectionData)) {
 		return false;
@@ -214,10 +287,21 @@ async function restoreSelection(selectionData, persistToCookie = true) {
 	}
 }
 
+/**
+ * Restores timetable from saved cookie.
+ *
+ * @returns {Promise<boolean>} `true` when restore succeeds.
+ */
 async function restoreSavedTimetable() {
 	return restoreSelection(loadSelectionCookie());
 }
 
+/**
+ * Restores timetable from an encoded share link value.
+ *
+ * @param {string} encodedSelection - Encoded selection token from URL.
+ * @returns {Promise<boolean>} `true` when restore succeeds.
+ */
 async function restoreSharedTimetable(encodedSelection) {
 	const decodedSelection = decodeSelectionPayload(encodedSelection);
 	if (!decodedSelection) {
@@ -228,6 +312,12 @@ async function restoreSharedTimetable(encodedSelection) {
 
 // display functions
 
+/**
+ * Applies one of the supported UI themes and stores the preference in cookie.
+ *
+ * @param {number} [a=0] - Theme selector (0 default, 1 dark, 2 light).
+ * @returns {void}
+ */
 function setTheme(a = 0) {
 	theme = Math.round(a%3);
 
@@ -260,6 +350,12 @@ function setTheme(a = 0) {
 	setCookie("t", theme);
 }
 
+/**
+ * Toggles or sets day highlighting mode and refreshes timetable rendering.
+ *
+ * @param {boolean} [a] - Optional explicit highlighting value.
+ * @returns {void}
+ */
 function setHilighting(a) {
 	hilighting = a ?? (!hilighting);
 	document.getElementById("hilighting").innerText = hilighting
@@ -272,6 +368,12 @@ function setHilighting(a) {
 	setCookie("h", hilighting ? "1" : "0");
 }
 
+/**
+ * Shows one page section and hides the others.
+ *
+ * @param {string} n - Page element ID to display.
+ * @returns {void}
+ */
 function displayPage(n) {
 	pages.forEach(key => {
 		key.style.display = (n===key.id)
@@ -280,11 +382,21 @@ function displayPage(n) {
 	});
 }
 
+/**
+ * Resolves the current school weekday index used by this timetable.
+ *
+ * @returns {number} Weekday index in range 0..4.
+ */
 function getCurrentWeekday() {
 	// P E T K N R L
 	return [0, 0, 1, 2, 3, 4, 0][(new Date(Date.now() + 25e6)).getDay()];
 }
 
+/**
+ * Renders all timetable items into the grid UI.
+ *
+ * @returns {void}
+ */
 function displayTimetable() {
 	const
 	timetableElement = document.getElementById("tt"),
@@ -412,12 +524,25 @@ function displayTimetable() {
 	});
 }
 
+/**
+ * Computes scale factor to fit content into a target width.
+ *
+ * @param {number} targetSize - Available width.
+ * @param {number} currentSize - Current content width.
+ * @returns {number} Scale value where `1` means no scaling.
+ */
 function getDisplayScale(targetSize, currentSize) {
 	return (targetSize < currentSize)
 		? targetSize/currentSize
 		: 1;
 }
 
+/**
+ * Converts long teacher names into compact initials form.
+ *
+ * @param {string} string - Full teacher name string.
+ * @returns {string} Shortened representation.
+ */
 function shortenName(string) {
 	let r = [];
 	string.split("/").forEach(k => {
@@ -428,6 +553,13 @@ function shortenName(string) {
 	return r.join(", ");
 }
 
+/**
+ * Waits for one of the option buttons or the abort button to be clicked.
+ *
+ * @param {Array<HTMLElement>} acceptionList - Accept buttons.
+ * @param {HTMLElement} rejection - Abort button.
+ * @returns {Promise<string|number>} Selected value parsed as number when possible.
+ */
 async function waitForInput(acceptionList, rejection) {
 	return new Promise((resolve, reject) => {
 
@@ -464,6 +596,14 @@ async function waitForInput(acceptionList, rejection) {
 	});
 }
 
+/**
+ * Builds a setup step UI and waits for user selection.
+ *
+ * @param {string} pre - HTML content displayed above options.
+ * @param {Array<{title: string, value: string|number|null}>} options - Selectable options.
+ * @param {string|number|null} [defaultValue=null] - Optional preselected option value.
+ * @returns {Promise<string|number>} Selected option value.
+ */
 function setupPage(pre, options, defaultValue = null) {
 	document.getElementById("pre").innerHTML = pre;
 
@@ -493,6 +633,12 @@ function setupPage(pre, options, defaultValue = null) {
 
 // timetable backup functions
 
+/**
+ * Restores old compact timetable code format into `gr`.
+ *
+ * @param {string|null} h - Serialized group code.
+ * @returns {void}
+ */
 function loadFromCode(h) {
 	if (h === null) {
 		return;
@@ -524,6 +670,11 @@ function loadFromCode(h) {
 	generateTimetable();
 }
 
+/**
+ * Updates highlighted weekday and rerenders timetable when the day changes.
+ *
+ * @returns {void}
+ */
 function setWeekday() {
 	const w = getCurrentWeekday();
 
@@ -533,11 +684,21 @@ function setWeekday() {
 	}
 }
 
+/**
+ * Saves legacy timetable code to cookie.
+ *
+ * @returns {void}
+ */
 function saveTimetableCode() {
 	code = `${gr.m}${gr.e}${gr.bvk}${gr.i}${gr.t}${gr.s}${(gr.pkt).toString(36)}`;
 	setCookie("g", code);
 }
 
+/**
+ * Copies a shareable URL containing the current timetable selection to clipboard.
+ *
+ * @returns {void}
+ */
 function share() {
 	const selectionData = {
 		classID: gr?.classID,
@@ -560,11 +721,23 @@ function share() {
 
 // timetable generation functions
 
+/**
+ * Loads and sorts available timetables for a subdomain.
+ *
+ * @param {string} subDomain - School subdomain.
+ * @returns {Promise<Array<object>>} Sorted timetable metadata.
+ */
 async function load(subDomain) {
 	const timetablesList = await fetchTimetables(subDomain);
 	return sortTimetables(timetablesList);
 }
 
+/**
+ * Resolves currently selected group value for a subject key.
+ *
+ * @param {string} subject - Subject code.
+ * @returns {string|number|undefined} Selected group value.
+ */
 function getGroups(subject) {
 	switch (subject) {
 		case "ik":	return gr.ik;
@@ -582,6 +755,20 @@ function getGroups(subject) {
 }
 
 
+/**
+ * Appends one timetable item to the render list.
+ *
+ * @param {number} x - Grid column index.
+ * @param {number} y - Grid row index (weekday).
+ * @param {string} [title="-"] - Item title.
+ * @param {string|undefined} [start_time=undefined] - Start time label.
+ * @param {string|undefined} [end_time=undefined] - End time label.
+ * @param {string|false} [location=false] - Location string.
+ * @param {string|false} [name=false] - Teacher/person label.
+ * @param {boolean} [isBreak=false] - Break marker.
+ * @param {number} [w=1] - Item width in columns.
+ * @returns {void}
+ */
 function pushItem(
 	x, y, title = "-", start_time = undefined, end_time = undefined,
 	location = false, name = false, isBreak = false, w = 1
@@ -601,12 +788,22 @@ function pushItem(
 	tt.push(obj);
 }
 
-// Return chosen group index for a given subject prefix using `gr` mapping
+/**
+ * Returns chosen group index for a subject code using `gr` mapping.
+ *
+ * @param {string} sub - Subject code.
+ * @returns {string|number|undefined} Selected group value.
+ */
 function gg(sub) {
 	return getGroups(sub);
 }
 
-// Get human-friendly name for a group/teacher/class key using timetableHelper's structuredData when available
+/**
+ * Resolves a human-friendly name for a group/class/teacher key.
+ *
+ * @param {string|number} key - Lookup key.
+ * @returns {string|number} Resolved display name or original key.
+ */
 function go(key) {
 	try {
 		if (typeof structuredData !== "undefined") {
@@ -620,7 +817,12 @@ function go(key) {
 	return key;
 }
 
-// Get subject/title for a subject code; prefer structuredData.subjectsMap when available, fallback to sensible defaults
+/**
+ * Resolves a subject title from a short subject code.
+ *
+ * @param {string} sub - Subject short code.
+ * @returns {string} Subject display name.
+ */
 function gt(sub) {
 	try {
 		if (typeof structuredData !== "undefined" && structuredData.subjectsMap) {
@@ -640,6 +842,11 @@ function gt(sub) {
 }
 
 
+/**
+ * Initializes UI state and attempts to restore previously selected timetable.
+ *
+ * @returns {Promise<void>}
+ */
 async function main() {
 	setTheme(0);
 
@@ -655,7 +862,12 @@ async function main() {
 	}
 }
 
-// Generate timetable from live lesson data (using structuredData from timetableHelper)
+/**
+ * Builds the timetable render list from structured live data.
+ *
+ * @param {object} grData - Selected class/groups and structured timetable data.
+ * @returns {void}
+ */
 function genTTFromLiveData(grData) {
 	tt = [];
 	if (!grData || !grData.structuredData) {
@@ -670,6 +882,12 @@ function genTTFromLiveData(grData) {
 	const periodToSlot = [0, 0, 2, 3, 5, 6, 7, 8, 9, 9, 9];
 	const thirdLessonByDay = new Array(5).fill(null);
 
+	/**
+	 * Normalizes time strings to display form.
+	 *
+	 * @param {string|number|null|undefined} timeStr - Time value.
+	 * @returns {string|null} Formatted time or `null`.
+	 */
 	function formatTime(timeStr) {
 		if (!timeStr) {
 			return null;
@@ -683,6 +901,12 @@ function genTTFromLiveData(grData) {
 			.filter((entry) => !isNaN(entry[0]))
 	);
 
+	/**
+	 * Normalizes strings for loose accent-insensitive comparisons.
+	 *
+	 * @param {string} str - Input text.
+	 * @returns {string} Normalized lowercase text.
+	 */
 	function normText(str) {
 		return String(str ?? "")
 			.toLowerCase()
@@ -690,10 +914,25 @@ function genTTFromLiveData(grData) {
 			.replace(/[\u0300-\u036f]/g, "");
 	}
 
+	/**
+	 * Detects whether a lesson title refers to liikumisõpetus.
+	 *
+	 * @param {string} title - Lesson title.
+	 * @returns {boolean} `true` when title matches liikumisõpetus.
+	 */
 	function isLiikumisopetusTitle(title) {
 		return normText(title).includes("liikumis");
 	}
 
+	/**
+	 * Places an item into one weekday slot array with collision checks.
+	 *
+	 * @param {number} dayIndex - Weekday index.
+	 * @param {number} startSlot - Start slot index.
+	 * @param {number} width - Number of slots to occupy.
+	 * @param {object} itemData - Slot item payload.
+	 * @returns {boolean} `true` when placement succeeds.
+	 */
 	function addToDay(dayIndex, startSlot, width, itemData) {
 		const slots = daySlots[dayIndex];
 		if (!slots || startSlot < 0 || startSlot >= slots.length) {
@@ -971,7 +1210,18 @@ function genTTFromLiveData(grData) {
 	displayTimetable();
 }
 
+/**
+ * Runs interactive setup flow to choose class and groups.
+ *
+ * @returns {Promise<void>}
+ */
 async function setup() {
+	/**
+	 * Checks whether a group name matches roman-numeral language group format.
+	 *
+	 * @param {string} name - Group name.
+	 * @returns {boolean} `true` when name looks like language group marker.
+	 */
 	function isLanguageGroupName(name) {
 		const normalized = String(name ?? "")
 			.replace(/\s+/g, "")
@@ -979,6 +1229,13 @@ async function setup() {
 		return /^[IVX]+[AB]$/.test(normalized);
 	}
 
+	/**
+	 * Collects unique subjects that appear in lessons for a division.
+	 *
+	 * @param {object} structuredData - Structured timetable data.
+	 * @param {object} division - Division metadata.
+	 * @returns {Array<{id: string, name: string}>} Sorted subjects for that division.
+	 */
 	function getDivisionSubjects(structuredData, division) {
 		const groupIds = division?.groupids || [];
 		const subjectsByID = new Map();
@@ -1162,7 +1419,11 @@ async function setup() {
 		displayPage("home");
 	}
 }
-// Initialize local data (pkt, ttc) from files
+/**
+ * Loads local static support files used by legacy timetable features.
+ *
+ * @returns {Promise<void>}
+ */
 async function initializeLocalData() {
 	try {
 		// Fetch praktikumid (pkt) data
