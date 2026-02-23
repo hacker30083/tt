@@ -4,10 +4,16 @@
   "description": "",
   "main": "generate-data.js",
   "scripts": {
-    "generate": "node generate-data.mjs"
+    "generate": "node generate-data.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "node-fetch": "^3.3.2",
     "nodemon": "^3.1.11"
+  },
+  "devDependencies": {
+    "jsdom": "^28.1.0",
+    "vitest": "^4.0.18"
   }
 }
