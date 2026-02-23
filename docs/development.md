@@ -42,7 +42,7 @@ tt/
 │       ├── index.css            # Main styles
 │       └── dev.css              # Development styles
 ├── assets/                      # Static assets (fonts)
-├── generate-data.js             # Data generation script
+├── generate-data.mjs            # Data generation script
 ├── index.html                   # Main HTML file
 ├── package.json                 # Node.js dependencies
 └── README.md                    # Project documentation
@@ -52,7 +52,7 @@ tt/
 
 ### 1. Make Changes
 - Edit files in `src/JS/`, `src/styles/`, or `index.html`
-- For data-related changes, modify `generate-data.js`
+- For data-related changes, modify `generate-data.mjs`
 
 ### 2. Test Locally
 ```bash
@@ -81,7 +81,7 @@ git push origin main
 
 ## Key Components
 
-### Data Generation (`generate-data.js`)
+### Data Generation (`generate-data.mjs`)
 - Fetches timetable data from Edupage API
 - Processes and structures the data
 - Saves JSON files to `data/` directory
@@ -113,7 +113,7 @@ git push origin main
 - Test with sample data
 
 ### 3. New Data Sources
-- Modify `generate-data.js`
+- Modify `generate-data.mjs`
 - Update API endpoints
 - Add new data processing functions
 

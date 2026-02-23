@@ -42,7 +42,7 @@ The Timetable Generator is a static web application that provides an interface f
   4. Run data generation script
   5. Commit and push generated data
 
-#### Data Generation Script (`generate-data.js`)
+#### Data Generation Script (`generate-data.mjs`)
 - **Language**: Node.js
 - **Dependencies**: axios for HTTP requests
 - **Functions**:

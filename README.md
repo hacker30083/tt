@@ -69,7 +69,7 @@ npm run generate  # Generate timetable data
 ```
 
 ### Data Generation
-The `generate-data.js` script fetches timetable data from TERA school's Edupage system and saves it as JSON files.
+The `generate-data.mjs` script fetches timetable data from TERA school's Edupage system and saves it as JSON files.
 
 ### Deployment
 - Push to `main` branch to trigger GitHub Actions
