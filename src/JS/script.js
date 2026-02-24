@@ -1,13 +1,14 @@
 import { fetchTimetableByID, getDivisionsForGrade, getSubjectsForDivision } from "./timetableHelper.js";
-import { loadTimetables, initializeLocalData } from "./dataLoading.js";
+import { loadTimetables, initializeLocalData } from "./timetableDataLoading.js";
 import { buildTimetableFromLiveData } from "./timetableConstruction.js";
 import { displayTimetable, getCurrentWeekday } from "./timetableDrawing.js";
+import { setCookie, getCookie, clearAllCookies } from "./cookieHelper.js";
+import { downloadElementByID } from "./exporting.js";
 
 const
 	pages = Array.from(document.getElementsByClassName("page")),
 	PATH = "./src/",
 	DOMAIN = "mk4i.github.io/tt",
-	DEFAULT_COOKIE_DAYS = 93,
 	SELECTIONS_COOKIE_KEY = "tt_selection_v1",
 	SELECTIONS_COOKIE_DAYS = 7,
 	SUBDOMAIN = "tera";
@@ -23,72 +24,7 @@ let
 	weekday,
 	gr = null;
 
-/**
- * Returns all cookie pairs from `document.cookie`.
- *
- * @returns {Array<string>} Raw cookie entries split by `;`.
- */
-function allCookies() {
-	if (!document.cookie) {
-		return [];
-	}
-	return document.cookie.split(";");
-}
 
-/**
- * Writes a cookie with sane defaults for path, SameSite and optional Secure flag.
- *
- * @param {string} key - Cookie key.
- * @param {string} value - Cookie value.
- * @param {number} [expireDays=DEFAULT_COOKIE_DAYS] - Expiration in days.
- * @returns {void}
- */
-function setCookie(key, value, expireDays = DEFAULT_COOKIE_DAYS) {
-	const expires = (new Date(Date.now() + (expireDays * 24 * 60 * 60 * 1000))).toUTCString();
-	const secure = window.location.protocol === "https:" ? "; Secure" : "";
-	document.cookie = `${encodeURIComponent(String(key))}=${encodeURIComponent(String(value))}; path=/; SameSite=Lax${secure}; expires=${expires}`;
-}
-
-/**
- * Reads one cookie value by key.
- *
- * @param {string} key - Cookie key to lookup.
- * @returns {string|null} Decoded cookie value or `null` if absent.
- */
-function getCookie(key) {
-	key = encodeURIComponent(String(key)) + "=";
-
-	const cookies = allCookies();
-	const cookiesLength = cookies.length;
-
-	for (let i = 0; i < cookiesLength; i++) {
-		let cookie = cookies[i];
-
-		while (cookie.charAt(0) === " ") {
-			cookie = cookie.substring(1);
-		}
-
-		if (cookie.indexOf(key) === 0) {
-			return decodeURIComponent(cookie.substring(key.length, cookie.length));
-		}
-	}
-
-	return null;
-}
-
-/**
- * Clears all cookies currently accessible for this path.
- *
- * @returns {void}
- */
-function clearAll() {
-	const zd = (new Date(0)).toUTCString();
-
-	allCookies().forEach((cookie) => {
-		const key = cookie.split("=")[0].trim();
-		document.cookie = `${key}=; expires=${zd}; path=/`;
-	});
-}
 
 /**
  * Converts URL query parameters into a plain object.
@@ -730,10 +666,11 @@ initializeLocalData().then((localData) => {
 
 Object.assign(window, {
 	setup,
-	clearAll,
+	clearAllCookies,
 	share,
 	setTheme,
-	setHilighting
+	setHilighting,
+	downloadElementByID
 });
 
 main();
