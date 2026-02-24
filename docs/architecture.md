@@ -34,11 +34,11 @@ The Timetable Generator is a static web application that provides an interface f
 - **Purpose**: Automated data fetching and processing
 - **Triggers**:
   - Push to `main` branch
-  - Daily schedule (midnight UTC)
+  - Weekly schedule (00:01 on Sundays)
 - **Steps**:
   1. Checkout repository
   2. Setup Node.js environment
-  3. Install dependencies (axios)
+  3. Install dependencies
   4. Run data generation script
   5. Commit and push generated data
 
@@ -115,10 +115,9 @@ data/
 #### Data Flow
 1. User clicks "Koosta tunniplaan"
 2. `setup()` function loads timetable list from `data/timetables.json`
-3. User selects timetable period
-4. Application fetches detailed data from `data/{id}.json`
-5. User selects class and groups
-6. Timetable is generated and displayed
+3. Application fetches detailed data from `data/{id}.json`
+4. User selects class and groups
+5. Timetable is generated and displayed
 
 #### Key Functions
 - `load(subDomain)`: Loads and sorts timetables (currently hardcoded to "tera")
@@ -137,27 +136,26 @@ data/
 - **Response Format**: JSON with nested structure
 
 ### Current Limitations
-- Only supports "tera" subdomain
+- Only supports "tera" subdomain (Other schools coming in v1.1)
 - API responses may change without notice
 - No error handling for API failures in production
 
 ## Deployment
 
 ### GitHub Pages
-- **Source**: `main` branch
+- **Source**: `main` branch is production a.k.a currently live version of the site
 - **Build**: None (static hosting)
-- **URL**: `https://mk4i.github.io/tt/`
+- **URL**: `https://hacker30083.github.io/tt/`
 
 ### Build Process
 - No build step required
 - All assets served statically
-- Data updated via GitHub Actions
+- Data updated via GitHub Actions, as Edupage seems to not like CORS a lot
 
 ## Security Considerations
 
 ### Data Privacy
 - User selections stored in browser cookies
-- Sharing via links exposes data in URL parameters
 - No server-side data storage
 
 ### API Security
@@ -204,23 +202,22 @@ data/
    - Open `index.html` in browser
 
 2. **Testing**
-   - Manual testing in browser
+   - Manual testing in browser (Minor automatic testing setup creation is in progress)
    - Validate data generation
    - Check GitHub Actions logs
 
 3. **Deployment**
-   - Push to `main` branch
-   - GitHub Actions generates data
-   - Site updates automatically
+   - Push to `dev`, the appropriate version's branch (or your own fork)
+   - Make a pull-request
+   - GitHub Actions generates data (if you changed any data generation related files)
+   - Site updates automatically when PR is merged to main
 
 ## Dependencies
 
 ### Runtime
-- **jQuery 3.6.0**: DOM manipulation and AJAX
 - **Browser APIs**: fetch, localStorage, cookies
 
 ### Development
 - **Node.js 18+**: Data generation
-- **axios**: HTTP client for data fetching
 - **GitHub Actions**: CI/CD pipeline</content>
 <parameter name="filePath">/Users/kasparaun/Documents/GitHub/tt/docs/architecture.md

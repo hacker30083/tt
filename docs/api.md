@@ -19,7 +19,9 @@ The application integrates with the Edupage school's timetable system to fetch t
 }
 ```
 
-**Response**:
+Change year to currentYear-1
+
+**Example snippet of response**:
 ```json
 {
   "r": {
@@ -31,7 +33,8 @@ The application integrates with the Edupage school's timetable system to fetch t
           "text": "ProTERA ja TERA gümnaasium 2025/2026 (12.01.2026-29.05.2026)",
           "datefrom": "2026-01-12",
           "hidden": false
-        }
+        },
+        [...]
       ]
     }
   }
@@ -46,10 +49,11 @@ The application integrates with the Edupage school's timetable system to fetch t
 **Body**:
 ```json
 {
-  "__args": [null, "68"],
+  "__args": [null, ${timetableID}],
   "__gsh": "00000000"
 }
 ```
+`timetableID` is the ID seleced from the previous list of timetables.
 
 **Response**:
 ```json
@@ -106,7 +110,7 @@ The API uses a `__gsh` parameter which appears to be a session or API key. The v
 
 ## Rate Limiting
 
-Unknown. The application uses this API responsibly with automated daily fetches.
+Unknown. The application uses this API responsibly with automated weekly fetches.
 
 ## Error Handling
 
@@ -123,7 +127,7 @@ const timetables = await fetchTimetables("tera");
 
 ### Load Timetable Data
 ```javascript
-const structuredData = await fetchTimetableByID("68");
+const structuredData = await fetchTimetableByID(timetableID);
 ```
 
 ## Data Processing

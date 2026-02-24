@@ -26,26 +26,35 @@ open index.html
 ## Project Structure
 
 ```
-tt/
-├── .github/
-│   └── workflows/
-│       └── generate-data.yml    # GitHub Actions CI/CD
-├── data/                        # Generated JSON data files
-├── docs/                        # Documentation
-├── src/
-│   ├── HTML/                    # HTML templates (currently empty)
-│   ├── JS/
-│   │   ├── script.js            # Main application logic
-│   │   ├── timetableHelper.js   # Data processing functions
-│   │   └── utils.js             # Utility functions
+tt/     
+├── .github/        
+│   └── workflows/      
+│       └── generate-data.yml           # GitHub Actions CI/CD
+        └── pr-checks.yml               # Checks to be run when a PR is created    
+├── data/                               # Generated JSON data files
+├── docs                                # Documentation
+│   ├── api.md                          # Edupage api explanation
+│   ├── architecture.md                 # Site functionality explanation
+│   └── development.md                  # Site development guide            
+├── src/     
+│   ├── JS                              # JavaScript source
+│   │   ├── cookieHelper.js             # Everything to do with cookies   
+│   │   ├── exporting.js                # Exporting logic
+│   │   ├── proteraRules.js             # ProTERA specific rules (Maybe refactor later)
+│   │   ├── script.js                   # Main orchestrator
+│   │   ├── timetableConstruction.js    # Creating the timetable and setting break times etc.
+│   │   ├── timetableDataLoading.js     # Loads timetable data
+│   │   ├── timetableDrawing.js         # Showing the timetable to the user
+│   │   ├── timetableHelper.js          # Other minor functions
+│   │   └── utils.js                    # General purpose utility functions
 │   └── styles/
-│       ├── index.css            # Main styles
-│       └── dev.css              # Development styles
-├── assets/                      # Static assets (fonts)
-├── generate-data.mjs            # Data generation script
-├── index.html                   # Main HTML file
-├── package.json                 # Node.js dependencies
-└── README.md                    # Project documentation
+│       ├── index.css                   # Main styles
+│       └── dev.css                     # Development styles
+├── assets/                             # Static assets (fonts, images etc.)
+├── generate-data.mjs                   # Data generation script
+├── index.html                          # Main HTML file
+├── package.json                        # Node.js dependencies
+└── README.md                           # Project documentation
 ```
 
 ## Development Workflow
@@ -76,7 +85,7 @@ ls -la data/
 ```bash
 git add .
 git commit -m "Description of changes"
-git push origin main
+git push origin dev
 ```
 
 ## Key Components

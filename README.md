@@ -18,14 +18,14 @@ The application fetches timetable data from the school's Edupage system, process
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   GitHub Actions │    │   Data Generation │    │   Static Files  │
-│   (Daily/Scheduled)│───▶│   Script        │───▶│   (data/*.json) │
+│  GitHub Actions │    │  Data Generation │    │   Static Files  │
+|    (Weekly)     │───▶│      Script      │───▶│   (data/*.json) │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
                                                         │
                                                         ▼
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   User Browser  │    │   Client-side JS │    │   Rendered TT   │
-│   (GitHub Pages)│◀───│   (timetableHelper.js)│◀───│   (HTML/CSS) │
+│   User Browser  │    │   Rendered TT    │    │  TT generation  │
+│  (GitHub Pages) │◀───│      (HTML)      │◀───│   (in src/JS)   │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
 ```
 
@@ -39,19 +39,18 @@ The application fetches timetable data from the school's Edupage system, process
 ### Creating a Timetable
 1. Visit the application
 2. Click "Koosta tunniplaan" (Create Timetable)
-3. Select your desired timetable period
-4. Choose your class and groups
-5. The timetable will be generated and displayed
+3. Choose your class and groups
+4. The timetable will be generated and displayed
 
 ### Sharing Timetables
 - **Via Link**: Click "Jaga" to generate a shareable link containing your selections
-- **Via Code**: Share the generated code for others to input manually
+- **Via Download**: Click "Lae alla" to download the generated timetable as a png.
 
 ## Data Privacy
 
 - Group selections are stored in browser cookies
-- Sharing via link transmits group data to the server (GitHub Pages)
-- For maximum privacy, share codes instead of links or communicate groups verbally
+- Sharing via link encodes group data in the URL
+- Data is only shared when you choose to do so
 
 ## Development
 
@@ -64,17 +63,19 @@ The application fetches timetable data from the school's Edupage system, process
 git clone https://github.com/mk4i/tt.git
 cd tt
 npm install
-npm run generate  # Generate timetable data
+
+# Generate timetable data, if current dataset isn't to your liking.
+npm run generate  
 # Open index.html in browser
 ```
 
 ### Data Generation
-The `generate-data.mjs` script fetches timetable data from TERA school's Edupage system and saves it as JSON files.
+The `generate-data.mjs` script fetches timetable data from TERA (or any other school if you change the subdomain variable) school's Edupage system and saves it as JSON files.
 
 ### Deployment
 - Push to `main` branch to trigger GitHub Actions
-- Data is automatically updated daily
-- Site is hosted on GitHub Pages
+- Data is automatically updated weekly (cron: "1 0 * * 0" -> 00:01 on sundays)
+- Site is hosted on GitHub Pages at [https://hacker30083.github.io/tt](https://hacker30083.github.io/tt)
 
 ## Architecture Details
 
