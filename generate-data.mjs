@@ -1,44 +1,25 @@
-import axios from 'axios';
+import fetch from 'node-fetch';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const REQUEST_TIMEOUT_MS = 15000;
-const MAX_FETCH_ATTEMPTS = 3;
 
 /**
  * Builds HTTP headers that emulate a browser request.
  *
- * @param {string} referer - Referer URL.
  * @returns {Record<string, string>} Request headers.
  */
-export function buildBrowserHeaders(referer) {
-	const origin = new URL(referer).origin;
-
+export function buildBrowserHeaders() {
 	const headers = {
 		"Accept": "*/*",
 		"Accept-Language": "en-GB,en;q=0.9,et-EE;q=0.8,et;q=0.7,en-US;q=0.6",
 		"Content-Type": "application/json; charset=UTF-8",
-		"Origin": origin,
-		"Referer": referer,
-		"Sec-Fetch-Dest": "empty",
-		"Sec-Fetch-Mode": "cors",
-		"Sec-Fetch-Site": "same-origin",
-		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0",
-		"X-Requested-With": "XMLHttpRequest",
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
 	};
 
 	return headers;
-}
-
-function sleep(ms) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function isRetryableNetworkError(error) {
-	return ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "EAI_AGAIN"].includes(error?.code);
 }
 
 export function hasCachedTimetableData(dataDir = join(__dirname, "data")) {
@@ -50,43 +31,21 @@ export function hasCachedTimetableData(dataDir = join(__dirname, "data")) {
  *
  * @param {string} url - Edupage endpoint URL.
  * @param {object} body - JSON-serializable request payload.
- * @param {string} referer - Referer context for header compatibility.
  * @returns {Promise<any>} Parsed JSON response.
  * @throws {Error} If the response is not successful.
  */
-export async function postEdupage(url, body, referer) {
-	let lastError;
+export async function postEdupage(url, body) {
+	const response = await fetch(url, {
+		method: "POST",
+		headers: buildBrowserHeaders(),
+		body: JSON.stringify(body)
+	});
 
-	for (let attempt = 1; attempt <= MAX_FETCH_ATTEMPTS; attempt += 1) {
-		try {
-			const response = await axios.post(url, body, {
-				family: 4,
-				headers: buildBrowserHeaders(referer),
-				maxRedirects: 5,
-				timeout: REQUEST_TIMEOUT_MS,
-				validateStatus: () => true
-			});
-
-			if (response.status < 200 || response.status >= 300) {
-				throw new Error(`Request failed (${response.status} ${response.statusText}) for ${url}`);
-			}
-
-			return response.data;
-		} catch (error) {
-			lastError = error?.code === "ECONNABORTED"
-				? Object.assign(new Error(`Request timed out after ${REQUEST_TIMEOUT_MS}ms`), { code: "ETIMEDOUT" })
-				: error;
-
-			if (attempt === MAX_FETCH_ATTEMPTS || !isRetryableNetworkError(lastError)) {
-				break;
-			}
-
-			console.warn(`Retrying ${url} (attempt ${attempt + 1}/${MAX_FETCH_ATTEMPTS}) after ${lastError.code}`);
-			await sleep(1000 * attempt);
-		}
+	if (!response.ok) {
+		throw new Error(`Request failed (${response.status} ${response.statusText}) for ${url}`);
 	}
 
-	throw lastError;
+	return response.json();
 }
 
 
@@ -108,7 +67,7 @@ export async function fetchTimetables(subDomain) {
 	};
 
 	try {
-		return await postEdupage(url, body, `https://${subDomain}.edupage.org/timetable/`);
+		return await postEdupage(url, body);
 	} catch (err) {
 		console.error("fetchTimetables failed:", err);
 		throw err;
@@ -172,7 +131,7 @@ export async function fetchTimetableByID(timeTableID) {
 	};
 
 	try {
-		return await postEdupage(url, body, "https://tera.edupage.org/timetable/");
+		return await postEdupage(url, body);
 	} catch (err) {
 		console.error("fetchTimetableByID failed:", err);
 		throw err;
