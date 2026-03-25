@@ -33,13 +33,13 @@ describe("generate-data", () => {
 			json: async () => payload
 		});
 
-		const result = await postEdupage("https://example.com/api", { test: true }, "https://example.com");
+		const result = await postEdupage("https://example.com/api", { test: true });
 
-		expect(fetchMock).toHaveBeenCalledWith("https://example.com/api", expect.objectContaining({
+		expect(fetchMock).toHaveBeenCalledWith("https://example.com/api", {
 			method: "POST",
-			headers: buildBrowserHeaders("https://example.com"),
+			headers: buildBrowserHeaders(),
 			body: JSON.stringify({ test: true })
-		}));
+		});
 		expect(result).toEqual(payload);
 	});
 
@@ -55,28 +55,18 @@ describe("generate-data", () => {
 		expect(fetchMock.mock.calls[0][0]).toBe(
 			"https://tera.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData"
 		);
-		expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
-			__args: [null, new Date().getFullYear() - 1],
-			__gsh: "00000000"
+		expect(fetchMock.mock.calls[0][1]).toEqual({
+			method: "POST",
+			headers: buildBrowserHeaders(),
+			body: JSON.stringify({
+				__args: [null, new Date().getFullYear() - 1],
+				__gsh: "00000000"
+			})
 		});
 	});
 
-	it("retries transient network errors before succeeding", async () => {
-		fetchMock
-			.mockRejectedValueOnce(Object.assign(new Error("timeout"), { code: "ETIMEDOUT" }))
-			.mockResolvedValueOnce({
-				ok: true,
-				json: async () => ({ ok: true })
-			});
-
-		const result = await postEdupage("https://example.com/api", { test: true }, "https://example.com");
-
-		expect(fetchMock).toHaveBeenCalledTimes(2);
-		expect(result).toEqual({ ok: true });
-	});
-
 	it("uses cached data when the remote timetable list cannot be fetched", async () => {
-		fetchMock.mockRejectedValue(Object.assign(new Error("timeout"), { code: "ETIMEDOUT" }));
+		fetchMock.mockRejectedValue(new Error("network"));
 		existsSyncMock.mockReturnValue(true);
 
 		await expect(generateData("tera", "/tmp/data")).resolves.toBeUndefined();
