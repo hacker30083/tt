@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import axios from 'axios';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -58,24 +58,21 @@ export async function postEdupage(url, body, referer) {
 	let lastError;
 
 	for (let attempt = 1; attempt <= MAX_FETCH_ATTEMPTS; attempt += 1) {
-		const controller = new AbortController();
-		const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-
 		try {
-			const response = await fetch(url, {
-				method: "POST",
+			const response = await axios.post(url, body, {
 				headers: buildBrowserHeaders(referer),
-				body: JSON.stringify(body),
-				signal: controller.signal
+				maxRedirects: 5,
+				timeout: REQUEST_TIMEOUT_MS,
+				validateStatus: () => true
 			});
 
-			if (!response.ok) {
+			if (response.status < 200 || response.status >= 300) {
 				throw new Error(`Request failed (${response.status} ${response.statusText}) for ${url}`);
 			}
 
-			return await response.json();
+			return response.data;
 		} catch (error) {
-			lastError = error?.name === "AbortError"
+			lastError = error?.code === "ECONNABORTED"
 				? Object.assign(new Error(`Request timed out after ${REQUEST_TIMEOUT_MS}ms`), { code: "ETIMEDOUT" })
 				: error;
 
@@ -85,8 +82,6 @@ export async function postEdupage(url, body, referer) {
 
 			console.warn(`Retrying ${url} (attempt ${attempt + 1}/${MAX_FETCH_ATTEMPTS}) after ${lastError.code}`);
 			await sleep(1000 * attempt);
-		} finally {
-			clearTimeout(timeout);
 		}
 	}
 
