@@ -11,16 +11,23 @@ const MAX_FETCH_ATTEMPTS = 3;
 /**
  * Builds HTTP headers that emulate a browser request.
  *
- * @param {string} referer - Referer URL (kept for compatibility, not used).
+ * @param {string} referer - Referer URL.
  * @returns {Record<string, string>} Request headers.
  */
 export function buildBrowserHeaders(referer) {
+	const origin = new URL(referer).origin;
 
 	const headers = {
 		"Accept": "*/*",
 		"Accept-Language": "en-GB,en;q=0.9,et-EE;q=0.8,et;q=0.7,en-US;q=0.6",
 		"Content-Type": "application/json; charset=UTF-8",
-		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+		"Origin": origin,
+		"Referer": referer,
+		"Sec-Fetch-Dest": "empty",
+		"Sec-Fetch-Mode": "cors",
+		"Sec-Fetch-Site": "same-origin",
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0",
+		"X-Requested-With": "XMLHttpRequest",
 	};
 
 	return headers;
