@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const REQUEST_TIMEOUT_MS = 15000;
+const MAX_FETCH_ATTEMPTS = 3;
 
 /**
  * Builds HTTP headers that emulate a browser request.
@@ -24,6 +26,18 @@ export function buildBrowserHeaders(referer) {
 	return headers;
 }
 
+function sleep(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isRetryableNetworkError(error) {
+	return ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "EAI_AGAIN"].includes(error?.code);
+}
+
+export function hasCachedTimetableData(dataDir = join(__dirname, "data")) {
+	return existsSync(join(dataDir, "timetables.json"));
+}
+
 /**
  * Sends a POST request to an Edupage endpoint and returns parsed JSON.
  *
@@ -34,17 +48,42 @@ export function buildBrowserHeaders(referer) {
  * @throws {Error} If the response is not successful.
  */
 export async function postEdupage(url, body, referer) {
-	const response = await fetch(url, {
-		method: "POST",
-		headers: buildBrowserHeaders(referer),
-		body: JSON.stringify(body)
-	});
+	let lastError;
 
-	if (!response.ok) {
-		throw new Error(`Request failed (${response.status} ${response.statusText}) for ${url}`);
+	for (let attempt = 1; attempt <= MAX_FETCH_ATTEMPTS; attempt += 1) {
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+		try {
+			const response = await fetch(url, {
+				method: "POST",
+				headers: buildBrowserHeaders(referer),
+				body: JSON.stringify(body),
+				signal: controller.signal
+			});
+
+			if (!response.ok) {
+				throw new Error(`Request failed (${response.status} ${response.statusText}) for ${url}`);
+			}
+
+			return await response.json();
+		} catch (error) {
+			lastError = error?.name === "AbortError"
+				? Object.assign(new Error(`Request timed out after ${REQUEST_TIMEOUT_MS}ms`), { code: "ETIMEDOUT" })
+				: error;
+
+			if (attempt === MAX_FETCH_ATTEMPTS || !isRetryableNetworkError(lastError)) {
+				break;
+			}
+
+			console.warn(`Retrying ${url} (attempt ${attempt + 1}/${MAX_FETCH_ATTEMPTS}) after ${lastError.code}`);
+			await sleep(1000 * attempt);
+		} finally {
+			clearTimeout(timeout);
+		}
 	}
 
-	return response.json();
+	throw lastError;
 }
 
 
@@ -71,6 +110,48 @@ export async function fetchTimetables(subDomain) {
 		console.error("fetchTimetables failed:", err);
 		throw err;
 	}
+}
+
+export async function generateData(subDomain = "tera", dataDir = join(__dirname, "data")) {
+	console.log("Fetching timetables...");
+
+	let timetablesList;
+	try {
+		timetablesList = await fetchTimetables(subDomain);
+	} catch (err) {
+		if (hasCachedTimetableData(dataDir)) {
+			console.warn("Using cached timetable data because Edupage is currently unavailable.");
+			return;
+		}
+
+		throw err;
+	}
+
+	const sortedTimetables = sortTimetables(timetablesList);
+	const proTeraTimetables = sortedTimetables.filter((tt) =>
+		typeof tt.text === "string" && tt.text.includes("ProTERA")
+	);
+
+	console.log(`Found ${proTeraTimetables.length} ProTERA timetables`);
+
+	if (!existsSync(dataDir)) {
+		mkdirSync(dataDir);
+	}
+
+	writeFileSync(join(dataDir, "timetables.json"), JSON.stringify(proTeraTimetables, null, 2));
+
+	for (const tt of proTeraTimetables) {
+		console.log(`Fetching data for timetable ${tt.tt_num}: ${tt.text}`);
+		try {
+			const detailedData = await fetchTimetableByID(tt.tt_num);
+			const structuredData = filterData(detailedData);
+			writeFileSync(join(dataDir, `${tt.tt_num}.json`), JSON.stringify(structuredData, null, 2));
+		} catch (err) {
+			console.error(`Failed to fetch data for ${tt.tt_num}:`, err.message);
+		}
+	}
+
+	console.log("Data generation complete");
 }
 
 /**
@@ -217,37 +298,7 @@ export function filterData(requestedTimetable) {
  */
 async function main() {
 	try {
-		console.log("Fetching timetables...");
-		const timetablesList = await fetchTimetables("tera");
-		const sortedTimetables = sortTimetables(timetablesList);
-		const proTeraTimetables = sortedTimetables.filter((tt) =>
-			typeof tt.text === "string" && tt.text.includes("ProTERA")
-		);
-
-		console.log(`Found ${proTeraTimetables.length} ProTERA timetables`);
-
-		// Ensure data directory exists
-		const dataDir = join(__dirname, "data");
-		if (!existsSync(dataDir)) {
-			mkdirSync(dataDir);
-		}
-
-		// Save the list of timetables
-		writeFileSync(join(dataDir, "timetables.json"), JSON.stringify(proTeraTimetables, null, 2));
-
-		// Fetch and save detailed data for each timetable
-		for (const tt of proTeraTimetables) {
-			console.log(`Fetching data for timetable ${tt.tt_num}: ${tt.text}`);
-			try {
-				const detailedData = await fetchTimetableByID(tt.tt_num);
-				const structuredData = filterData(detailedData);
-				writeFileSync(join(dataDir, `${tt.tt_num}.json`), JSON.stringify(structuredData, null, 2));
-			} catch (err) {
-				console.error(`Failed to fetch data for ${tt.tt_num}:`, err.message);
-			}
-		}
-
-		console.log("Data generation complete");
+		await generateData();
 	} catch (err) {
 		console.error("Error:", err);
 		process.exit(1);
