@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
  * @param {string} referer - Referer URL (kept for compatibility, not used).
  * @returns {Record<string, string>} Request headers.
  */
-function buildBrowserHeaders(referer) {
+export function buildBrowserHeaders(referer) {
 
 	const headers = {
 		"Accept": "*/*",
@@ -33,7 +33,7 @@ function buildBrowserHeaders(referer) {
  * @returns {Promise<any>} Parsed JSON response.
  * @throws {Error} If the response is not successful.
  */
-async function postEdupage(url, body, referer) {
+export async function postEdupage(url, body, referer) {
 	const response = await fetch(url, {
 		method: "POST",
 		headers: buildBrowserHeaders(referer),
@@ -56,7 +56,7 @@ async function postEdupage(url, body, referer) {
  * @param {string} subDomain - Edupage subdomain (for example, "tera").
  * @returns {Promise<any>} Raw timetable list response.
  */
-async function fetchTimetables(subDomain) {
+export async function fetchTimetables(subDomain) {
 	const url = `https://${subDomain}.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData`;
 
 	
@@ -79,7 +79,7 @@ async function fetchTimetables(subDomain) {
  * @param {string|number} timeTableID - Timetable identifier.
  * @returns {Promise<any>} Raw detailed timetable response.
  */
-async function fetchTimetableByID(timeTableID) {
+export async function fetchTimetableByID(timeTableID) {
 	const url = "https://tera.edupage.org/timetable/server/regulartt.js?__func=regularttGetData";
 
 	const body = {
@@ -101,7 +101,7 @@ async function fetchTimetableByID(timeTableID) {
  * @param {any} timetablesList - Raw timetable list response.
  * @returns {Array<any>} Latest active timetables grouped by prefix.
  */
-function sortTimetables(timetablesList) {
+export function sortTimetables(timetablesList) {
 	const timetablesArray = timetablesList.r.regular.timetables;
 	// Step 1: Group timetables by first word in name
 	const groups = {};
@@ -140,7 +140,7 @@ function sortTimetables(timetablesList) {
  * @param {any} requestedTimetable - Raw timetable detail response.
  * @returns {object} Structured maps and arrays used by the frontend.
  */
-function filterData(requestedTimetable) {
+export function filterData(requestedTimetable) {
 	if (!requestedTimetable || !requestedTimetable.r || !requestedTimetable.r.dbiAccessorRes) {
 		console.warn("filterData: Invalid or missing timetable data, returning empty structure");
 		return {
@@ -254,4 +254,6 @@ async function main() {
 	}
 }
 
-main();
+if (process.argv[1] === __filename) {
+	main();
+}

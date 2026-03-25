@@ -6,7 +6,7 @@ vi.mock("../src/JS/timetableHelper.js", () => ({
 }));
 
 import { fetchTimetables, sortTimetables } from "../src/JS/timetableHelper.js";
-import { initializeLocalData, loadTimetables } from "../src/JS/dataLoading.js";
+import { initializeLocalData, loadTimetables } from "../src/JS/timetableDataLoading.js";
 
 describe("dataLoading", () => {
 	beforeEach(() => {
