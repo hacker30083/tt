@@ -60,6 +60,7 @@ export async function postEdupage(url, body, referer) {
 	for (let attempt = 1; attempt <= MAX_FETCH_ATTEMPTS; attempt += 1) {
 		try {
 			const response = await axios.post(url, body, {
+				family: 4,
 				headers: buildBrowserHeaders(referer),
 				maxRedirects: 5,
 				timeout: REQUEST_TIMEOUT_MS,

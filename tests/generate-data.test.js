@@ -38,6 +38,7 @@ describe("generate-data", () => {
 		const result = await postEdupage("https://example.com/api", { test: true }, "https://example.com");
 
 		expect(axiosPostMock).toHaveBeenCalledWith("https://example.com/api", { test: true }, expect.objectContaining({
+			family: 4,
 			headers: buildBrowserHeaders("https://example.com"),
 			timeout: 15000
 		}));
