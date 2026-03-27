@@ -1,12 +1,14 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-const fetchMock = vi.fn();
+const axiosPostMock = vi.fn();
 const existsSyncMock = vi.fn();
 const mkdirSyncMock = vi.fn();
 const writeFileSyncMock = vi.fn();
 
-vi.mock("node-fetch", () => ({
-	default: fetchMock
+vi.mock("axios", () => ({
+	default: {
+		post: axiosPostMock
+	}
 }));
 
 vi.mock("node:fs", () => ({
@@ -20,7 +22,7 @@ const { buildBrowserHeaders, fetchTimetables, generateData, hasCachedTimetableDa
 
 describe("generate-data", () => {
 	afterEach(() => {
-		fetchMock.mockReset();
+		axiosPostMock.mockReset();
 		existsSyncMock.mockReset();
 		mkdirSyncMock.mockReset();
 		writeFileSyncMock.mockReset();
@@ -28,45 +30,58 @@ describe("generate-data", () => {
 
 	it("posts Edupage requests as JSON and returns parsed data", async () => {
 		const payload = { r: { regular: { timetables: [] } } };
-		fetchMock.mockResolvedValue({
-			ok: true,
-			json: async () => payload
+		axiosPostMock.mockResolvedValue({
+			status: 200,
+			data: payload
 		});
 
-		const result = await postEdupage("https://example.com/api", { test: true });
+		const result = await postEdupage("https://example.com/api", { test: true }, "https://example.com");
 
-		expect(fetchMock).toHaveBeenCalledWith("https://example.com/api", {
-			method: "POST",
-			headers: buildBrowserHeaders(),
-			body: JSON.stringify({ test: true })
-		});
+		expect(axiosPostMock).toHaveBeenCalledWith(
+			"https://example.com/api",
+			{ test: true },
+			expect.objectContaining({
+				headers: buildBrowserHeaders("https://example.com"),
+				timeout: 15000
+			})
+		);
 		expect(result).toEqual(payload);
 	});
 
 	it("fetchTimetables requests the current school year payload shape", async () => {
-		fetchMock.mockResolvedValue({
-			ok: true,
-			json: async () => ({ ok: true })
+		axiosPostMock.mockResolvedValue({
+			status: 200,
+			data: { ok: true }
 		});
 
 		await fetchTimetables("tera");
 
-		expect(fetchMock).toHaveBeenCalledTimes(1);
-		expect(fetchMock.mock.calls[0][0]).toBe(
+		expect(axiosPostMock).toHaveBeenCalledTimes(1);
+		expect(axiosPostMock.mock.calls[0][0]).toBe(
 			"https://tera.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData"
 		);
-		expect(fetchMock.mock.calls[0][1]).toEqual({
-			method: "POST",
-			headers: buildBrowserHeaders(),
-			body: JSON.stringify({
-				__args: [null, new Date().getFullYear() - 1],
-				__gsh: "00000000"
-			})
+		expect(axiosPostMock.mock.calls[0][1]).toEqual({
+			__args: [null, new Date().getFullYear() - 1],
+			__gsh: "00000000"
 		});
 	});
 
+	it("retries transient network errors before succeeding", async () => {
+		axiosPostMock
+			.mockRejectedValueOnce(Object.assign(new Error("timeout"), { code: "ETIMEDOUT" }))
+			.mockResolvedValueOnce({
+				status: 200,
+				data: { ok: true }
+			});
+
+		const result = await postEdupage("https://example.com/api", { test: true }, "https://example.com");
+
+		expect(axiosPostMock).toHaveBeenCalledTimes(2);
+		expect(result).toEqual({ ok: true });
+	});
+
 	it("uses cached data when the remote timetable list cannot be fetched", async () => {
-		fetchMock.mockRejectedValue(new Error("network"));
+		axiosPostMock.mockRejectedValue(Object.assign(new Error("timeout"), { code: "ETIMEDOUT" }));
 		existsSyncMock.mockReturnValue(true);
 
 		await expect(generateData("tera", "/tmp/data")).resolves.toBeUndefined();
