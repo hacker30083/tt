@@ -14,7 +14,7 @@ on:
     - cron: "1 0 * * 0"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   generate-data:
@@ -25,7 +25,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          ssh-key: ${{ secrets.DATA_PUSH_SSH_KEY }}
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -46,10 +47,11 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git remote set-url origin git@github.com:hacker30083/tt.git
           git add data/
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
             git commit -m "Update timetable data"
-            git push
+            git push origin HEAD:main
           fi
