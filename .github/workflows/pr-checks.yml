@@ -10,6 +10,9 @@ on:
       - reopened
       - ready_for_review
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 permissions:
   contents: read
 
