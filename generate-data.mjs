@@ -58,6 +58,8 @@ export async function postEdupage(url, body, referer) {
 	let lastError;
 
 	for (let attempt = 1; attempt <= MAX_FETCH_ATTEMPTS; attempt += 1) {
+		const attemptStartedAt = Date.now();
+
 		try {
 			const response = await axios.post(url, body, {
 				family: 4,
@@ -66,16 +68,58 @@ export async function postEdupage(url, body, referer) {
 				timeout: REQUEST_TIMEOUT_MS,
 				validateStatus: () => true
 			});
+			const elapsedMs = Date.now() - attemptStartedAt;
 
 			if (response.status < 200 || response.status >= 300) {
-				throw new Error(`Request failed (${response.status} ${response.statusText}) for ${url}`);
+				const httpError = new Error(`Request failed (${response.status} ${response.statusText}) for ${url}`);
+				httpError.code = "HTTP_ERROR";
+				httpError.responseStatus = response.status;
+				httpError.responseStatusText = response.statusText;
+				httpError.elapsedMs = elapsedMs;
+				throw httpError;
 			}
 
+			console.log(`Fetched ${url} in ${elapsedMs}ms on attempt ${attempt}/${MAX_FETCH_ATTEMPTS}`);
 			return response.data;
 		} catch (error) {
+			const elapsedMs = Date.now() - attemptStartedAt;
 			lastError = error?.code === "ECONNABORTED"
-				? Object.assign(new Error(`Request timed out after ${REQUEST_TIMEOUT_MS}ms`), { code: "ETIMEDOUT" })
+				? Object.assign(new Error(`Request timed out after ${REQUEST_TIMEOUT_MS}ms`), { code: "ETIMEDOUT", elapsedMs })
 				: error;
+
+			if (lastError && typeof lastError === "object" && lastError.elapsedMs == null) {
+				lastError.elapsedMs = elapsedMs;
+			}
+
+			const errorDetails = {
+				attempt,
+				maxAttempts: MAX_FETCH_ATTEMPTS,
+				code: lastError?.code ?? "UNKNOWN",
+				message: lastError?.message ?? String(lastError),
+				elapsedMs,
+			};
+
+			if (lastError?.responseStatus != null) {
+				errorDetails.responseStatus = lastError.responseStatus;
+			}
+
+			if (lastError?.responseStatusText) {
+				errorDetails.responseStatusText = lastError.responseStatusText;
+			}
+
+			if (lastError?.address) {
+				errorDetails.address = lastError.address;
+			}
+
+			if (lastError?.port) {
+				errorDetails.port = lastError.port;
+			}
+
+			if (lastError?.hostname) {
+				errorDetails.hostname = lastError.hostname;
+			}
+
+			console.warn(`Edupage request failed for ${url}:`, errorDetails);
 
 			if (attempt === MAX_FETCH_ATTEMPTS || !isRetryableNetworkError(lastError)) {
 				break;
