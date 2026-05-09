@@ -14,7 +14,7 @@ on:
     - cron: "1 0 * * 0"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   generate-data:
@@ -25,8 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          ssh-key: ${{ secrets.DATA_PUSH_SSH_KEY }}
-          persist-credentials: false
+          ref: main
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -47,7 +46,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git remote set-url origin git@github.com:hacker30083/tt.git
           git add data/
           if git diff --staged --quiet; then
             echo "No changes to commit"
