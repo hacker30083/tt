@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("../src/JS/timetableHelper.js", () => ({
+vi.mock("../src/lib/timetableHelper", () => ({
 	fetchTimetables: vi.fn(),
 	sortTimetables: vi.fn()
 }));
 
-import { fetchTimetables, sortTimetables } from "../src/JS/timetableHelper.js";
-import { initializeLocalData, loadTimetables } from "../src/JS/timetableDataLoading.js";
+import { fetchTimetables, sortTimetables } from "../src/lib/timetableHelper";
+import { initializeLocalData, loadTimetables } from "../src/lib/timetableDataLoading";
 
 describe("dataLoading", () => {
 	beforeEach(() => {
@@ -27,17 +27,10 @@ describe("dataLoading", () => {
 	});
 
 	it("parses local pkt and tt text files", async () => {
-		const originalFetch = global.fetch;
-		global.fetch = vi
-			.fn()
-			.mockResolvedValueOnce({
-				text: async () => "Math|09:00|09:35|201|Teacher\n# comment\nChem|10:40|11:15|302|Other"
-			})
-			.mockResolvedValueOnce({
-				text: async () => "raw-timetable-content"
-			});
-
-		const result = await initializeLocalData();
+		const result = await initializeLocalData({
+			pktText: "Math|09:00|09:35|201|Teacher\n# comment\nChem|10:40|11:15|302|Other",
+			ttcText: "raw-timetable-content"
+		});
 
 		expect(result.pkt).toHaveLength(2);
 		expect(result.pkt[0]).toEqual({
@@ -48,16 +41,11 @@ describe("dataLoading", () => {
 			n: "Teacher"
 		});
 		expect(result.ttc).toBe("raw-timetable-content");
-		global.fetch = originalFetch;
 	});
 
 	it("returns defaults when local files fail to load", async () => {
-		const originalFetch = global.fetch;
-		global.fetch = vi.fn().mockRejectedValue(new Error("network"));
-
-		const result = await initializeLocalData();
+		const result = await initializeLocalData({});
 
 		expect(result).toEqual({ pkt: [], ttc: null });
-		global.fetch = originalFetch;
 	});
 });

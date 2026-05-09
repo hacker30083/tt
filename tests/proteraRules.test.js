@@ -4,7 +4,7 @@ import {
 	adjustLessonPlacementForProTERA,
 	isLiikumisopetusTitle,
 	scanThirdLessonPatterns
-} from "../src/JS/proteraRules.js";
+} from "../src/lib/proteraRules";
 
 describe("proteraRules", () => {
 	it("detects liikumisopetus titles accent-insensitively", () => {

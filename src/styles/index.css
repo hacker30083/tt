@@ -1,13 +1,13 @@
 @font-face {
 	font-family: "Inter";
 	src:
-		url("/assets/font/Inter/InterVariable.ttf") format("truetype"),
+		url("../../assets/font/Inter/InterVariable.ttf") format("truetype"),
 }
 
 @font-face {
 	font-family: "Exo_2";
 	src:
-		url("/assets/font/Exo_2/Exo2-VariableFont_wght.ttf") format("truetype"),
+		url("../../assets/font/Exo_2/Exo2-VariableFont_wght.ttf") format("truetype"),
 }
 
 :root {
@@ -360,6 +360,8 @@ input[type=range]:active::-moz-range-thumb {
 	top: 22%;
 	font-weight: 600;
 	font-size: calc(3 * var(--w));
+	transform-origin: center center;
+	white-space: pre;
 }
 
 #tt .item time {
@@ -382,6 +384,7 @@ input[type=range]:active::-moz-range-thumb {
 	white-space: pre;
 	font-weight: 350;
 	line-height: 0;
+	transform-origin: center center;
 }
 
 #tt .bottom:is(.left) { left: 25%; }
@@ -415,4 +418,8 @@ input[type=range]:active::-moz-range-thumb {
 
 #tt .unhilighted {
 	opacity: 0.5;
+}
+
+#tt[data-exporting="true"] .unhilighted {
+	opacity: 1;
 }
