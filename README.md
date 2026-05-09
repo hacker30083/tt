@@ -24,15 +24,15 @@ The application fetches timetable data from the school's Edupage system, process
                                                         │
                                                         ▼
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   User Browser  │    │   Client-side JS │    │   Rendered TT   │
-│   (GitHub Pages)│◀───│   (timetableHelper.js)│◀───│   (HTML/CSS) │
+│   User Browser  │    │ Client-side React │    │   Rendered TT   │
+│   (GitHub Pages)│◀───│   (TS + Vite app) │◀───│   (HTML/CSS)   │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
 ```
 
 1. **Data Generation**: GitHub Actions runs daily to fetch latest timetable data from Edupage
 2. **Data Storage**: Structured JSON data saved to `data/` directory in the repository
 3. **Static Hosting**: GitHub Pages serves the static HTML, CSS, and JS files
-4. **Client Processing**: JavaScript loads data from static JSON files and generates timetables
+4. **Client Processing**: React + TypeScript loads the structured data and renders the timetable UI
 
 ## Usage
 
@@ -65,7 +65,7 @@ git clone https://github.com/mk4i/tt.git
 cd tt
 npm install
 npm run generate  # Generate timetable data
-# Open index.html in browser
+npm run dev
 ```
 
 ### Data Generation

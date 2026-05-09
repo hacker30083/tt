@@ -5,7 +5,7 @@ import {
 	getLessonsForGroup,
 	getSubjectsForDivision,
 	sortTimetables
-} from "../src/JS/timetableHelper.js";
+} from "../src/lib/timetableHelper";
 
 function makeRawTimetable() {
 	return {

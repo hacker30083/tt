@@ -56,18 +56,18 @@ The Timetable Generator is a static web application that provides an interface f
 
 #### HTML (`index.html`)
 - Single-page application entry point
-- Contains UI structure and Estonian text
-- Loads jQuery and custom JavaScript
+- Mounts the React application root
 
 #### CSS (`src/styles/index.css`, `src/styles/dev.css`)
 - Responsive design for timetable display
 - Theme variables for colors and fonts
 - Mobile-friendly layout
 
-#### JavaScript (`src/JS/`)
-- **script.js**: Main application logic, UI handling, setup flow
-- **timetableHelper.js**: Data fetching, processing, and timetable generation
-- **utils.js**: Utility functions (download, cookies)
+#### React + TypeScript (`src/`)
+- **App.tsx**: Main application logic and setup flow
+- **components/TimetableGrid.tsx**: Timetable grid rendering
+- **lib/**: Data loading, processing, export, and cookie helpers
+- **types/**: Shared timetable data contracts
 
 ### 3. Data Storage
 
@@ -201,7 +201,7 @@ data/
    - Clone repository
    - Run `npm install`
    - Execute `npm run generate` for data
-   - Open `index.html` in browser
+   - Run `npm run dev`
 
 2. **Testing**
    - Manual testing in browser
@@ -216,8 +216,8 @@ data/
 ## Dependencies
 
 ### Runtime
-- **jQuery 3.6.0**: DOM manipulation and AJAX
-- **Browser APIs**: fetch, localStorage, cookies
+- **React 19**: UI rendering and state management
+- **Browser APIs**: fetch, cookies, clipboard, fonts
 
 ### Development
 - **Node.js 18+**: Data generation
