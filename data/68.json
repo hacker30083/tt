@@ -308,18 +308,18 @@
       "edupageid": "-12",
       "classids": []
     },
-    "-125": {
-      "id": "-125",
+    "*23": {
+      "id": "*23",
       "nameprefix": "",
       "namesuffix": "",
-      "name": "Jürgenstein Triin",
-      "short": "TJ",
+      "name": "Hindrikson Annely",
+      "short": "AH",
       "bell": "",
       "color": "#00FFFF",
       "fontcolorprint": "",
       "fontcolorprint2": "",
       "customfields": [],
-      "edupageid": "-125",
+      "edupageid": "",
       "classids": []
     },
     "*24": {
@@ -10149,7 +10149,7 @@
       "id": "*229",
       "subjectid": "*40",
       "teacherids": [
-        "-125"
+        "*34"
       ],
       "groupids": [
         "*149"
@@ -10373,7 +10373,7 @@
       "id": "*236",
       "subjectid": "-6",
       "teacherids": [
-        "-125"
+        "*23"
       ],
       "groupids": [
         "*138"
@@ -10405,7 +10405,7 @@
       "id": "*237",
       "subjectid": "-18",
       "teacherids": [
-        "-125"
+        "*23"
       ],
       "groupids": [
         "*138"
@@ -10661,7 +10661,7 @@
       "id": "*245",
       "subjectid": "-6",
       "teacherids": [
-        "-125"
+        "*23"
       ],
       "groupids": [
         "*144"
@@ -10693,7 +10693,7 @@
       "id": "*246",
       "subjectid": "-18",
       "teacherids": [
-        "-125"
+        "*23"
       ],
       "groupids": [
         "*144"
@@ -10949,7 +10949,7 @@
       "id": "*254",
       "subjectid": "-6",
       "teacherids": [
-        "-125"
+        "*23"
       ],
       "groupids": [
         "*149"
@@ -10981,7 +10981,7 @@
       "id": "*255",
       "subjectid": "-18",
       "teacherids": [
-        "-125"
+        "*23"
       ],
       "groupids": [
         "*149"
@@ -11692,7 +11692,7 @@
         "-64",
         "-101",
         "*20",
-        "-125",
+        "*23",
         "*32",
         "*33",
         "*34",
@@ -11728,29 +11728,6 @@
       "classids": [],
       "count": 1,
       "durationperiods": 1,
-      "termsdefid": "*4",
-      "weeksdefid": "*3",
-      "daysdefid": "*6",
-      "terms": "11",
-      "seminargroup": null,
-      "bell": "",
-      "texts": null,
-      "studentids": [],
-      "groupnames": [],
-      "classdata": {}
-    },
-    {
-      "id": "*278",
-      "subjectid": "*50",
-      "teacherids": [
-        "-125",
-        "-131",
-        "-96"
-      ],
-      "groupids": [],
-      "classids": [],
-      "count": 1,
-      "durationperiods": 2,
       "termsdefid": "*4",
       "weeksdefid": "*3",
       "daysdefid": "*6",
@@ -14418,7 +14395,7 @@
       "days": "00010",
       "weeks": "1",
       "classroomids": [
-        "*3"
+        "*2"
       ]
     },
     {
@@ -14429,7 +14406,7 @@
       "days": "00010",
       "weeks": "1",
       "classroomids": [
-        "*2"
+        "*3"
       ]
     },
     {
@@ -15099,17 +15076,6 @@
       "days": "10000",
       "weeks": "1",
       "classroomids": []
-    },
-    {
-      "id": "*306",
-      "lessonid": "*278",
-      "locked": false,
-      "period": "3",
-      "days": "00100",
-      "weeks": "1",
-      "classroomids": [
-        "*2"
-      ]
     }
   ],
   "lessonsCardsMap": {
@@ -17602,7 +17568,7 @@
       "days": "00010",
       "weeks": "1",
       "classroomids": [
-        "*3"
+        "*2"
       ]
     },
     "*229": {
@@ -17613,7 +17579,7 @@
       "days": "00010",
       "weeks": "1",
       "classroomids": [
-        "*2"
+        "*3"
       ]
     },
     "*230": {
@@ -18140,17 +18106,6 @@
       "days": "10000",
       "weeks": "1",
       "classroomids": []
-    },
-    "*278": {
-      "id": "*306",
-      "lessonid": "*278",
-      "locked": false,
-      "period": "3",
-      "days": "00100",
-      "weeks": "1",
-      "classroomids": [
-        "*2"
-      ]
     }
   }
 }
