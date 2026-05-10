@@ -19,6 +19,7 @@ import type {
 const SELECTIONS_COOKIE_KEY = "tt_selection_v1";
 const SELECTIONS_COOKIE_DAYS = 7;
 const SUBDOMAIN = "tera";
+const COPYRIGHT_YEAR = 2026;
 
 type Page = "home" | "setup" | "timetable";
 type SetupResolver = {
@@ -30,6 +31,37 @@ interface SetupViewState {
 	pre: string;
 	options: SetupOption[];
 	defaultValue: string | number | null;
+}
+
+function AppFooter() {
+	return (
+		<footer className="site-footer">
+			<div className="site-footer_grid">
+			<div className="site-footer__section">
+				<h2 className="site-footer__title">GitHub</h2>
+				<p>
+					<a className="lnk" href="https://github.com/hacker30083/tt">Repository</a>
+				</p>
+				<p>
+					<a className="lnk" href="https://github.com/hacker30083/tt/blob/main/README.md">README</a>
+				</p>
+			</div>
+			<div className="site-footer__section">
+				<h2 className="site-footer__title">Kontakt</h2>
+				<p>
+					<a className="lnk" href="https://github.com/hacker30083">hacker30083+github@hotmail.com</a>
+				</p>
+				<p>
+					<a className="lnk" href="https://github.com/hacker30083/tt/issues">Issues</a>
+				</p>
+			</div>
+			</div>
+			<div className="site-footer__copyright">
+				<p>&copy; 2024-{COPYRIGHT_YEAR} mk4i and Kaspar Aun (hacker30083)</p>
+				<p>All rights reserved.</p>
+			</div>
+		</footer>
+	);
 }
 
 function getURLParams(url: string | URL): Record<string, string> {
@@ -491,6 +523,7 @@ export default function App() {
 					<button className="primary large" type="button" onClick={() => void setup()}>
 						Koosta →
 					</button>
+					<AppFooter />
 				</div>
 			</div>
 
@@ -517,6 +550,7 @@ export default function App() {
 							</button>
 						))}
 					</div>
+					<AppFooter />
 				</div>
 			</div>
 
@@ -538,9 +572,8 @@ export default function App() {
 					</div>
 				)}
 
-				<hr />
 
-				<div className="flex">
+				<div className="flex toolbar-grid">
 					<button type="button" onClick={() => void setup()}>Genereeri tunniplaan</button>
 					<button type="button" onClick={clearAll}>Kustuta küpsised</button>
 					<button type="button" onClick={() => void share()}>Kopeeri link</button>
@@ -552,6 +585,7 @@ export default function App() {
 					</button>
 					<button type="button" onClick={() => void downloadElementByID("tt")}>Laadi alla</button>
 				</div>
+				<AppFooter />
 			</div>
 		</>
 	);
