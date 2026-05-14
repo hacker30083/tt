@@ -85,6 +85,15 @@ a {
 	line-height: 1;
 	border-radius: 50%;
 	font-size: 1.2rem;
+	display: grid;
+	place-items: center;
+	text-align: center;
+}
+
+#share-warning .warning-close span {
+	display: block;
+	line-height: 1;
+	transform: translateY(-0.04em);
 }
 
 input {
@@ -159,7 +168,7 @@ input {
 }
 
 .site-footer {
-	width: min(100%, 42rem);
+	width: 100%;
 	margin-top: 1.5rem;
 	padding-top: 1rem;
 	border-top: 0.04rem solid var(--gray);
@@ -173,6 +182,8 @@ input {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 1rem;
+	padding-left: 1rem;
+	
 }
 
 .site-footer__section {
@@ -428,6 +439,8 @@ input[type=range]:active::-moz-range-thumb {
 	background-clip: text;
 	color: transparent;
 }
+
+/* Timetable */
 
 #timetable {
 	font-family: Exo_2;
