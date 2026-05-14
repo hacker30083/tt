@@ -31,7 +31,8 @@ The application integrates with the Edupage school's timetable system to fetch t
           "text": "ProTERA ja TERA gümnaasium 2025/2026 (12.01.2026-29.05.2026)",
           "datefrom": "2026-01-12",
           "hidden": false
-        }
+        },
+        ...
       ]
     }
   }
@@ -46,7 +47,7 @@ The application integrates with the Edupage school's timetable system to fetch t
 **Body**:
 ```json
 {
-  "__args": [null, "68"],
+  "__args": [null, "TIMETABLE_ID"],
   "__gsh": "00000000"
 }
 ```
@@ -106,7 +107,7 @@ The API uses a `__gsh` parameter which appears to be a session or API key. The v
 
 ## Rate Limiting
 
-Unknown. The application uses this API responsibly with automated daily fetches.
+Unknown. The application uses this API responsibly with automated weekly fetches.
 
 ## Error Handling
 
@@ -123,7 +124,7 @@ const timetables = await fetchTimetables("tera");
 
 ### Load Timetable Data
 ```javascript
-const structuredData = await fetchTimetableByID("68");
+const structuredData = await fetchTimetableByID("ID");
 ```
 
 ## Data Processing
@@ -141,5 +142,6 @@ Raw API data is processed into structured maps for efficient lookup:
 - `lessonsCards`: Array of time slot data
 - `lessonsCardsMap`: lessonid -> card object
 
-This structure enables fast timetable generation and filtering.</content>
+This structure enables fast timetable generation and filtering.
+</content>
 <parameter name="filePath">/Users/kasparaun/Documents/GitHub/tt/docs/api.md
