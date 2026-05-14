@@ -78,7 +78,7 @@ export function TimetableGrid({ items, highlighting }: { items: TimetableItem[];
 	}, [items, highlighting]);
 
 	return (
-		<div id="tt" ref={timetableRef}>
+		<div id="timetable" ref={timetableRef}>
 			<div className="num" style={{ gridColumn: "2 / span 2" }}>1</div>
 			<div className="num s" style={{ gridColumn: "4" }}>Amps</div>
 			<div className="num" style={{ gridColumn: "5 / span 2" }}>2</div>
@@ -100,7 +100,8 @@ export function TimetableGrid({ items, highlighting }: { items: TimetableItem[];
 					item.isBreak ? "break" : "lesson",
 					activeWeekday !== null && item.y !== activeWeekday ? "unhilighted" : "",
 					firstXPos[item.y] === item.x ? "first" : "",
-					lastXPos[item.y] === item.x ? "last" : ""
+					lastXPos[item.y] === item.x ? "last" : "",
+					item.w > 1 ? "wide" : ""
 				].filter(Boolean).join(" ");
 				const gridArea = item.w > 1
 					? `${item.y + 2} / ${item.x + 2} / span 1 / span ${item.w}`

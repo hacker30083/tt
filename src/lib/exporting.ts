@@ -83,7 +83,7 @@ export async function downloadElementByID(elementID: string): Promise<void> {
 				}
 			});
 
-			clonedDoc.querySelectorAll("#tt .item.lesson").forEach((item) => {
+			clonedDoc.querySelectorAll("#timetable .item.lesson").forEach((item) => {
 				if (!(item instanceof HTMLElement) || !clonedDoc.defaultView) {
 					return;
 				}
