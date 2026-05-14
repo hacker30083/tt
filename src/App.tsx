@@ -508,7 +508,7 @@ export default function App() {
 	return (
 		<>
 			<div className="page" id="home" style={{ display: page === "home" ? "" : "none" }}>
-				<div className="pd">
+				<div className="page-panel">
 					<h1 className="gradient-text" style={{ "--c1": "var(--fg)", "--c2": "var(--purple-fg)" } as CSSProperties}>
 						ProTERA ja TERA gümnaasiumi tunniplaani koostamise rakendus
 					</h1>
@@ -519,16 +519,15 @@ export default function App() {
 						<a className="lnk" href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Pop Vectors - Flaticon</a>
 					</p>
 				</div>
-				<div className="pd">
+				<div className="page-panel">
 					<button className="primary large" type="button" onClick={() => void setup()}>
 						Koosta →
 					</button>
-					<AppFooter />
 				</div>
 			</div>
 
 			<div className="page" id="setup" style={{ display: page === "setup" ? "" : "none" }}>
-				<div className="pd">
+				<div className="page-panel">
 					<div id="pre" dangerouslySetInnerHTML={{ __html: setupView.pre }} />
 					<hr />
 					<div className="flex opt">
@@ -537,7 +536,7 @@ export default function App() {
 						</button>
 					</div>
 				</div>
-				<div className="pd">
+				<div className="page-panel">
 					<div className="flex opt" id="opt">
 						{setupView.options.map((option) => (
 							<button
@@ -550,11 +549,10 @@ export default function App() {
 							</button>
 						))}
 					</div>
-					<AppFooter />
 				</div>
 			</div>
 
-			<div className="page" id="timetable" style={{ display: page === "timetable" ? "" : "none" }}>
+			<div className="page" id="timetable-page" style={{ display: page === "timetable" ? "" : "none" }}>
 				<TimetableGrid items={timetable} highlighting={highlighting} />
 				{!shareWarningDismissed && (
 					<div className="is" id="share-warning">
@@ -585,8 +583,8 @@ export default function App() {
 					</button>
 					<button type="button" onClick={() => void downloadElementByID("tt")}>Laadi alla</button>
 				</div>
-				<AppFooter />
 			</div>
+			<AppFooter />
 		</>
 	);
 }
