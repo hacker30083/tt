@@ -16,23 +16,21 @@ The application fetches timetable data from the school's Edupage system, process
 
 ### Architecture
 
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   GitHub Actions │    │   Data Generation │    │   Static Files  │
-│   (Daily/Scheduled)│───▶│   Script        │───▶│   (data/*.json) │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-                                                        │
-                                                        ▼
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   User Browser  │    │ Client-side React │    │   Rendered TT   │
-│   (GitHub Pages)│◀───│   (TS + Vite app) │◀───│   (HTML/CSS)   │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
+```mermaid
+flowchart TD
+    
+    A[Edupage] -->|Timetable data| B(Github Actions)
+    B --> |Formatted timetable data| C(Github repository)
+    D(Frontend code\n made with React and TS ) --> C
+    C --> E(Github Actions:\n build React app) 
+    E --> F(Github Pages) 
+    F--> G[hacker30083.github.io/tt]
+
 ```
 
-1. **Data Generation**: GitHub Actions runs daily to fetch latest timetable data from Edupage
+1. **Data Generation**: GitHub Actions runs weekly to fetch latest timetable data from Edupage
 2. **Data Storage**: Structured JSON data saved to `data/` directory in the repository
 3. **Static Hosting**: GitHub Pages serves the static HTML, CSS, and JS files
-4. **Client Processing**: React + TypeScript loads the structured data and renders the timetable UI
 
 ## Usage
 
@@ -45,13 +43,12 @@ The application fetches timetable data from the school's Edupage system, process
 
 ### Sharing Timetables
 - **Via Link**: Click "Jaga" to generate a shareable link containing your selections
-- **Via Code**: Share the generated code for others to input manually
+- **Via Image**: Click "Laadi alla" to download your timetable
 
 ## Data Privacy
 
 - Group selections are stored in browser cookies
 - Sharing via link transmits group data to the server (GitHub Pages)
-- For maximum privacy, share codes instead of links or communicate groups verbally
 
 ## Development
 
@@ -75,10 +72,6 @@ The `generate-data.mjs` script fetches timetable data from TERA school's Edupage
 - Push to `main` branch to trigger GitHub Actions
 - Data is automatically updated daily
 - Site is hosted on GitHub Pages
-
-## Architecture Details
-
-See [docs/architecture.md](docs/architecture.md) for detailed component descriptions.
 
 ## Documentation
 
