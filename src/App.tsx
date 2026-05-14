@@ -562,7 +562,7 @@ export default function App() {
 							aria-label="Peida teade"
 							onClick={() => setShareWarningDismissed(true)}
 						>
-							&times;
+							<span aria-hidden="true">&times;</span>
 						</button>
 						<p style={{ color: "var(--purple-fg)" }}>
 							Tähelepanu! Palun kontrolli tunniplaanis olevaid kellaaegu kuna selles võivad esineda vead. (Eriti gümnaasiumi õpilaste puhul)

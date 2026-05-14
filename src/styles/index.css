@@ -85,6 +85,15 @@ a {
 	line-height: 1;
 	border-radius: 50%;
 	font-size: 1.2rem;
+	display: grid;
+	place-items: center;
+	text-align: center;
+}
+
+#share-warning .warning-close span {
+	display: block;
+	line-height: 1;
+	transform: translateY(-0.04em);
 }
 
 input {
@@ -362,6 +371,8 @@ input[type=range]:active::-moz-range-thumb {
 	background-clip: text;
 	color: transparent;
 }
+
+/* Timetable */
 
 #timetable {
 	font-family: Exo_2;
