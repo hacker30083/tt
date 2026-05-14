@@ -5,25 +5,15 @@
 The Timetable Generator is a static web application that provides an interface for students to create personalized timetables from school data. The application has evolved from a server-based architecture to a fully static, GitHub Pages-hosted solution with automated data generation.
 
 ## High-Level Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    GitHub Repository                        │
-├─────────────────────────────────────────────────────────────┤
-│  ┌─────────────────┐  ┌──────────────────┐  ┌─────────────┐ │
-│  │  GitHub Actions │  │   Static Files   │  │  Data Files │ │
-│  │  (CI/CD)        │  │   (HTML/CSS/JS)  │  │  (JSON)     │ │
-│  └─────────────────┘  └──────────────────┘  └─────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-                                 │
-                                 ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    GitHub Pages                             │
-│  ┌─────────────────┐  ┌──────────────────┐  ┌─────────────┐ │
-│  │   User Browser  │  │   Client-side    │  │   Rendered  │ │
-│  │   (Requests)    │  │   JavaScript     │  │   Timetable │ │
-│  └─────────────────┘  └──────────────────┘  └─────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    
+    A[Edupage] -->|Timetable data| B(Github Actions)
+    B --> |Formatted timetable data| C(Github repository)
+    D(Frontend code\n made with React and TS ) --> C
+    C --> E(Github Actions:\n build React app) 
+    E --> F(Github Pages) 
+    F--> G[hacker30083.github.io/tt]
 ```
 
 ## Components
@@ -33,14 +23,14 @@ The Timetable Generator is a static web application that provides an interface f
 #### GitHub Actions Workflow (`.github/workflows/generate-data.yml`)
 - **Purpose**: Automated data fetching and processing
 - **Triggers**:
-  - Push to `main` branch
-  - Daily schedule (midnight UTC)
+  - Pushing a commit to `main` branch that affects data generation
+  - Weekly schedule (midnight on Saturday UTC)
 - **Steps**:
   1. Checkout repository
   2. Setup Node.js environment
-  3. Install dependencies (axios)
+  3. Install dependencies
   4. Run data generation script
-  5. Commit and push generated data
+  5. Commit and push generated data (If changes are present)
 
 #### Data Generation Script (`generate-data.mjs`)
 - **Language**: Node.js
@@ -139,17 +129,16 @@ data/
 ### Current Limitations
 - Only supports "tera" subdomain
 - API responses may change without notice
-- No error handling for API failures in production
 
 ## Deployment
 
 ### GitHub Pages
 - **Source**: `main` branch
-- **Build**: None (static hosting)
-- **URL**: `https://mk4i.github.io/tt/`
+- **Build**: `npm run build` (static hosting of the resulting files)
+- **URL**: `https://hacker30083.github.io/tt/`
 
 ### Build Process
-- No build step required
+- Build with `npm run build`
 - All assets served statically
 - Data updated via GitHub Actions
 
@@ -158,12 +147,11 @@ data/
 ### Data Privacy
 - User selections stored in browser cookies
 - Sharing via links exposes data in URL parameters
-- No server-side data storage
+- No server-side user data storage
 
 ### API Security
 - No authentication required for data fetching
 - Data is publicly available from Edupage
-- Potential for API rate limiting
 
 ## Performance
 
@@ -192,8 +180,7 @@ data/
 
 ### Features
 - Offline support (Service Worker)
-- Advanced filtering options
-- Export functionality (PDF, iCal)
+- Calendar export
 
 ## Development Workflow
 
@@ -207,6 +194,8 @@ data/
    - Manual testing in browser
    - Validate data generation
    - Check GitHub Actions logs
+   - Validate that `npm run build` also succeeds
+   - Run `npm run test` and verify everything succeeds
 
 3. **Deployment**
    - Push to `main` branch
