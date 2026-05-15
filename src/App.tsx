@@ -581,7 +581,7 @@ export default function App() {
 					<button type="button" onClick={() => setHighlightPreference()}>
 						Markeeri tänane tunniplaan: <span style={{ fontWeight: "bold" }}>{highlighting ? "jah" : "ei"}</span>
 					</button>
-					<button type="button" onClick={() => void downloadElementByID("tt")}>Laadi alla</button>
+					<button type="button" onClick={() => void downloadElementByID("timetable")}>Laadi alla</button>
 				</div>
 			</div>
 			<AppFooter />
