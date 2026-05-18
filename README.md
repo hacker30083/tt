@@ -118,5 +118,4 @@ Kui vajutad *Jaga*, koostab programm lingi ja koodi.
 
 Kui Sa ei soovi, et gruppide koosseisu info kõrvaliste isikute kätte satuks, on targem jagada ainult kood või lihtsalt öelda enda grupid otse teistele.
 
-Kood sisaldab gruppide koosseisu masinloetavas formaadis, kuid võimalik on sellelt grupid välja lugeda ka ilma programmi kasutamata. Lingis on kood parameetrina päringus (st `.../tt/?g=KOOD`).</content>
-<parameter name="filePath">/Users/kasparaun/Documents/GitHub/tt/README.md
+Kood sisaldab gruppide koosseisu masinloetavas formaadis, kuid võimalik on sellelt grupid välja lugeda ka ilma programmi kasutamata. Lingis on kood parameetrina päringus (st `.../tt/?g=KOOD`).

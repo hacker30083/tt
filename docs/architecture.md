@@ -211,5 +211,4 @@ data/
 ### Development
 - **Node.js 18+**: Data generation
 - **axios**: HTTP client for data fetching
-- **GitHub Actions**: CI/CD pipeline</content>
-<parameter name="filePath">/Users/kasparaun/Documents/GitHub/tt/docs/architecture.md
+- **GitHub Actions**: CI/CD pipeline

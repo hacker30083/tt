@@ -219,5 +219,4 @@ git push origin main
 ### Getting Help
 - Check existing issues on GitHub
 - Review documentation in `docs/`
-- Test with minimal changes to isolate issues</content>
-<parameter name="filePath">/Users/kasparaun/Documents/GitHub/tt/docs/development.md
+- Test with minimal changes to isolate issues

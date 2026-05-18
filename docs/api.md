@@ -143,5 +143,3 @@ Raw API data is processed into structured maps for efficient lookup:
 - `lessonsCardsMap`: lessonid -> card object
 
 This structure enables fast timetable generation and filtering.
-</content>
-<parameter name="filePath">/Users/kasparaun/Documents/GitHub/tt/docs/api.md
