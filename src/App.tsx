@@ -555,7 +555,7 @@ export default function App() {
 			<div className="page" id="timetable-page" style={{ display: page === "timetable" ? "" : "none" }}>
 				<TimetableGrid items={timetable} highlighting={highlighting} />
 				{!shareWarningDismissed && (
-					<div className="is" id="share-warning">
+					<div id="share-warning">
 						<button
 							className="warning-close"
 							type="button"
