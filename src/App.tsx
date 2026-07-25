@@ -521,7 +521,7 @@ export default function App() {
 				</div>
 				<div className="page-panel">
 					<button className="primary large" type="button" onClick={() => void setup()}>
-						Koosta â†’
+						Koosta →
 					</button>
 				</div>
 			</div>
