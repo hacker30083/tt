@@ -23,6 +23,17 @@ npm run generate
 npm run dev
 ```
 
+### Firebase Banner
+```bash
+# Copy example env values
+copy .env.example .env.local
+
+# Fill in your Firebase web app config values, then restart the dev server
+```
+- The app reads `VITE_FIREBASE_*` variables at build time.
+- GitHub Actions injects the same values from repository secrets during the Pages build.
+- If the banner document is missing or disabled, the default timetable warning is shown.
+
 ## Project Structure
 
 ```

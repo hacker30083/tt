@@ -73,6 +73,18 @@ The `generate-data.mjs` script fetches timetable data from TERA school's Edupage
 - Data is automatically updated daily
 - Site is hosted on GitHub Pages
 
+### Firebase Banner
+- The site reads a warning banner from Firestore at `siteBanner/current`
+- The banner listens to Firestore updates in real time, so changes appear without a refresh
+- Copy [.env.example](.env.example) to `.env.local` for local development
+- Put the same values into GitHub repo secrets so the Pages build can inject them
+- Expected document fields:
+  - `enabled` - set to `true` to show a custom banner
+  - `level` - `warning`, `info`, or `error`
+  - `title` - short banner heading
+  - `message` - main banner text
+- If `enabled` is `false` or the document cannot be read, the site shows the default timetable warning message
+
 ## Documentation
 
 - [Architecture](docs/architecture.md) - System design and components

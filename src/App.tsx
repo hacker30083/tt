@@ -1,6 +1,7 @@
-import { startTransition, useEffect, useRef, useState } from "react";
+﻿import { startTransition, useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { TimetableGrid } from "./components/TimetableGrid";
+import { SiteBanner } from "./components/SiteBanner";
 import { clearAllCookies, getCookie, setCookie } from "./lib/cookieHelper";
 import { downloadElementByID } from "./lib/exporting";
 import { buildTimetableFromLiveData } from "./lib/timetableConstruction";
@@ -142,7 +143,6 @@ export default function App() {
 	const [setupView, setSetupView] = useState<SetupViewState>({ pre: "", options: [], defaultValue: null });
 	const [timetable, setTimetable] = useState<TimetableItem[]>([]);
 	const [selection, setSelection] = useState<GroupSelectionState | null>(null);
-	const [shareWarningDismissed, setShareWarningDismissed] = useState(false);
 	const setupResolverRef = useRef<SetupResolver | null>(null);
 
 	function saveSelectionCookie(selectionData: SelectionData): void {
@@ -304,7 +304,7 @@ export default function App() {
 		try {
 			const timetables = await loadTimetables(SUBDOMAIN);
 			if (!timetables.length) {
-				await setupPage("<h1>Viga</h1><p>Ühegi tunniplaani ei leitud.</p>", [{ title: "Tagasi", value: null }]);
+				await setupPage("<h1>Viga</h1><p>Ühtegi tunniplaani ei leitud.</p>", [{ title: "Tagasi", value: null }]);
 				displayPage("home");
 				return;
 			}
@@ -366,7 +366,7 @@ export default function App() {
 					continue;
 				}
 
-				const displaySubject = subjects.length > 0 ? subjects[0] : "Üldained";
+				const displaySubject = subjects.length > 0 ? subjects[0] : "Ãœldained";
 				const groupNames = groupsForDivision.map((group) => String(group.name ?? group.id)).join("/");
 				const divisionTitle = isLanguageDivision
 					? `Keelegrupp (${groupNames}) - ${displaySubject}`
@@ -472,7 +472,6 @@ export default function App() {
 		clearAllCookies();
 		setSelection(null);
 		setTimetable([]);
-		setShareWarningDismissed(false);
 		displayPage("home");
 	}
 
@@ -507,6 +506,7 @@ export default function App() {
 
 	return (
 		<>
+			<SiteBanner />
 			<div className="page" id="home" style={{ display: page === "home" ? "" : "none" }}>
 				<div className="page-panel">
 					<h1 className="gradient-text" style={{ "--c1": "var(--fg)", "--c2": "var(--purple-fg)" } as CSSProperties}>
@@ -554,22 +554,6 @@ export default function App() {
 
 			<div className="page" id="timetable-page" style={{ display: page === "timetable" ? "" : "none" }}>
 				<TimetableGrid items={timetable} highlighting={highlighting} />
-				{!shareWarningDismissed && (
-					<div className="is" id="share-warning">
-						<button
-							className="warning-close"
-							type="button"
-							aria-label="Peida teade"
-							onClick={() => setShareWarningDismissed(true)}
-						>
-							<span aria-hidden="true">&times;</span>
-						</button>
-						<p style={{ color: "var(--purple-fg)" }}>
-							Tähelepanu! Palun kontrolli tunniplaanis olevaid kellaaegu kuna selles võivad esineda vead. (Eriti gümnaasiumi õpilaste puhul)
-						</p>
-					</div>
-				)}
-
 
 				<div className="flex toolbar-grid">
 					<button type="button" onClick={() => void setup()}>Genereeri tunniplaan</button>
