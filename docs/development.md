@@ -19,12 +19,20 @@ npm install
 # Generate timetable data
 npm run generate
 
-# Generate Firebase banner config if you want the banner to load
-npm run firebase:config
-
-# Open the application
-open index.html
+# Start the frontend
+npm run dev
 ```
+
+### Firebase Banner
+```bash
+# Copy example env values
+copy .env.example .env.local
+
+# Fill in your Firebase web app config values, then restart the dev server
+```
+- The app reads `VITE_FIREBASE_*` variables at build time.
+- GitHub Actions injects the same values from repository secrets during the Pages build.
+- If the banner document is missing or disabled, the default timetable warning is shown.
 
 ## Project Structure
 
@@ -36,11 +44,11 @@ tt/
 ├── data/                        # Generated JSON data files
 ├── docs/                        # Documentation
 ├── src/
-│   ├── HTML/                    # HTML templates (currently empty)
-│   ├── JS/
-│   │   ├── script.js            # Main application logic
-│   │   ├── timetableHelper.js   # Data processing functions
-│   │   └── utils.js             # Utility functions
+│   ├── components/              # React UI components
+│   ├── lib/                     # Typed timetable/data helpers
+│   ├── types/                   # Shared TypeScript types
+│   ├── App.tsx                  # Main application shell
+│   ├── main.tsx                 # React entry point
 │   └── styles/
 │       ├── index.css            # Main styles
 │       └── dev.css              # Development styles
@@ -54,26 +62,22 @@ tt/
 ## Development Workflow
 
 ### 1. Make Changes
-- Edit files in `src/JS/`, `src/styles/`, or `index.html`
+- Edit files in `src/components/`, `src/lib/`, `src/types/`, or `src/styles/`
 - For data-related changes, modify `generate-data.mjs`
-- For Firebase banner changes, edit `.env.local` and regenerate `firebase-config.json`
 
 ### 2. Test Locally
 ```bash
 # Regenerate data if needed
 npm run generate
 
-# Open in browser
-open index.html
+# Run the frontend
+npm run dev
 ```
 
 ### 3. Test Data Generation
 ```bash
 # Run data generation
 npm run generate
-
-# Regenerate Firebase config
-npm run firebase:config
 
 # Check generated files
 ls -la data/
@@ -93,12 +97,12 @@ git push origin main
 - Processes and structures the data
 - Saves JSON files to `data/` directory
 
-### Main Application (`src/JS/script.js`)
+### Main Application (`src/App.tsx`)
 - Handles UI interactions
 - Manages setup flow
 - Processes user selections
 
-### Data Processing (`src/JS/timetableHelper.js`)
+### Data Processing (`src/lib/timetableHelper.ts`)
 - Loads data from JSON files
 - Filters and sorts timetables
 - Generates timetable display
@@ -110,12 +114,12 @@ git push origin main
 ## Adding New Features
 
 ### 1. UI Changes
-- Modify `index.html` for structure
+- Modify `src/App.tsx` or `src/components/` for structure
 - Update `src/styles/index.css` for styling
-- Add logic in `src/JS/script.js`
+- Add logic in `src/App.tsx` or `src/lib/`
 
 ### 2. Data Processing
-- Add functions in `timetableHelper.js`
+- Add functions in `src/lib/timetableHelper.ts`
 - Update data generation if needed
 - Test with sample data
 
@@ -144,7 +148,7 @@ git push origin main
 ## Testing
 
 ### Manual Testing
-1. Open `index.html` in browser
+1. Run `npm run dev`
 2. Click "Koosta tunniplaan"
 3. Select a timetable period
 4. Choose class and groups
@@ -175,8 +179,8 @@ git push origin main
 
 ## Code Style
 
-### JavaScript
-- Use modern ES6+ features
+### TypeScript
+- Use modern ES modules and React patterns
 - Consistent indentation (tab, 4)
 - Descriptive variable names
 - Add comments for complex logic

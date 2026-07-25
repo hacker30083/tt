@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("../src/JS/timetableHelper.js", () => ({
+vi.mock("../src/lib/timetableHelper", () => ({
 	getLessonsForGroup: vi.fn()
 }));
 
-import { getLessonsForGroup } from "../src/JS/timetableHelper.js";
-import { buildTimetableFromLiveData } from "../src/JS/timetableConstruction.js";
+import { getLessonsForGroup } from "../src/lib/timetableHelper";
+import { buildTimetableFromLiveData } from "../src/lib/timetableConstruction";
 
 describe("timetableConstruction", () => {
 	beforeEach(() => {

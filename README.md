@@ -16,23 +16,21 @@ The application fetches timetable data from the school's Edupage system, process
 
 ### Architecture
 
-```
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   GitHub Actions │    │   Data Generation │    │   Static Files  │
-│   (Daily/Scheduled)│───▶│   Script        │───▶│   (data/*.json) │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
-                                                        │
-                                                        ▼
-┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   User Browser  │    │   Client-side JS │    │   Rendered TT   │
-│   (GitHub Pages)│◀───│   (timetableHelper.js)│◀───│   (HTML/CSS) │
-└─────────────────┘    └──────────────────┘    └─────────────────┘
+```mermaid
+flowchart TD
+    
+    A[Edupage] -->|Timetable data| B(Github Actions)
+    B --> |Formatted timetable data| C(Github repository)
+    D(Frontend code\n made with React and TS ) --> C
+    C --> E(Github Actions:\n build React app) 
+    E --> F(Github Pages) 
+    F--> G[hacker30083.github.io/tt]
+
 ```
 
-1. **Data Generation**: GitHub Actions runs daily to fetch latest timetable data from Edupage
+1. **Data Generation**: GitHub Actions runs weekly to fetch latest timetable data from Edupage
 2. **Data Storage**: Structured JSON data saved to `data/` directory in the repository
 3. **Static Hosting**: GitHub Pages serves the static HTML, CSS, and JS files
-4. **Client Processing**: JavaScript loads data from static JSON files and generates timetables
 
 ## Usage
 
@@ -45,13 +43,12 @@ The application fetches timetable data from the school's Edupage system, process
 
 ### Sharing Timetables
 - **Via Link**: Click "Jaga" to generate a shareable link containing your selections
-- **Via Code**: Share the generated code for others to input manually
+- **Via Image**: Click "Laadi alla" to download your timetable
 
 ## Data Privacy
 
 - Group selections are stored in browser cookies
 - Sharing via link transmits group data to the server (GitHub Pages)
-- For maximum privacy, share codes instead of links or communicate groups verbally
 
 ## Development
 
@@ -65,7 +62,7 @@ git clone https://github.com/mk4i/tt.git
 cd tt
 npm install
 npm run generate  # Generate timetable data
-# Open index.html in browser
+npm run dev
 ```
 
 ### Data Generation
@@ -79,35 +76,14 @@ The `generate-data.mjs` script fetches timetable data from TERA school's Edupage
 ### Firebase Banner
 - The site reads a warning banner from Firestore at `siteBanner/current`
 - The banner listens to Firestore updates in real time, so changes appear without a refresh
-- Keep Firebase values out of source control by putting them in `.env.local`
-- Generate `firebase-config.json` with `npm run firebase:config`
-- The generated file is ignored by git and loaded automatically by the site
-- In GitHub Actions, store the same values as repository secrets with the same names
-- The `generate-data` workflow writes `firebase-config.json` before tests and commits it with the generated data
-- Get the values from Firebase Console:
-  - Project settings -> General -> Your apps -> Web app config
-  - Copy the web config fields into `.env.local`
+- Copy [.env.example](.env.example) to `.env.local` for local development
+- Put the same values into GitHub repo secrets so the Pages build can inject them
 - Expected document fields:
-  - `enabled` - set to `true` to show the banner
+  - `enabled` - set to `true` to show a custom banner
   - `level` - `warning`, `info`, or `error`
   - `title` - short banner heading
   - `message` - main banner text
-- Example config fields:
-  - `apiKey`
-  - `authDomain`
-  - `projectId`
-  - `storageBucket`
-  - `messagingSenderId`
-  - `appId`
-- Optional env fields:
-  - `FIREBASE_MEASUREMENT_ID`
-  - `FIREBASE_WARNING_COLLECTION`
-  - `FIREBASE_WARNING_DOCUMENT`
-- If Firebase is not configured, the site falls back to the built-in timetable warning text
-
-## Architecture Details
-
-See [docs/architecture.md](docs/architecture.md) for detailed component descriptions.
+- If `enabled` is `false` or the document cannot be read, the site shows the default timetable warning message
 
 ## Documentation
 

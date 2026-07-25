@@ -5,6 +5,4 @@ build
 *.tmp
 .env
 .env.*
-.en
-!.env.example
 firebase-config.json
