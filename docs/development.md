@@ -19,6 +19,9 @@ npm install
 # Generate timetable data
 npm run generate
 
+# Generate Firebase banner config if you want the banner to load
+npm run firebase:config
+
 # Open the application
 open index.html
 ```
@@ -53,6 +56,7 @@ tt/
 ### 1. Make Changes
 - Edit files in `src/JS/`, `src/styles/`, or `index.html`
 - For data-related changes, modify `generate-data.mjs`
+- For Firebase banner changes, edit `.env.local` and regenerate `firebase-config.json`
 
 ### 2. Test Locally
 ```bash
@@ -67,6 +71,9 @@ open index.html
 ```bash
 # Run data generation
 npm run generate
+
+# Regenerate Firebase config
+npm run firebase:config
 
 # Check generated files
 ls -la data/

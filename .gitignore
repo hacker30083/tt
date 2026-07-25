@@ -3,3 +3,7 @@ dist
 build
 *.log
 *.tmp
+.env
+.env.*
+!.env.example
+firebase-config.json

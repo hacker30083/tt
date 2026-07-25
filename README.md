@@ -76,6 +76,35 @@ The `generate-data.mjs` script fetches timetable data from TERA school's Edupage
 - Data is automatically updated daily
 - Site is hosted on GitHub Pages
 
+### Firebase Banner
+- The site reads a warning banner from Firestore at `siteBanner/current`
+- The banner listens to Firestore updates in real time, so changes appear without a refresh
+- Keep Firebase values out of source control by putting them in `.env.local`
+- Generate `firebase-config.json` with `npm run firebase:config`
+- The generated file is ignored by git and loaded automatically by the site
+- In GitHub Actions, store the same values as repository secrets with the same names
+- The `generate-data` workflow writes `firebase-config.json` before tests and commits it with the generated data
+- Get the values from Firebase Console:
+  - Project settings -> General -> Your apps -> Web app config
+  - Copy the web config fields into `.env.local`
+- Expected document fields:
+  - `enabled` - set to `true` to show the banner
+  - `level` - `warning`, `info`, or `error`
+  - `title` - short banner heading
+  - `message` - main banner text
+- Example config fields:
+  - `apiKey`
+  - `authDomain`
+  - `projectId`
+  - `storageBucket`
+  - `messagingSenderId`
+  - `appId`
+- Optional env fields:
+  - `FIREBASE_MEASUREMENT_ID`
+  - `FIREBASE_WARNING_COLLECTION`
+  - `FIREBASE_WARNING_DOCUMENT`
+- If Firebase is not configured, the site falls back to the built-in timetable warning text
+
 ## Architecture Details
 
 See [docs/architecture.md](docs/architecture.md) for detailed component descriptions.

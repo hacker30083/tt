@@ -4,6 +4,7 @@ import { buildTimetableFromLiveData } from "./timetableConstruction.js";
 import { displayTimetable, getCurrentWeekday } from "./timetableDrawing.js";
 import { setCookie, getCookie, clearAllCookies } from "./cookieHelper.js";
 import { downloadElementByID } from "./exporting.js";
+import { initializeSiteBanner } from "./siteBanner.js";
 
 const
 	pages = Array.from(document.getElementsByClassName("page")),
@@ -673,4 +674,5 @@ Object.assign(window, {
 	downloadElementByID
 });
 
+initializeSiteBanner();
 main();
