@@ -14,18 +14,20 @@
 	font-size: max(min(24px, 8vw), 2vw);
 	--max-safe-width: calc(100vw - 2rem);
 	font-family: Inter;
+	
 }
 
 body {
 	background-color: var(--bg);
 	color: var(--fg);
 	font-family: Inter, system-ui;
-	margin: 0 auto;
+	margin: 0;
+	padding: 0;
 	/*display: flex;
 	justify-content: center;
 	align-items: center;*/
-	min-width: 100vw;
-	/*overflow: hidden;*/
+	width: 100vw;
+	overflow-x: hidden;
 	text-overflow: clip;
 	/*flex-direction: column;*/
 	font-size: 16px;
@@ -72,13 +74,17 @@ a {
 /* Site banner */
 
 .site-banner {
-	position: sticky;
+	position: relative;
+	width: 100%;
+	height: fit-content;
+
+
 	top: 0;
 	z-index: 20;
 	display: flex;
 	align-items: center;
 	gap: 0.4rem;
-	padding: 0.3rem 0.6rem;
+	padding: 0.5rem 1rem;
 	border-bottom: 1px solid var(--gray);
 	backdrop-filter: blur(0.3rem);
 	box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
@@ -86,7 +92,7 @@ a {
 }
 
 .site-banner[data-level="warning"] {
-	background: linear-gradient(90deg, var(--purple-fg) 0%, var(--bg-m) 100%);
+	background: linear-gradient(90deg, #e2e612 0%,#feffae  100%);
 	color: var(--fg);
 }
 
@@ -188,9 +194,7 @@ input {
 	justify-content: center;
 }
 
-#timetable-page > *:not(#timetable) {
-	max-width: calc(100% - 2rem);
-}
+
 
 #pre p {
 	color: var(--lighter-gray)
@@ -295,6 +299,7 @@ input {
 	gap: 0.75rem;
 	width: min(100%, 78rem);
 	align-self: stretch;
+	margin: 2%;
 }
 
 .toolbar-grid button {
@@ -315,7 +320,7 @@ input {
 
 .site-footer_grid {
 	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 1rem;
 	padding-left: 1rem;
 	
