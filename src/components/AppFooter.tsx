@@ -20,7 +20,7 @@ export function AppFooter() {
 				<div className="site-footer__section">
 					<h2 className="site-footer__title">Kontakt</h2>
 					<p>
-						<a className="lnk" href="https://github.com/hacker30083">hacker30083+github@hotmail.com</a>
+						<a className="lnk" href="mailto:hacker30083+github@hotmail.com">hacker30083+github@hotmail.com</a>
 					</p>
 					<p>
 						<a className="lnk" href="https://github.com/hacker30083/tt/issues">Issues</a>
@@ -28,7 +28,9 @@ export function AppFooter() {
 				</div>
 				<div className="site-footer__section">
 					<h2 className="site-footer__title">Kasutatud materjalid</h2>
-					<a className="lnk" href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Pop Vectors - Flaticon</a>
+					<p>
+						<a className="lnk" href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Pop Vectors - Flaticon</a>
+					</p>
 				</div>
 			</div>
 			<div className="site-footer__copyright">

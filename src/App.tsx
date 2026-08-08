@@ -55,6 +55,10 @@ export default function App() {
 	const { selection, timetable, renderTimetable, clearSelection } = useSelection();
 	const { setupResolverRef, resolveSetupChoice, rejectSetupChoice } = useSetupFlow();
 
+	const [setupPreHTML, setSetupPreHTML] = useState("");
+	const [setupOptions, setSetupOptions] = useState<Array<{ title: string; value: string | number | null }>>([]);
+	const [setupDefaultValue, setSetupDefaultValue] = useState<string | number | null>(null);
+
 	// Helper functions
 	function saveSelectionCookie(selectionData: SelectionData): void {
 		try {
@@ -85,8 +89,9 @@ export default function App() {
 		options: Array<{ title: string; value: string | number | null }>,
 		defaultValue: string | number | null = null
 	): Promise<string | number | null> {
-		setupResolverRef.current?.reject(new Error("Superseded"));
-		displayPage(PAGE_SETUP);
+		setupResolverRef.current?.reject(new Error("Superseded"));		setSetupPreHTML(pre);
+		setSetupOptions(options);
+		setSetupDefaultValue(defaultValue);		displayPage(PAGE_SETUP);
 
 		return new Promise((resolve, reject) => {
 			setupResolverRef.current = { resolve, reject };
@@ -358,14 +363,14 @@ export default function App() {
 			
 			{page === PAGE_SETUP && (
 				<SetupPage
-					preHTML=""
-					options={[]}
-					defaultValue={null}
+					preHTML={setupPreHTML}
+					options={setupOptions}
+					defaultValue={setupDefaultValue}
 					onAbort={() => rejectSetupChoice(new Error("Aborted"))}
 					onSelectOption={resolveSetupChoice}
 				/>
 			)}
-			
+
 			{page === PAGE_TIMETABLE && (
 				<TimetablePage
 					items={timetable}
@@ -380,7 +385,7 @@ export default function App() {
 					onDownload={() => void downloadElementByID("timetable")}
 				/>
 			)}
-			
+
 			<AppFooter />
 		</>
 	);
