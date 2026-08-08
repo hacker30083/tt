@@ -54,10 +54,69 @@ flowchart TD
 - Mobile-friendly layout
 
 #### React + TypeScript (`src/`)
-- **App.tsx**: Main application logic and setup flow
-- **components/TimetableGrid.tsx**: Timetable grid rendering
-- **lib/**: Data loading, processing, export, and cookie helpers
-- **types/**: Shared timetable data contracts
+
+The source code is organized into a clean, modular structure:
+
+```
+src/
+├── App.tsx              # Main application component
+├── constants.ts         # Application-wide constants
+├── main.tsx             # React entry point
+├── vite-env.d.ts        # Vite type declarations
+│
+├── components/          # Reusable UI components
+│   ├── AppFooter.tsx    # Footer component
+│   ├── SiteBanner.tsx   # Banner notifications
+│   └── TimetableGrid.tsx # Timetable grid rendering
+│
+├── pages/               # Page-level components
+│   ├── HomePage.tsx     # Landing page
+│   ├── SetupPage.tsx    # Setup wizard interface
+│   └── TimetablePage.tsx # Timetable display page
+│
+├── hooks/               # Custom React hooks
+│   ├── usePage.ts       # Page navigation state
+│   ├── usePreferences.ts # Theme and highlighting prefs
+│   ├── useSelection.ts  # Timetable selection state
+│   └── useSetupFlow.ts  # Setup wizard flow control
+│
+├── utils/               # Utility functions
+│   ├── selectionPayload.ts # Encoding/decoding selections
+│   ├── theme.ts            # Theme management
+│   ├── timetableSetup.ts   # Setup logic helpers
+│   └── url.ts              # URL parameter handling
+│
+├── lib/                 # Business logic and helpers
+│   ├── cookieHelper.ts  # Cookie management
+│   ├── exporting.ts     # Timetable export functionality
+│   ├── firebaseBanner.ts # Firebase banner integration
+│   ├── proteraRules.ts  # ProTERA-specific timetable rules
+│   ├── timetableConstruction.ts # Build timetable from data
+│   ├── timetableDataLoading.ts  # Load data from JSON
+│   ├── timetableHelper.ts       # Query and filter helpers
+│   └── timetableTextFit.ts      # Text sizing utilities
+│
+├── types/               # TypeScript type definitions
+│   ├── firebase-remote-modules.d.ts # Firebase types
+│   └── timetable.ts     # Timetable data contracts
+│
+├── styles/              # Application styling
+│   ├── index.css        # Main stylesheet
+│   └── dev.css          # Development overrides
+│
+├── misc/                # Data files
+│   ├── op.txt           # School name data
+│   ├── pkt.txt          # Period/time data
+│   └── tt.txt           # Timetable metadata
+```
+
+**Architecture Principles:**
+
+- **Component Separation**: UI components are small, focused, and reusable
+- **Custom Hooks**: State management and side effects are isolated in hooks for reusability
+- **Utility Functions**: Pure functions for data transformation, validation, and encoding
+- **Type Safety**: Strong TypeScript types throughout for better developer experience
+- **Clear Dependencies**: Each module has a single responsibility and imports only what it needs
 
 ### 3. Data Storage
 
