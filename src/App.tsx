@@ -1,149 +1,36 @@
-﻿import { startTransition, useEffect, useRef, useState } from "react";
-import type { CSSProperties } from "react";
-import { TimetableGrid } from "./components/TimetableGrid";
+﻿import { useEffect, useState } from "react";
+import { AppFooter } from "./components/AppFooter";
+import { HomePage } from "./pages/HomePage";
+import { SetupPage } from "./pages/SetupPage";
+import { TimetablePage } from "./pages/TimetablePage";
 import { SiteBanner } from "./components/SiteBanner";
 import { DEFAULT_BANNER, subscribeToFirebaseBanner } from "./lib/firebaseBanner";
 import type { BannerState } from "./lib/firebaseBanner";
 import { clearAllCookies, getCookie, setCookie } from "./lib/cookieHelper";
 import { downloadElementByID } from "./lib/exporting";
-import { buildTimetableFromLiveData } from "./lib/timetableConstruction";
 import { initializeLocalData, loadTimetables } from "./lib/timetableDataLoading";
 import { fetchTimetableByID, getDivisionsForGrade, getSubjectsForDivision } from "./lib/timetableHelper";
+import { PAGE_HOME, PAGE_SETUP, PAGE_TIMETABLE, SELECTIONS_COOKIE_KEY, SELECTIONS_COOKIE_DAYS, SUBDOMAIN, THEME_LABELS } from "./constants";
+import { usePage } from "./hooks/usePage";
+import { usePreferences } from "./hooks/usePreferences";
+import { useSelection } from "./hooks/useSelection";
+import { useSetupFlow } from "./hooks/useSetupFlow";
+import { isValidSelectionData, encodeSelectionPayload, decodeSelectionPayload } from "./utils/selectionPayload";
+import { getURLParams } from "./utils/url";
+import { getLanguageDivisionSubjects, isLanguageGroupName } from "./utils/timetableSetup";
 import type {
-	DivisionRow,
 	GroupSelectionState,
 	SelectionData,
-	SetupOption,
 	StructuredTimetableData,
-	TimetableItem,
 	TimetableMeta
 } from "./types/timetable";
 
-const SELECTIONS_COOKIE_KEY = "tt_selection_v1";
-const SELECTIONS_COOKIE_DAYS = 7;
-const SUBDOMAIN = "tera";
-const COPYRIGHT_YEAR = 2026;
-
-type Page = "home" | "setup" | "timetable";
-type SetupResolver = {
-	resolve: (value: string | number | null) => void;
-	reject: (error: Error) => void;
-};
-
-interface SetupViewState {
-	pre: string;
-	options: SetupOption[];
-	defaultValue: string | number | null;
-}
-
-function AppFooter() {
-	return (
-		<footer className="site-footer">
-			<div className="site-footer_grid">
-			<div className="site-footer__section">
-				<h2 className="site-footer__title">GitHub</h2>
-				<p>
-					<a className="lnk" href="https://github.com/hacker30083/tt">Repository</a>
-				</p>
-				<p>
-					<a className="lnk" href="https://github.com/hacker30083/tt/blob/main/README.md">README</a>
-				</p>
-			</div>
-			<div className="site-footer__section">
-				<h2 className="site-footer__title">Kontakt</h2>
-				<p>
-					<a className="lnk" href="https://github.com/hacker30083">hacker30083+github@hotmail.com</a>
-				</p>
-				<p>
-					<a className="lnk" href="https://github.com/hacker30083/tt/issues">Issues</a>
-				</p>
-			</div>
-			<div className="site-footer__section">
-				<h2 className="site-footer__title">Kasutatud materjalid</h2>
-				<a className="lnk" href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Pop Vectors - Flaticon</a>
-			</div>
-
-			</div>
-			<div className="site-footer__copyright">
-				<p>&copy; 2024-{COPYRIGHT_YEAR} mk4i and Kaspar Aun (hacker30083)</p>
-				<p>All rights reserved.</p>
-			</div>
-		</footer>
-	);
-}
-
-function getURLParams(url: string | URL): Record<string, string> {
-	const parsedURL = url instanceof URL ? url : new URL(url, window.location.origin);
-	const params: Record<string, string> = {};
-
-	parsedURL.searchParams.forEach((value, key) => {
-		params[key] = value;
-	});
-
-	return params;
-}
-
-function isValidSelectionData(parsed: unknown): parsed is SelectionData {
-	if (!parsed || typeof parsed !== "object") {
-		return false;
-	}
-
-	const value = parsed as Partial<SelectionData>;
-	if (typeof value.classID !== "string" || !value.classID) {
-		return false;
-	}
-
-	const ttIDType = typeof value.selectedTTID;
-	if ((ttIDType !== "string" && ttIDType !== "number") || String(value.selectedTTID).length === 0) {
-		return false;
-	}
-
-	return Boolean(value.groups && typeof value.groups === "object");
-}
-
-function encodeSelectionPayload(selectionData: SelectionData): string {
-	const json = JSON.stringify(selectionData);
-	return btoa(unescape(encodeURIComponent(json)))
-		.replace(/\+/g, "-")
-		.replace(/\//g, "_")
-		.replace(/=+$/g, "");
-}
-
-function decodeSelectionPayload(encodedSelection: string): SelectionData | null {
-	try {
-		const normalized = String(encodedSelection).replace(/-/g, "+").replace(/_/g, "/");
-		const padding = "=".repeat((4 - (normalized.length % 4)) % 4);
-		const decoded = decodeURIComponent(escape(atob(normalized + padding)));
-		const parsed = JSON.parse(decoded);
-		return isValidSelectionData(parsed) ? parsed : null;
-	} catch (error) {
-		console.warn("Failed to decode shared timetable selection payload:", error);
-		return null;
-	}
-}
-
-function getLanguageDivisionSubjects(structuredData: StructuredTimetableData, division: DivisionRow): Array<{ id: string; name: string }> {
-	const groupIds = division.groupids || [];
-	const subjectsByID = new Map<string, { id: string; name: string }>();
-
-	for (const lesson of structuredData.lessonsJSON || []) {
-		if (!Array.isArray(lesson.groupids)) {
-			continue;
-		}
-
-		const includesDivisionGroup = lesson.groupids.some((groupID) => groupIds.includes(groupID));
-		if (!includesDivisionGroup || !lesson.subjectid || subjectsByID.has(lesson.subjectid)) {
-			continue;
-		}
-
-		const subjectName = structuredData.subjectsMap[lesson.subjectid]?.name || lesson.subjectid;
-		subjectsByID.set(lesson.subjectid, { id: lesson.subjectid, name: String(subjectName) });
-	}
-
-	return Array.from(subjectsByID.values()).sort((a, b) => a.name.localeCompare(b.name));
-}
-
+/**
+ * Main application component
+ * Manages page navigation, preferences, and timetable selection
+ */
 export default function App() {
+	// Firebase banner subscription
 	const [banner, setBanner] = useState<BannerState>(DEFAULT_BANNER);
 
 	useEffect(() => {
@@ -162,14 +49,17 @@ export default function App() {
 		};
 	}, []);
 
-	const [page, setPage] = useState<Page>("home");
-	const [theme, setThemeState] = useState(0);
-	const [highlighting, setHighlightingState] = useState(true);
-	const [setupView, setSetupView] = useState<SetupViewState>({ pre: "", options: [], defaultValue: null });
-	const [timetable, setTimetable] = useState<TimetableItem[]>([]);
-	const [selection, setSelection] = useState<GroupSelectionState | null>(null);
-	const setupResolverRef = useRef<SetupResolver | null>(null);
+	// Core state management
+	const { page, displayPage } = usePage();
+	const { theme, highlighting, isInitialized, setThemePreference, setHighlightPreference } = usePreferences();
+	const { selection, timetable, renderTimetable, clearSelection } = useSelection();
+	const { setupResolverRef, resolveSetupChoice, rejectSetupChoice } = useSetupFlow();
 
+	const [setupPreHTML, setSetupPreHTML] = useState("");
+	const [setupOptions, setSetupOptions] = useState<Array<{ title: string; value: string | number | null }>>([]);
+	const [setupDefaultValue, setSetupDefaultValue] = useState<string | number | null>(null);
+
+	// Helper functions
 	function saveSelectionCookie(selectionData: SelectionData): void {
 		try {
 			setCookie(SELECTIONS_COOKIE_KEY, JSON.stringify(selectionData), SELECTIONS_COOKIE_DAYS);
@@ -193,74 +83,18 @@ export default function App() {
 		}
 	}
 
-	function applyThemeVariables(nextTheme: number): void {
-		const resolvedTheme = nextTheme === 0
-			? (window.matchMedia("(prefers-color-scheme: dark)").matches ? 1 : 2)
-			: nextTheme;
-		const styles = document.documentElement.style;
-		const variables: Array<[string, string | number, string | number]> = [
-			["--bg-brightness", 0.5, 2],
-			["--bg", "#000", "#fff"],
-			["--bg-m", "#222", "#eee"],
-			["--gray-bg", "#333", "#ccc"],
-			["--gray", "#666", "#999"],
-			["--lighter-gray", "#888", "#666"],
-			["--ltrans", "#cccc", "#444c"],
-			["--light-fg", "#ccc", "#555"],
-			["--fg-m", "#ddd", "#555"],
-			["--fg", "#fff", "#000"],
-			["--darksky", "#445", "#dde"],
-			["--purple", "#86f", "#86f"],
-			["--purple-fg", "#cbf", "#435"]
-		];
-
-		for (const [name, darkValue, lightValue] of variables) {
-			styles.setProperty(name, String(resolvedTheme === 1 ? darkValue : lightValue));
-		}
-	}
-
-	function setThemePreference(value?: number): void {
-		const nextTheme = value === undefined
-			? ((theme + 1) % 3)
-			: ((((Math.round(Number(value)) % 3) + 3) % 3));
-		setThemeState(nextTheme);
-		setCookie("t", nextTheme);
-	}
-
-	function setHighlightPreference(value?: boolean): void {
-		const nextValue = value ?? !highlighting;
-		setHighlightingState(nextValue);
-		setCookie("h", nextValue ? "1" : "0");
-	}
-
-	function displayPage(nextPage: Page): void {
-		setPage(nextPage);
-	}
-
-	function setupPage(pre: string, options: SetupOption[], defaultValue: string | number | null = null): Promise<string | number | null> {
-		setupResolverRef.current?.reject(new Error("Superseded"));
-		displayPage("setup");
-		setSetupView({ pre, options, defaultValue });
+	// Setup flow control
+	async function showSetupPage(
+		pre: string,
+		options: Array<{ title: string; value: string | number | null }>,
+		defaultValue: string | number | null = null
+	): Promise<string | number | null> {
+		setupResolverRef.current?.reject(new Error("Superseded"));		setSetupPreHTML(pre);
+		setSetupOptions(options);
+		setSetupDefaultValue(defaultValue);		displayPage(PAGE_SETUP);
 
 		return new Promise((resolve, reject) => {
 			setupResolverRef.current = { resolve, reject };
-		});
-	}
-
-	function resolveSetupChoice(value: string | number | null): void {
-		setupResolverRef.current?.resolve(value);
-		setupResolverRef.current = null;
-	}
-
-	function rejectSetupChoice(error: Error): void {
-		setupResolverRef.current?.reject(error);
-		setupResolverRef.current = null;
-	}
-
-	function renderTimetable(nextSelection: GroupSelectionState): void {
-		setSelection(nextSelection);
-		startTransition(() => {
-			setTimetable(buildTimetableFromLiveData(nextSelection));
 		});
 	}
 
@@ -311,7 +145,7 @@ export default function App() {
 			}
 
 			renderTimetable(nextSelection);
-			displayPage("timetable");
+			displayPage(PAGE_TIMETABLE);
 			return true;
 		} catch (error) {
 			console.warn("Failed to restore saved timetable:", error);
@@ -320,24 +154,20 @@ export default function App() {
 	}
 
 	async function setup(): Promise<void> {
-		function isLanguageGroupName(name: string): boolean {
-			return String(name ?? "").replace(/\s+/g, "").toUpperCase().match(/^[IVX]+[AB]$/) !== null;
-		}
-
-		displayPage("setup");
+		displayPage(PAGE_SETUP);
 
 		try {
 			const timetables = await loadTimetables(SUBDOMAIN);
 			if (!timetables.length) {
-				await setupPage("<h1>Viga</h1><p>Ühtegi tunniplaani ei leitud.</p>", [{ title: "Tagasi", value: null }]);
-				displayPage("home");
+				await showSetupPage("<h1>Viga</h1><p>Ühtegi tunniplaani ei leitud.</p>", [{ title: "Tagasi", value: null }]);
+				displayPage(PAGE_HOME);
 				return;
 			}
 
 			const proteraTimetables = timetables.filter((meta: TimetableMeta) => /protera/i.test(String(meta.text ?? "")));
 			if (!proteraTimetables.length) {
-				await setupPage("<h1>Viga</h1><p>ProTERA tunniplaani ei leitud.</p>", [{ title: "Tagasi", value: null }]);
-				displayPage("home");
+				await showSetupPage("<h1>Viga</h1><p>ProTERA tunniplaani ei leitud.</p>", [{ title: "Tagasi", value: null }]);
+				displayPage(PAGE_HOME);
 				return;
 			}
 
@@ -348,25 +178,25 @@ export default function App() {
 			const structuredData = await fetchTimetableByID(selectedTTID);
 
 			if (!Object.keys(structuredData.classesMap).length) {
-				await setupPage("<h1>Viga</h1><p>Tunniplaani andmeid ei õnnestunud laadida.</p>", [{ title: "Tagasi", value: null }]);
-				displayPage("home");
+				await showSetupPage("<h1>Viga</h1><p>Tunniplaani andmeid ei õnnestunud laadida.</p>", [{ title: "Tagasi", value: null }]);
+				displayPage(PAGE_HOME);
 				return;
 			}
 
 			const classOptions = Object.values(structuredData.classesMap)
 				.map((cls) => ({ title: String(cls.name ?? cls.id), value: String(cls.id) }))
 				.sort((a, b) => a.title.localeCompare(b.title));
-			const selectedClassID = await setupPage("<h1>Klass</h1><p>Vali oma klass:</p>", classOptions);
+			const selectedClassID = await showSetupPage("<h1>Klass</h1><p>Vali oma klass:</p>", classOptions);
 
 			if (!selectedClassID) {
-				displayPage("home");
+				displayPage(PAGE_HOME);
 				return;
 			}
 
 			const divisionsForClass = getDivisionsForGrade(structuredData, String(selectedClassID));
 			if (!divisionsForClass.length) {
-				await setupPage("<h1>Viga</h1><p>Selle klassi jaoks ei leitud divisjone.</p>", [{ title: "Tagasi", value: null }]);
-				displayPage("home");
+				await showSetupPage("<h1>Viga</h1><p>Selle klassi jaoks ei leitud divisjone.</p>", [{ title: "Tagasi", value: null }]);
+				displayPage(PAGE_HOME);
 				return;
 			}
 
@@ -405,13 +235,13 @@ export default function App() {
 
 				if (isLanguageDivision) {
 					for (const subject of divisionSubjects) {
-						const selectedGroupID = await setupPage(
+						const selectedGroupID = await showSetupPage(
 							`<h1>${subject.name}</h1><p>Vali keelegrupp:</p>`,
 							groupOptions
 						);
 
 						if (!selectedGroupID) {
-							displayPage("home");
+							displayPage(PAGE_HOME);
 							return;
 						}
 
@@ -420,9 +250,9 @@ export default function App() {
 					continue;
 				}
 
-				const selectedGroupID = await setupPage(`<h1>${divisionTitle}</h1><p>Vali grupp:</p>`, groupOptions);
+				const selectedGroupID = await showSetupPage(`<h1>${divisionTitle}</h1><p>Vali grupp:</p>`, groupOptions);
 				if (!selectedGroupID) {
-					displayPage("home");
+					displayPage(PAGE_HOME);
 					return;
 				}
 
@@ -430,8 +260,8 @@ export default function App() {
 			}
 
 			if (!Object.keys(selectedGroups).length) {
-				await setupPage("<h1>Viga</h1><p>Vähemalt üks grupp tuleb valida.</p>", [{ title: "Tagasi", value: null }]);
-				displayPage("home");
+				await showSetupPage("<h1>Viga</h1><p>Vähemalt üks grupp tuleb valida.</p>", [{ title: "Tagasi", value: null }]);
+				displayPage(PAGE_HOME);
 				return;
 			}
 
@@ -456,17 +286,17 @@ export default function App() {
 			});
 
 			renderTimetable(nextSelection);
-			displayPage("timetable");
+			displayPage(PAGE_TIMETABLE);
 		} catch (error) {
 			if (error instanceof Error && error.message === "Aborted") {
-				displayPage("home");
+				displayPage(PAGE_HOME);
 				return;
 			}
 
 			const message = error instanceof Error ? error.message : "Tundmatu viga";
 			console.error("Setup error:", error);
-			await setupPage(`<h1>Viga</h1><p>Tunniplaani koostamisel tekkis viga: ${message}</p>`, [{ title: "Tagasi", value: null }]);
-			displayPage("home");
+			await showSetupPage(`<h1>Viga</h1><p>Tunniplaani koostamisel tekkis viga: ${message}</p>`, [{ title: "Tagasi", value: null }]);
+			displayPage(PAGE_HOME);
 		}
 	}
 
@@ -495,21 +325,13 @@ export default function App() {
 
 	function clearAll(): void {
 		clearAllCookies();
-		setSelection(null);
-		setTimetable([]);
-		displayPage("home");
+		clearSelection();
+		displayPage(PAGE_HOME);
 	}
 
-	useEffect(() => {
-		applyThemeVariables(theme);
-	}, [theme]);
-
+	// Initialize on mount
 	useEffect(() => {
 		void initializeLocalData();
-
-		const cookieTheme = Number(getCookie("t") ?? 0);
-		setThemeState(Number.isFinite(cookieTheme) ? cookieTheme : 0);
-		setHighlightingState(getCookie("h") !== "0");
 
 		const params = getURLParams(window.location.href);
 		const restorePromise = params.sel !== undefined
@@ -517,82 +339,53 @@ export default function App() {
 			: restoreSelection(loadSelectionCookie());
 
 		void restorePromise.then((restored) => {
-			if (!restored) {
-				displayPage("home");
+			if (!restored && isInitialized) {
+				displayPage(PAGE_HOME);
 			}
 		});
 
 		return () => {
 			rejectSetupChoice(new Error("Unmounted"));
 		};
-	}, []);
+	}, [isInitialized]);
 
-	const themeLabel = ["vaikimisi", "tume", "hele"][theme] ?? "vaikimisi";
+	const themeLabel = THEME_LABELS[theme] ?? THEME_LABELS[0];
+
+	if (!isInitialized) {
+		return null; // Or a loading indicator
+	}
 
 	return (
 		<>
 			{(banner.level === "warning" || banner.level === "error") && <SiteBanner banner={banner} />}
-			<div className="page" id="home" style={{ display: page === "home" ? "" : "none" }}>
-				<div className="page-panel">
-					<h1 className="gradient-text" style={{ "--c1": "var(--fg)", "--c2": "var(--purple-fg)" } as CSSProperties}>
-						ProTERA ja TERA gümnaasiumi tunniplaani koostamise rakendus
-					</h1>
-					<p>
-						<a className="lnk" href="https://github.com/hacker30083/tt/blob/main/README.md">README.md</a><br />
-						<a className="lnk" href="https://github.com/hacker30083/tt">GitHub</a><br />
-						<a className="lnk" href="https://tera.edupage.org/timetable/">Alginfo</a><br />
-					</p>
-				</div>
-				<div className="page-panel">
-					<button className="primary large" type="button" onClick={() => void setup()}>
-						Koosta →
-					</button>
-				</div>
-			</div>
+			
+			{page === PAGE_HOME && <HomePage onSetup={() => void setup()} />}
+			
+			{page === PAGE_SETUP && (
+				<SetupPage
+					preHTML={setupPreHTML}
+					options={setupOptions}
+					defaultValue={setupDefaultValue}
+					onAbort={() => rejectSetupChoice(new Error("Aborted"))}
+					onSelectOption={resolveSetupChoice}
+				/>
+			)}
 
-			<div className="page" id="setup" style={{ display: page === "setup" ? "" : "none" }}>
-				<div className="page-panel">
-					<div id="pre" dangerouslySetInnerHTML={{ __html: setupView.pre }} />
-					<hr />
-					<div className="flex opt">
-						<button id="abort" type="button" onClick={() => rejectSetupChoice(new Error("Aborted"))}>
-							Katkesta
-						</button>
-					</div>
-				</div>
-				<div className="page-panel">
-					<div className="flex opt" id="opt">
-						{setupView.options.map((option) => (
-							<button
-								key={`${option.title}-${String(option.value)}`}
-								type="button"
-								className={setupView.defaultValue !== null && option.value === setupView.defaultValue ? "primary" : ""}
-								onClick={() => resolveSetupChoice(option.value)}
-							>
-								{option.title}
-							</button>
-						))}
-					</div>
-				</div>
-			</div>
+			{page === PAGE_TIMETABLE && (
+				<TimetablePage
+					items={timetable}
+					highlighting={highlighting}
+					banner={banner}
+					themeLabel={themeLabel}
+					onSetup={() => void setup()}
+					onClearAll={clearAll}
+					onShare={() => void share()}
+					onThemeToggle={() => setThemePreference()}
+					onHighlightingToggle={() => setHighlightPreference()}
+					onDownload={() => void downloadElementByID("timetable")}
+				/>
+			)}
 
-			<div className="page" id="timetable-page" style={{ display: page === "timetable" ? "" : "none" }}>
-				{banner.level === "info" && <SiteBanner banner={banner} />}
-				<TimetableGrid items={timetable} highlighting={highlighting} />
-
-				<div className="flex toolbar-grid">
-					<button type="button" onClick={() => void setup()}>Genereeri tunniplaan</button>
-					<button type="button" onClick={clearAll}>Kustuta küpsised</button>
-					<button type="button" onClick={() => void share()}>Kopeeri link</button>
-					<button type="button" onClick={() => setThemePreference()}>
-						Taust: <span style={{ fontWeight: "bold" }}>{themeLabel}</span>
-					</button>
-					<button type="button" onClick={() => setHighlightPreference()}>
-						Markeeri tänane tunniplaan: <span style={{ fontWeight: "bold" }}>{highlighting ? "jah" : "ei"}</span>
-					</button>
-					<button type="button" onClick={() => void downloadElementByID("timetable")}>Laadi alla</button>
-				</div>
-			</div>
 			<AppFooter />
 		</>
 	);

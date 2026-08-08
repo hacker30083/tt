@@ -351,6 +351,7 @@ input {
 	color: var(--light-fg);
 	font-weight: 300;
 	font-size: 125%;
+	word-break: break-word;
 }
 
 @media (max-width: 40rem) {

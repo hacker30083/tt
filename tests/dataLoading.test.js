@@ -26,21 +26,13 @@ describe("dataLoading", () => {
 		expect(result).toEqual(sorted);
 	});
 
-	it("parses local pkt and tt text files", async () => {
+	it("ignores legacy local text sources", async () => {
 		const result = await initializeLocalData({
 			pktText: "Math|09:00|09:35|201|Teacher\n# comment\nChem|10:40|11:15|302|Other",
 			ttcText: "raw-timetable-content"
 		});
 
-		expect(result.pkt).toHaveLength(2);
-		expect(result.pkt[0]).toEqual({
-			t: "Math",
-			stime: "09:00",
-			etime: "09:35",
-			loc: "201",
-			n: "Teacher"
-		});
-		expect(result.ttc).toBe("raw-timetable-content");
+		expect(result).toEqual({ pkt: [], ttc: null });
 	});
 
 	it("returns defaults when local files fail to load", async () => {

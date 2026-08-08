@@ -1,17 +1,19 @@
-# API Documentation
+# API and data format
 
-## Edupage API Integration
+This project does not call Edupage from the browser at runtime. Instead, the repository contains a generator script that downloads timetable data ahead of time and stores it as JSON files in [data](../data).
 
-The application integrates with the Edupage school's timetable system to fetch timetable data. This document describes the API endpoints and data structures used.
+## Edupage endpoints used by the generator
 
-## Endpoints
+The generator in [generate-data.mjs](../generate-data.mjs) uses two POST endpoints:
 
-### Get Timetable List
-**URL**: `https://{subdomain}.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData`
+### 1. List available timetables
 
-**Method**: POST
+```text
+https://{subdomain}.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData
+```
 
-**Body**:
+Request body:
+
 ```json
 {
   "__args": [null, 2025],
@@ -19,129 +21,55 @@ The application integrates with the Edupage school's timetable system to fetch t
 }
 ```
 
-**Response**:
-```json
-{
-  "r": {
-    "regular": {
-      "timetables": [
-        {
-          "tt_num": "68",
-          "year": 2025,
-          "text": "ProTERA ja TERA gümnaasium 2025/2026 (12.01.2026-29.05.2026)",
-          "datefrom": "2026-01-12",
-          "hidden": false
-        },
-        ...
-      ]
-    }
-  }
-}
+The response contains the metadata for the available timetables, including fields such as `tt_num`, `text`, `datefrom`, and `hidden`.
+
+### 2. Fetch one timetable in detail
+
+```text
+https://tera.edupage.org/timetable/server/regulartt.js?__func=regularttGetData
 ```
 
-### Get Detailed Timetable
-**URL**: `https://tera.edupage.org/timetable/server/regulartt.js?__func=regularttGetData`
+Request body:
 
-**Method**: POST
-
-**Body**:
 ```json
 {
-  "__args": [null, "TIMETABLE_ID"],
+  "__args": [null, "68"],
   "__gsh": "00000000"
 }
 ```
 
-**Response**:
-```json
-{
-  "r": {
-    "dbiAccessorRes": {
-      "tables": [
-        {
-          "id": "teachers",
-          "data_rows": [
-            {
-              "id": "1",
-              "firstname": "John",
-              "lastname": "Doe",
-              "short": "JD"
-            }
-          ]
-        },
-        {
-          "id": "classrooms",
-          "data_rows": [
-            {
-              "id": "1",
-              "name": "Room 101",
-              "short": "101"
-            }
-          ]
-        },
-        // ... more tables
-      ]
-    }
-  }
-}
-```
+The response is a nested structure from Edupage. The generator normalizes it into the form used by the frontend.
 
-## Data Tables
+## Generated data files
 
-The detailed timetable response contains multiple data tables:
+### [data/timetables.json](../data/timetables.json)
 
-- **teachers**: Teacher information
-- **classrooms**: Classroom/room data
-- **classes**: Grade/class information
-- **groups**: Student groups within classes
-- **divisions**: Large groups (Alpha, Beta, etc.)
-- **subjects**: Subject/course information
-- **daysdefs**: Day definitions
-- **periods**: Time period definitions
-- **lessons**: Lesson/period data
-- **cards**: Lesson time slot assignments
+Contains the filtered list of available timetables. The frontend uses this file to present the setup dialog.
 
-## Authentication
+### [data/{tt_num}.json](../data)
 
-The API uses a `__gsh` parameter which appears to be a session or API key. The value "00000000" works for public data access.
+Contains the detailed timetable definition for one timetable ID. The structure includes maps such as:
 
-## Rate Limiting
+- `teachersMap`
+- `classroomsMap`
+- `classesMap`
+- `groupsMap`
+- `subjectsMap`
+- `daysMap`
+- `periodsMap`
+- `lessonsJSON`
+- `lessonsCards`
+- `lessonsCardsMap`
 
-Unknown. The application uses this API responsibly with automated weekly fetches.
+The frontend reads these files through the helpers in [src/lib/timetableDataLoading.ts](../src/lib/timetableDataLoading.ts) and [src/lib/timetableHelper.ts](../src/lib/timetableHelper.ts).
 
-## Error Handling
+## Request behaviour
 
-The API may return invalid JSON or missing data. The application includes error handling for these cases.
+The generator uses retry logic and browser-like headers to reduce failures when Edupage is slow or temporarily unavailable. It also falls back to any existing cached timetable data if the network request fails and a local cache is already present.
 
-## Client-Side API
+## Notes for contributors
 
-The application provides a client-side API for loading data:
-
-### Load Timetables
-```javascript
-const timetables = await fetchTimetables("tera");
-```
-
-### Load Timetable Data
-```javascript
-const structuredData = await fetchTimetableByID("ID");
-```
-
-## Data Processing
-
-Raw API data is processed into structured maps for efficient lookup:
-
-- `teachersMap`: id -> teacher object
-- `classroomsMap`: id -> classroom object
-- `classesMap`: id -> class object
-- `groupsMap`: id -> group object
-- `subjectsMap`: id -> subject object
-- `daysMap`: value -> day object
-- `periodsMap`: id -> period object
-- `lessonsJSON`: Array of lesson data
-- `lessonsCards`: Array of time slot data
-- `lessonsCardsMap`: lessonid -> card object
-
-This structure enables fast timetable generation and filtering.
+- Keep the generated files in sync with Edupage data by running `npm run generate` when needed.
+- When the Edupage response shape changes, update both the generator and the frontend data expectations.
 </content>
 <parameter name="filePath">/Users/kasparaun/Documents/GitHub/tt/docs/api.md

@@ -1,4 +1,3 @@
-import timetables from "../../data/timetables.json";
 import type {
 	DivisionRow,
 	LessonCardRow,
@@ -24,7 +23,14 @@ type RawTimetablePayload = {
 	};
 };
 
-const timetableModules = import.meta.glob<{ default: StructuredTimetableData }>("../../data/*.json");
+type RemoteTimetableData = {
+	timetables: TimetableMeta[];
+	details: Record<string, StructuredTimetableData>;
+	lastUpdated?: string;
+};
+
+const TIMETABLE_DATA_URL = "https://tera-edupage-data-store.hacker30083.workers.dev/";
+let remoteTimetableDataPromise: Promise<RemoteTimetableData> | null = null;
 
 function emptyStructuredData(): StructuredTimetableData {
 	return {
@@ -43,6 +49,26 @@ function emptyStructuredData(): StructuredTimetableData {
 	};
 }
 
+async function loadRemoteTimetableData(): Promise<RemoteTimetableData> {
+	if (!remoteTimetableDataPromise) {
+		remoteTimetableDataPromise = (async () => {
+			const response = await fetch(TIMETABLE_DATA_URL, { cache: "no-store" });
+			if (!response.ok) {
+				throw new Error(`Failed to load timetable data: ${response.status} ${response.statusText}`);
+			}
+
+			const data = await response.json();
+			if (!data || !Array.isArray(data.timetables) || typeof data.details !== "object") {
+				throw new Error("Invalid timetable data from remote source");
+			}
+
+			return data as RemoteTimetableData;
+		})();
+	}
+
+	return remoteTimetableDataPromise;
+}
+
 function getRows<T>(tables: RawTable[], id: string): T[] {
 	return ((tables.find((table) => table.id === id)?.data_rows ?? []) as T[]);
 }
@@ -52,10 +78,11 @@ function toEntityMap<T extends { id: string }>(rows: T[]): Record<string, T> {
 }
 
 export async function fetchTimetables(_subDomain: string): Promise<TimetablesResponse> {
+	const remote = await loadRemoteTimetableData();
 	return {
 		r: {
 			regular: {
-				timetables: timetables as TimetableMeta[]
+				timetables: remote.timetables
 			}
 		}
 	};
@@ -88,15 +115,15 @@ export function sortTimetables(timetablesList: TimetablesResponse): TimetableMet
 }
 
 export async function fetchTimetableByID(timeTableID: TimetableID): Promise<StructuredTimetableData> {
-	const modulePath = `../../data/${timeTableID}.json`;
-	const loader = timetableModules[modulePath];
+	const remote = await loadRemoteTimetableData();
+	const id = String(timeTableID);
+	const structuredData = remote.details[id] ?? remote.details[String(Number(timeTableID))];
 
-	if (!loader) {
-		throw new Error("Failed to load timetable data");
+	if (!structuredData) {
+		throw new Error(`Failed to load timetable data for ID ${timeTableID}`);
 	}
 
-	const loadedModule = await loader();
-	return loadedModule.default;
+	return structuredData;
 }
 
 export function filterData(requestedTimetable: RawTimetablePayload | null): StructuredTimetableData {
