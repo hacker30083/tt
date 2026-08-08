@@ -1,134 +1,76 @@
-# Automatic Timetable Generator for Tartu Erakool ProTERA and TERA Gymnasium
+# Automatic Timetable Generator for ProTERA and TERA
 
-An automated timetable composition tool for ProTERA and TERA schools. This web application allows students to create personalized timetables by selecting their classes and groups.
+This repository contains a React and TypeScript web app for building a personalised timetable from the ProTERA and TERA school data. The app runs as a static site and is deployed to GitHub Pages.
 
-## Features
+## What it does
 
-- **Automatic Timetable Generation**: Select your classes and groups to generate a personalized timetable
-- **Data Privacy**: Group selections are stored locally in browser cookies
-- **Sharing**: Share timetables via encoded links or codes
-- **Static Hosting**: Fully static site hosted on GitHub Pages with pre-generated data
-- **Real-time Updates**: Data automatically updated via GitHub Actions
+- Lets students choose a timetable period, class, and groups
+- Builds a timetable from generated JSON data in the repository
+- Supports sharing the current selection through an encoded URL or a short code
+- Persists the current selection in browser cookies
+- Optionally shows a site-wide banner from Firebase
 
-## How It Works
+## How it works
 
-The application fetches timetable data from the school's Edupage system, processes it into a structured format, and allows users to filter for their specific classes and groups.
+1. The data generation script in [generate-data.mjs](generate-data.mjs) fetches timetable metadata and detailed lesson data from Edupage.
+2. The script converts the raw response into structured JSON files under [data](data).
+3. The frontend loads those JSON files, filters them for the selected class and groups, and renders the timetable.
+4. GitHub Actions handles both data refreshes and the Pages deployment pipeline.
 
-### Architecture
-
-```mermaid
-flowchart TD
-    
-    A[Edupage] -->|Timetable data| B(Github Actions)
-    B --> |Formatted timetable data| C(Github repository)
-    D(Frontend code\n made with React and TS ) --> C
-    C --> E(Github Actions:\n build React app) 
-    E --> F(Github Pages) 
-    F--> G[hacker30083.github.io/tt]
-
-```
-
-1. **Data Generation**: GitHub Actions runs weekly to fetch latest timetable data from Edupage
-2. **Data Storage**: Structured JSON data saved to `data/` directory in the repository
-3. **Static Hosting**: GitHub Pages serves the static HTML, CSS, and JS files
-
-## Usage
-
-### Creating a Timetable
-1. Visit the application
-2. Click "Koosta tunniplaan" (Create Timetable)
-3. Select your desired timetable period
-4. Choose your class and groups
-5. The timetable will be generated and displayed
-
-### Sharing Timetables
-- **Via Link**: Click "Jaga" to generate a shareable link containing your selections
-- **Via Image**: Click "Laadi alla" to download your timetable
-
-## Data Privacy
-
-- Group selections are stored in browser cookies
-- Sharing via link transmits group data to the server (GitHub Pages)
-
-## Development
+## Local development
 
 ### Prerequisites
-- Node.js 18+
+- Node.js 20+ (the workflows currently target Node 24)
+- npm
 - Git
 
-### Local Development
+### Install and run
+
 ```bash
-git clone https://github.com/mk4i/tt.git
+git clone https://github.com/hacker30083/tt.git
 cd tt
 npm install
-npm run generate  # Generate timetable data
 npm run dev
 ```
 
-### Data Generation
-The `generate-data.mjs` script fetches timetable data from TERA school's Edupage system and saves it as JSON files.
+The Vite dev server will start at http://localhost:5173.
 
-### Deployment
-- Push to `main` branch to trigger GitHub Actions
-- Data is automatically updated daily
-- Site is hosted on GitHub Pages
+### Generate timetable data
 
-### Firebase Banner
-- The site reads a warning banner from Firestore at `siteBanner/current`
-- The banner listens to Firestore updates in real time, so changes appear without a refresh
-- Copy [.env.example](.env.example) to `.env.local` for local development
-- Put the same values into GitHub repo secrets so the Pages build can inject them
-- Expected document fields:
-  - `enabled` - set to `true` to show a custom banner
-  - `level` - `warning`, `info`, or `error`
-  - `title` - short banner heading
-  - `message` - main banner text
-- If `enabled` is `false` or the document cannot be read, the site shows the default timetable warning message
+```bash
+npm run generate
+```
+
+This writes timetable JSON into the [data](data) directory.
+
+### Test and build
+
+```bash
+npm test
+npm run build
+```
+
+## Optional Firebase banner
+
+The app can display a banner from Firestore when the Firebase configuration is available.
+
+- Set the values in a local .env.local file or provide them through the GitHub Actions secrets used by the Pages workflow.
+- The app also accepts a local firebase-config.json bundle when present.
+- If no banner config is available, the app falls back to the built-in default warning.
+
+## Deployment
+
+- The workflow in [.github/workflows/generate-data.yml](.github/workflows/generate-data.yml) refreshes timetable data and opens a pull request with the generated files.
+- The workflow in [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml) builds the site and deploys it to GitHub Pages from the main branch.
 
 ## Documentation
 
-- [Architecture](docs/architecture.md) - System design and components
-- [API](docs/api.md) - Edupage API integration details
-- [Development](docs/development.md) - Development guide and workflow
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make changes
-4. Test locally
-5. Submit a pull request
+- [docs/architecture.md](docs/architecture.md) – project structure and data flow
+- [docs/development.md](docs/development.md) – development workflow
+- [docs/api.md](docs/api.md) – Edupage integration and generated data format
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-# Automaatne tunniplaani koostaja Tartu Erakool ProTERA 9. klassi jaoks.
-
-## Kuidas see töötab?
-Selles programmis on ametlikust tunniplaanist võetud info kirjutatud ümber masinloetavasse formaati. Siis, kui sisestad enda grupid, loeb arvuti kõik läbi ja leiab vastavad tunnid.
-
-## Kes näeb, millistes gruppides ma olen?
-Kui sisestad enda grupid, jääb see info Sinu veebilehitseja **küpsistesse**. Tavatingimustes ei lahku see info Sinu seadmest. Jagamisel saavad kõik, kellele lingi saadad, näha, mis grupid sa sisestanud oled.
-
-## Kuidas töötab jagamine?
-Kui vajutad *Jaga*, koostab programm lingi ja koodi.
-
-**Kui link avatakse, toimub järgnev:**
-1. veebilehitseja esitab päringu serverile
-	- Antud juhul esitatakse päring GitHub Pages'ile. Kuna link ise sisaldab gruppide infot, saab GitHub ka selle info teada. Selle vältimiseks saab kasutada koodi ilma lingita.
-2. server saadab vastusena programmi
-3. programm loeb lingist koodi
-4. programm loeb koodist grupid välja
-5. programm koostab tunniplaani
-
-**Kui sisestad koodi, toimub järgnev:**
-1. programm loeb koodist grupid välja
-2. programm koostab tunniplaani
-
-Kui Sa ei soovi, et gruppide koosseisu info kõrvaliste isikute kätte satuks, on targem jagada ainult kood või lihtsalt öelda enda grupid otse teistele.
-
-Kood sisaldab gruppide koosseisu masinloetavas formaadis, kuid võimalik on sellelt grupid välja lugeda ka ilma programmi kasutamata. Lingis on kood parameetrina päringus (st `.../tt/?g=KOOD`).</content>
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+</content>
 <parameter name="filePath">/Users/kasparaun/Documents/GitHub/tt/README.md

@@ -1,263 +1,66 @@
-# Architecture Documentation
+# Architecture Overview
 
-## Overview
+The timetable generator is a static React application. It does not rely on a server-side runtime; instead, it ships a frontend bundle to GitHub Pages and loads pre-generated timetable data from the repository.
 
-The Timetable Generator is a static web application that provides an interface for students to create personalized timetables from school data. The application has evolved from a server-based architecture to a fully static, GitHub Pages-hosted solution with automated data generation.
+## High-level flow
 
-## High-Level Architecture
 ```mermaid
 flowchart TD
-    
-    A[Edupage] -->|Timetable data| B(Github Actions)
-    B --> |Formatted timetable data| C(Github repository)
-    D(Frontend code\n made with React and TS ) --> C
-    C --> E(Github Actions:\n build React app) 
-    E --> F(Github Pages) 
-    F--> G[hacker30083.github.io/tt]
+    A[Edupage] -->|raw timetable data| B[generate-data.mjs]
+    B --> C[data/*.json]
+    C --> D[React + TypeScript frontend]
+    D --> E[GitHub Pages]
 ```
 
-## Components
+## Main building blocks
 
-### 1. Data Generation Pipeline
+### 1. Data generation pipeline
 
-#### GitHub Actions Workflow (`.github/workflows/generate-data.yml`)
-- **Purpose**: Automated data fetching and processing
-- **Triggers**:
-  - Pushing a commit to `main` branch that affects data generation
-  - Weekly schedule (midnight on Saturday UTC)
-- **Steps**:
-  1. Checkout repository
-  2. Setup Node.js environment
-  3. Install dependencies
-  4. Run data generation script
-  5. Commit and push generated data (If changes are present)
+The script in [generate-data.mjs](../generate-data.mjs) performs three main steps:
 
-#### Data Generation Script (`generate-data.mjs`)
-- **Language**: Node.js
-- **Dependencies**: axios for HTTP requests
-- **Functions**:
-  - `fetchTimetables()`: Retrieves list of available timetables
-  - `sortTimetables()`: Filters and sorts timetables by date
-  - `fetchTimetableByID()`: Fetches detailed timetable data
-  - `filterData()`: Processes raw data into structured format
-- **Output**: JSON files in `data/` directory
+1. Fetch a list of timetables from the Edupage timetable viewer endpoint.
+2. Fetch the detailed timetable data for the relevant ProTERA entries.
+3. Transform the response into structured JSON files and write them to [data](../data).
 
-### 2. Static Assets
+The workflow in [.github/workflows/generate-data.yml](../.github/workflows/generate-data.yml) runs this script automatically on pushes to main, on a weekly schedule, and manually.
 
-#### HTML (`index.html`)
-- Single-page application entry point
-- Mounts the React application root
+### 2. Frontend application
 
-#### CSS (`src/styles/index.css`, `src/styles/dev.css`)
-- Responsive design for timetable display
-- Theme variables for colors and fonts
-- Mobile-friendly layout
+The frontend lives in [src](../src) and is built with Vite. The main pieces are:
 
-#### React + TypeScript (`src/`)
+- [src/App.tsx](../src/App.tsx) – orchestrates page state, selection restoration, and the setup flow
+- [src/pages](../src/pages) – home, setup, and timetable display pages
+- [src/components](../src/components) – reusable UI pieces such as the timetable grid and banner
+- [src/hooks](../src/hooks) – state hooks for navigation, preferences, selection, and setup flow
+- [src/lib](../src/lib) – timetable construction, data loading, export, and banner logic
+- [src/utils](../src/utils) – selection payload encoding and other helpers
 
-The source code is organized into a clean, modular structure:
+### 3. Generated data files
 
-```
-src/
-├── App.tsx              # Main application component
-├── constants.ts         # Application-wide constants
-├── main.tsx             # React entry point
-├── vite-env.d.ts        # Vite type declarations
-│
-├── components/          # Reusable UI components
-│   ├── AppFooter.tsx    # Footer component
-│   ├── SiteBanner.tsx   # Banner notifications
-│   └── TimetableGrid.tsx # Timetable grid rendering
-│
-├── pages/               # Page-level components
-│   ├── HomePage.tsx     # Landing page
-│   ├── SetupPage.tsx    # Setup wizard interface
-│   └── TimetablePage.tsx # Timetable display page
-│
-├── hooks/               # Custom React hooks
-│   ├── usePage.ts       # Page navigation state
-│   ├── usePreferences.ts # Theme and highlighting prefs
-│   ├── useSelection.ts  # Timetable selection state
-│   └── useSetupFlow.ts  # Setup wizard flow control
-│
-├── utils/               # Utility functions
-│   ├── selectionPayload.ts # Encoding/decoding selections
-│   ├── theme.ts            # Theme management
-│   ├── timetableSetup.ts   # Setup logic helpers
-│   └── url.ts              # URL parameter handling
-│
-├── lib/                 # Business logic and helpers
-│   ├── cookieHelper.ts  # Cookie management
-│   ├── exporting.ts     # Timetable export functionality
-│   ├── firebaseBanner.ts # Firebase banner integration
-│   ├── proteraRules.ts  # ProTERA-specific timetable rules
-│   ├── timetableConstruction.ts # Build timetable from data
-│   ├── timetableDataLoading.ts  # Load data from JSON
-│   ├── timetableHelper.ts       # Query and filter helpers
-│   └── timetableTextFit.ts      # Text sizing utilities
-│
-├── types/               # TypeScript type definitions
-│   ├── firebase-remote-modules.d.ts # Firebase types
-│   └── timetable.ts     # Timetable data contracts
-│
-├── styles/              # Application styling
-│   ├── index.css        # Main stylesheet
-│   └── dev.css          # Development overrides
-│
-├── misc/                # Data files
-│   ├── op.txt           # School name data
-│   ├── pkt.txt          # Period/time data
-│   └── tt.txt           # Timetable metadata
-```
+The generated data is stored in [data](../data) and is the source of truth for the app at runtime.
 
-**Architecture Principles:**
+- [data/timetables.json](../data/timetables.json) contains the available timetable metadata.
+- Each timetable ID has a corresponding JSON file (for example, [data/68.json](../data/68.json)) with the structured lesson and class/group definitions.
 
-- **Component Separation**: UI components are small, focused, and reusable
-- **Custom Hooks**: State management and side effects are isolated in hooks for reusability
-- **Utility Functions**: Pure functions for data transformation, validation, and encoding
-- **Type Safety**: Strong TypeScript types throughout for better developer experience
-- **Clear Dependencies**: Each module has a single responsibility and imports only what it needs
+### 4. Deployment pipeline
 
-### 3. Data Storage
+The workflow in [.github/workflows/deploy-pages.yml](../.github/workflows/deploy-pages.yml) builds the Vite bundle, runs the test suite, and publishes the contents of [dist](../dist) to GitHub Pages.
 
-#### File Structure
-```
-data/
-├── timetables.json    # List of available timetables
-├── 68.json           # Structured data for timetable ID 68
-├── 96.json           # Structured data for timetable ID 96
-└── ...
-```
+## Runtime behaviour
 
-#### Data Formats
-- **timetables.json**: Array of timetable metadata
-  ```json
-  [
-    {
-      "tt_num": "68",
-      "year": 2025,
-      "text": "ProTERA ja TERA gümnaasium 2025/2026",
-      "datefrom": "2026-01-12",
-      "hidden": false
-    }
-  ]
-  ```
+When a user opens the app:
 
-- **{id}.json**: Structured timetable data
-  ```json
-  {
-    "teachersMap": { "1": { "id": "1", "name": "Teacher Name" } },
-    "classroomsMap": { "1": { "id": "1", "name": "Room 101" } },
-    "classesMap": { "1": { "id": "1", "name": "9A" } },
-    "groupsMap": { "1": { "id": "1", "name": "Math Group A" } },
-    "subjectsMap": { "1": { "id": "1", "name": "Mathematics" } },
-    "daysMap": { "1": { "val": "Monday" } },
-    "periodsMap": { "1": { "id": "1", "starttime": "08:00" } },
-    "lessonsJSON": [ /* lesson data */ ],
-    "lessonsCards": [ /* time slot data */ ],
-    "lessonsCardsMap": { /* lessonid -> card mapping */ }
-  }
-  ```
+1. The app loads the available timetables and presents the setup flow.
+2. The user selects a timetable, class, and one or more groups.
+3. The app loads the corresponding generated JSON file and builds the timetable client-side.
+4. The selection is stored in cookies and can be shared through an encoded URL.
 
-### 4. Client-Side Processing
+## Notes on data and privacy
 
-#### Data Flow
-1. User clicks "Koosta tunniplaan"
-2. `setup()` function loads timetable list from `data/timetables.json`
-3. User selects timetable period
-4. Application fetches detailed data from `data/{id}.json`
-5. User selects class and groups
-6. Timetable is generated and displayed
+- The app does not keep user data on a server.
+- Selection state is stored in the browser and can be shared through the URL when the user chooses to share it.
+- The Firebase banner is optional and only affects the visible banner state.
 
-#### Key Functions
-- `load(subDomain)`: Loads and sorts timetables (currently hardcoded to "tera")
-- `fetchTimetableByID(id)`: Loads structured data from JSON file
-- `filterData()`: Processes raw Edupage data (used in generation, not client)
-- `sortTimetables()`: Groups and sorts timetables by date
-
-## Data Sources
-
-### Edupage API
-- **Base URL**: `https://{subdomain}.edupage.org`
-- **Endpoints**:
-  - `/timetable/server/ttviewer.js?__func=getTTViewerData`: List timetables
-  - `/timetable/server/regulartt.js?__func=regularttGetData`: Detailed timetable data
-- **Authentication**: Uses `__gsh` parameter (appears to be session token)
-- **Response Format**: JSON with nested structure
-
-### Current Limitations
-- Only supports "tera" subdomain
-- API responses may change without notice
-
-## Deployment
-
-### GitHub Pages
-- **Source**: `main` branch
-- **Build**: `npm run build` (static hosting of the resulting files)
-- **URL**: `https://hacker30083.github.io/tt/`
-
-### Build Process
-- Build with `npm run build`
-- All assets served statically
-- Data updated via GitHub Actions
-
-## Security Considerations
-
-### Data Privacy
-- User selections stored in browser cookies
-- Sharing via links exposes data in URL parameters
-- No server-side user data storage
-
-### API Security
-- No authentication required for data fetching
-- Data is publicly available from Edupage
-
-## Performance
-
-### Client-Side
-- Initial load: ~50KB (HTML/CSS/JS)
-- Data loading: ~100-500KB per timetable (cached)
-- Processing: Fast (client-side JavaScript)
-
-### Data Generation
-- Runs in GitHub Actions (Ubuntu)
-- Network requests to Edupage API
-- Processing time: ~1-2 minutes
-- Storage: ~1-5MB JSON files
-
-## Future Improvements
-
-### Scalability
-- Support multiple school subdomains
-- Incremental data updates
-- CDN for static assets
-
-### Reliability
-- API monitoring and error handling
-- Fallback data sources
-- Data validation
-
-### Features
-- Offline support (Service Worker)
-- Calendar export
-
-## Development Workflow
-
-1. **Local Development**
-   - Clone repository
-   - Run `npm install`
-   - Execute `npm run generate` for data
-   - Run `npm run dev`
-
-2. **Testing**
-   - Manual testing in browser
-   - Validate data generation
-   - Check GitHub Actions logs
-   - Validate that `npm run build` also succeeds
-   - Run `npm run test` and verify everything succeeds
-
-3. **Deployment**
-   - Push to `main` branch
    - GitHub Actions generates data
    - Site updates automatically
 

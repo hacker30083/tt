@@ -1,262 +1,93 @@
 # Development Guide
 
-A comprehensive guide for developers working on the Timetable Generator project.
+This project is a small React and TypeScript application with Vite, Vitest, and a data-generation step that prepares the timetable JSON files.
 
-## Project Setup
+## Project setup
 
 ### Prerequisites
-- Node.js 18+ (check with `node --version`)
-- npm or yarn package manager
+- Node.js 20+ (the workflows currently target Node 24)
+- npm
 - Git
 
-### Installation
+### Install dependencies
 
 ```bash
-# Clone repository
 git clone https://github.com/hacker30083/tt.git
 cd tt
-
-# Install dependencies
 npm install
-
-# Start development server
-npm run dev
-
-# Run tests
-npm test
-
-# Build for production
-npm run build
 ```
 
-The development server will start at `http://localhost:5173` with hot-reload enabled.
+### Start the app locally
 
-### Firebase Banner (Optional)
 ```bash
-# Copy example env values
-cp .env.example .env.local
-
-# Fill in your Firebase web app config values, then restart the dev server
+npm run dev
 ```
 
-- The app reads `VITE_FIREBASE_*` variables at build time.
-- GitHub Actions injects the same values from repository secrets during the Pages build.
-- If the banner document is missing or disabled, a default timetable warning is shown.
+The dev server is typically available at http://localhost:5173.
 
-## Project Structure
+## Common commands
 
+```bash
+npm run generate   # fetch timetable data from Edupage and write JSON files
+npm test           # run the Vitest suite
+npm run build      # type-check and build the production bundle
 ```
+
+## Repository layout
+
+```text
 tt/
-├── .github/workflows/           # GitHub Actions CI/CD
-│   └── generate-data.yml        # Auto-generate timetable data
-├── data/                        # Generated JSON data files
-│   ├── timetables.json          # List of available timetables
-│   └── *.json                   # Structured timetable data by ID
-├── docs/                        # Documentation
-│   ├── architecture.md          # System design and data flow
-│   └── development.md           # This file
+├── .github/workflows/      # GitHub Actions for data refresh and Pages deployment
+├── data/                    # Generated timetable JSON files
+├── docs/                    # Project documentation
 ├── src/
-│   ├── App.tsx                  # Main application component
-│   ├── constants.ts             # Application-wide constants
-│   ├── main.tsx                 # React entry point
-│   │
-│   ├── components/              # Reusable UI components
-│   │   ├── AppFooter.tsx
-│   │   ├── SiteBanner.tsx
-│   │   └── TimetableGrid.tsx
-│   │
-│   ├── pages/                   # Page-level components
-│   │   ├── HomePage.tsx
-│   │   ├── SetupPage.tsx
-│   │   └── TimetablePage.tsx
-│   │
-│   ├── hooks/                   # Custom React hooks
-│   │   ├── usePage.ts           # Page navigation
-│   │   ├── usePreferences.ts    # Theme and highlighting
-│   │   ├── useSelection.ts      # Timetable selection
-│   │   └── useSetupFlow.ts      # Setup wizard flow
-│   │
-│   ├── utils/                   # Utility functions
-│   │   ├── selectionPayload.ts  # Encoding/decoding
-│   │   ├── theme.ts             # Theme management
-│   │   ├── timetableSetup.ts    # Setup logic helpers
-│   │   └── url.ts               # URL parameter handling
-│   │
-│   ├── lib/                     # Business logic
-│   │   ├── cookieHelper.ts
-│   │   ├── exporting.ts
-│   │   ├── firebaseBanner.ts
-│   │   ├── proteraRules.ts
-│   │   ├── timetableConstruction.ts
-│   │   ├── timetableDataLoading.ts
-│   │   ├── timetableHelper.ts
-│   │   └── timetableTextFit.ts
-│   │
-│   ├── types/                   # TypeScript definitions
-│   │   ├── firebase-remote-modules.d.ts
-│   │   └── timetable.ts
-│   │
-│   ├── styles/                  # Stylesheets
-│   │   ├── index.css
-│   │   └── dev.css
-│   │
-│   └── misc/                    # Data files
-│       ├── op.txt
-│       ├── pkt.txt
-│       └── tt.txt
-│
-├── tests/                       # Test files
-├── generate-data.mjs            # Edupage data generation script
-├── package.json                 # NPM dependencies and scripts
-├── tsconfig.json                # TypeScript configuration
-├── vite.config.js               # Vite configuration
-└── vitest.config.ts             # Vitest configuration
+│   ├── components/          # UI components such as the timetable grid and banner
+│   ├── hooks/               # Page, preference, selection, and setup-flow state
+│   ├── lib/                 # Data loading, exporting, timing rules, and banner logic
+│   ├── pages/               # Home, setup, and timetable pages
+│   ├── styles/              # CSS for the app
+│   ├── types/               # TypeScript definitions
+│   └── utils/               # URL, selection, and setup helpers
+├── generate-data.mjs        # Edupage data generation script
+├── package.json             # Scripts and dependencies
+└── vitest.config.ts        # Vitest configuration
 ```
 
-## Architecture Overview
+## App architecture at a glance
 
-The codebase is organized around clear separation of concerns:
+- [src/App.tsx](../src/App.tsx) is the main controller for page state, selection restoration, and the setup flow.
+- [src/hooks](../src/hooks) keeps page navigation and user preference state separate from the UI.
+- [src/lib](../src/lib) contains the timetable construction logic, data-loading helpers, exporting, and the Firebase banner integration.
+- [src/utils](../src/utils) contains the payload encoding and setup helpers.
 
-### Layers
+## Data workflow
 
-1. **Pages** (`src/pages/`) - Page-level layout and coordination
-2. **Components** (`src/components/`) - Reusable UI components
-3. **Hooks** (`src/hooks/`) - Custom React hooks for state and side effects
-4. **Utils** (`src/utils/`) - Pure utility functions
-5. **Lib** (`src/lib/`) - Business logic and external integrations
-6. **Types** (`src/types/`) - TypeScript type definitions
+1. Run `npm run generate` to fetch timetable list and detail data.
+2. The generator writes the output to [data](../data).
+3. The frontend loads those generated JSON files when the user selects a timetable.
+4. The app builds the visible timetable client-side and stores the selection in cookies.
 
-### State Management
+## Firebase banner configuration
 
-All state is managed through custom hooks:
+The banner is optional and is enabled when Firebase config is available.
 
-```typescript
-// Page navigation
-const { page, displayPage } = usePage();
+Set either of the following:
 
-// User preferences (theme, highlighting)
-const { theme, setThemePreference, highlighting, setHighlightPreference } = usePreferences();
+- environment variables such as `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, and related values
+- a local [firebase-config.json](../firebase-config.json) file
 
-// Timetable selection and rendering
-const { selection, timetable, renderTimetable, clearSelection } = useSelection();
+If no banner config is available, the app falls back to the built-in default warning text.
 
-// Setup wizard flow
-const { setupResolverRef, resolveSetupChoice, rejectSetupChoice } = useSetupFlow();
-```
+## Deployment workflow
 
-### Data Flow
+- The data refresh workflow runs on the main branch and on a weekly schedule.
+- The Pages deployment workflow builds the app and publishes the static bundle from [dist](../dist) to GitHub Pages.
 
-```
-1. App Initialization
-   ├─ Load preferences from cookies
-   ├─ Apply theme variables
-   └─ Restore saved selection (or show home page)
+## Guidelines for changes
 
-2. Setup Wizard
-   ├─ Load timetable list (data/timetables.json)
-   ├─ Filter to ProTERA timetables
-   ├─ User selects timetable period
-   ├─ Load structured data (data/{id}.json)
-   ├─ User selects class
-   ├─ User selects groups for each division
-   └─ Persist selection to cookies
-
-3. Timetable Rendering
-   ├─ Build timetable from lessons
-   ├─ Apply ProTERA time rules (if enabled)
-   ├─ Format for display
-   └─ Render grid
-
-4. Post-Rendering
-   ├─ Export as image (html2canvas)
-   ├─ Share via encoded URL
-   └─ Toggle preferences
-```
-
-## Key Concepts
-
-### Selection State (`GroupSelectionState`)
-
-Represents the current user's timetable configuration:
-```typescript
-{
-  classID: string;           // Selected class ID
-  className: string;         // Display name
-  groups: Record<string, string>;  // Division -> Group mapping
-  structuredData: StructuredTimetableData;  // Full timetable data
-  subDomain: string;         // School subdomain
-  timetableName: string;     // Timetable description
-  selectedTTID: string | number;  // Timetable ID
-  useProTERATimeRules: boolean;   // Special rules flag
-}
-```
-
-This is:
-1. Stored in browser cookies for persistence
-2. Encoded into URLs for sharing
-3. Validated before use
-
-### Constants (`src/constants.ts`)
-
-All configuration values are centralized:
-- Cookie keys and expiration times
-- Page names and theme values
-- School configuration
-- Timetable layout constants
-
-This ensures consistency and makes changes easy.
-
-### ProTERA Time Rules
-
-ProTERA uses custom time slots different from regular scheduling. The `useProTERATimeRules` flag enables special:
-- Break positioning
-- Lesson time adjustments
-- Special handling for "liikumisopetus" (physical education)
-
-See `src/lib/proteraRules.ts` for implementation details.
-
-## Common Tasks
-
-### Adding a New Page
-
-1. Create `src/pages/NewPage.tsx`:
-```typescript
-interface NewPageProps {
-  // ... your props
-}
-
-export function NewPage({ /* ... */ }: NewPageProps) {
-  return <div>/* your page content */</div>;
-}
-```
-
-2. Add page name to `src/constants.ts`:
-```typescript
-export const PAGE_NEW = "new" as const;
-export type Page = typeof PAGE_HOME | typeof PAGE_NEW | /* ... */;
-```
-
-3. Use in App.tsx:
-```typescript
-{page === PAGE_NEW && <NewPage {...props} />}
-```
-
-### Adding a New Utility Function
-
-1. Create `src/utils/newUtility.ts`:
-```typescript
-/**
- * Descriptive docstring
- */
-export function newFunction(): void {
-  // implementation
-}
-```
-
-2. Import and use:
-```typescript
-import { newFunction } from "@/utils/newUtility";
-```
+- Keep the UI components focused and reusable.
+- Prefer small helper functions in [src/lib](../src/lib) or [src/utils](../src/utils) over large inline logic blocks.
+- Keep the generated data files in sync with the source data by running `npm run generate` when timetable data changes.
 
 ### Working with Timetable Data
 
