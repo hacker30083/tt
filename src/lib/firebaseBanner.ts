@@ -1,4 +1,6 @@
-const FIREBASE_SDK_VERSION = "12.16.0";
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { getFirestore, doc, onSnapshot } from "firebase/firestore";
+
 const FIREBASE_CONFIG_URL = "./firebase-config.json";
 
 export type BannerLevel = "warning" | "info" | "error";
@@ -35,15 +37,11 @@ type FirebaseBannerDoc = {
 };
 
 const DEFAULT_BANNER: BannerState = {
-	level: "warning",
+	level: "info",
 	title: "T\u00E4helepanu!",
 	message: "Palun kontrolli tunniplaanis olevaid kellaaegu kuna selles võivad esineda vead. (Eriti gümnaasiumi õpilaste puhul)"
 };
 
-let firebaseModulePromise: Promise<[
-	any,
-	any
-]> | null = null;
 let firebaseConfigBundlePromise: Promise<FirebaseConfigBundle | null> | null = null;
 let firebaseApp: any = null;
 
@@ -128,17 +126,6 @@ function normalizeFirebaseConfigBundle(rawBundle: unknown): FirebaseConfigBundle
 	};
 }
 
-async function loadFirebaseSdk(): Promise<[any, any]> {
-	if (!firebaseModulePromise) {
-		firebaseModulePromise = Promise.all([
-			import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-app.js`),
-			import(`https://www.gstatic.com/firebasejs/${FIREBASE_SDK_VERSION}/firebase-firestore.js`)
-		]);
-	}
-
-	return firebaseModulePromise;
-}
-
 async function loadFirebaseConfigBundle() {
 	if (!firebaseConfigBundlePromise) {
 		firebaseConfigBundlePromise = (async () => {
@@ -173,7 +160,6 @@ async function getFirestoreInstance() {
 		return null;
 	}
 
-	const [{ initializeApp, getApps, getApp }, { getFirestore }] = await loadFirebaseSdk();
 	if (!firebaseApp) {
 		firebaseApp = getApps().length > 0 ? getApp() : initializeApp(config);
 	}
@@ -215,7 +201,6 @@ export async function subscribeToFirebaseBanner(
 			return () => undefined;
 		}
 
-		const [, { doc, onSnapshot }] = await loadFirebaseSdk();
 		const bundle = await loadFirebaseConfigBundle();
 		const warningDoc = bundle?.warningDoc ?? getWarningDocFromEnv();
 		const bannerRef = doc(firestore, warningDoc.collection, warningDoc.document);

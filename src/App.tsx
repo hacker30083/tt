@@ -2,6 +2,8 @@
 import type { CSSProperties } from "react";
 import { TimetableGrid } from "./components/TimetableGrid";
 import { SiteBanner } from "./components/SiteBanner";
+import { DEFAULT_BANNER, subscribeToFirebaseBanner } from "./lib/firebaseBanner";
+import type { BannerState } from "./lib/firebaseBanner";
 import { clearAllCookies, getCookie, setCookie } from "./lib/cookieHelper";
 import { downloadElementByID } from "./lib/exporting";
 import { buildTimetableFromLiveData } from "./lib/timetableConstruction";
@@ -56,6 +58,11 @@ function AppFooter() {
 					<a className="lnk" href="https://github.com/hacker30083/tt/issues">Issues</a>
 				</p>
 			</div>
+			<div className="site-footer__section">
+				<h2 className="site-footer__title">Kasutatud materjalid</h2>
+				<a className="lnk" href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Pop Vectors - Flaticon</a>
+			</div>
+
 			</div>
 			<div className="site-footer__copyright">
 				<p>&copy; 2024-{COPYRIGHT_YEAR} mk4i and Kaspar Aun (hacker30083)</p>
@@ -137,6 +144,24 @@ function getLanguageDivisionSubjects(structuredData: StructuredTimetableData, di
 }
 
 export default function App() {
+	const [banner, setBanner] = useState<BannerState>(DEFAULT_BANNER);
+
+	useEffect(() => {
+		let unsubscribe: (() => void) | null = null;
+		let alive = true;
+
+		void (async () => {
+			unsubscribe = await subscribeToFirebaseBanner((nextBanner) => {
+				if (alive) setBanner(nextBanner);
+			});
+		})();
+
+		return () => {
+			alive = false;
+			unsubscribe?.();
+		};
+	}, []);
+
 	const [page, setPage] = useState<Page>("home");
 	const [theme, setThemeState] = useState(0);
 	const [highlighting, setHighlightingState] = useState(true);
@@ -506,17 +531,16 @@ export default function App() {
 
 	return (
 		<>
-			<SiteBanner />
+			{(banner.level === "warning" || banner.level === "error") && <SiteBanner banner={banner} />}
 			<div className="page" id="home" style={{ display: page === "home" ? "" : "none" }}>
 				<div className="page-panel">
 					<h1 className="gradient-text" style={{ "--c1": "var(--fg)", "--c2": "var(--purple-fg)" } as CSSProperties}>
 						ProTERA ja TERA gümnaasiumi tunniplaani koostamise rakendus
 					</h1>
 					<p>
-						<a className="lnk" href="https://github.com/mk4i/tt/blob/main/README.md">README.md</a><br />
-						<a className="lnk" href="https://github.com/mk4i/tt">GitHub</a><br />
+						<a className="lnk" href="https://github.com/hacker30083/tt/blob/main/README.md">README.md</a><br />
+						<a className="lnk" href="https://github.com/hacker30083/tt">GitHub</a><br />
 						<a className="lnk" href="https://tera.edupage.org/timetable/">Alginfo</a><br />
-						<a className="lnk" href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by Pop Vectors - Flaticon</a>
 					</p>
 				</div>
 				<div className="page-panel">
@@ -553,6 +577,7 @@ export default function App() {
 			</div>
 
 			<div className="page" id="timetable-page" style={{ display: page === "timetable" ? "" : "none" }}>
+				{banner.level === "info" && <SiteBanner banner={banner} />}
 				<TimetableGrid items={timetable} highlighting={highlighting} />
 
 				<div className="flex toolbar-grid">
