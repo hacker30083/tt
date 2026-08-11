@@ -55,6 +55,15 @@ jobs:
       - name: Build production bundle
         run: npm run build
 
+      - name: Copy firebase config into build output (if present)
+        run: |
+          if [ -f firebase-config.json ]; then
+            cp firebase-config.json dist/
+            echo "Copied firebase-config.json into dist/"
+          else
+            echo "No firebase-config.json found in repo root; skipping copy"
+          fi
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
