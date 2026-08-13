@@ -24,24 +24,28 @@ export function SetupPage({
 			<div className="page-panel">
 				<div id="pre" dangerouslySetInnerHTML={{ __html: preHTML }} />
 				<hr />
-				<div className="flex opt">
+				<div className="flex-container options-grid">
 					<button id="abort" type="button" onClick={onAbort}>
 						Katkesta
 					</button>
 				</div>
 			</div>
 			<div className="page-panel">
-				<div className="flex opt" id="opt">
-					{options.map((option) => (
-						<button
-							key={`${option.title}-${String(option.value)}`}
-							type="button"
-							className={defaultValue !== null && option.value === defaultValue ? "primary" : ""}
-							onClick={() => onSelectOption(option.value)}
-						>
-							{option.title}
-						</button>
-					))}
+				<div className="flex-container options-grid" id="opt">
+					{options.map((option) => {
+						const isSelected = defaultValue !== null && option.value === defaultValue;
+						return (
+							<button
+								key={`${option.title}-${String(option.value)}`}
+								type="button"
+								className={isSelected ? "option-button option-button--selected" : "option-button"}
+								aria-pressed={isSelected}
+								onClick={() => onSelectOption(option.value)}
+							>
+								<span>{option.title}</span>
+							</button>
+						);
+					})}
 				</div>
 			</div>
 		</div>

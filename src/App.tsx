@@ -89,9 +89,11 @@ export default function App() {
 		options: Array<{ title: string; value: string | number | null }>,
 		defaultValue: string | number | null = null
 	): Promise<string | number | null> {
-		setupResolverRef.current?.reject(new Error("Superseded"));		setSetupPreHTML(pre);
+		setupResolverRef.current?.reject(new Error("Superseded"));
+		setSetupPreHTML(pre);
 		setSetupOptions(options);
-		setSetupDefaultValue(defaultValue);		displayPage(PAGE_SETUP);
+		setSetupDefaultValue(defaultValue);
+		displayPage(PAGE_SETUP);
 
 		return new Promise((resolve, reject) => {
 			setupResolverRef.current = { resolve, reject };
@@ -221,11 +223,11 @@ export default function App() {
 					continue;
 				}
 
-				const displaySubject = subjects.length > 0 ? subjects[0] : "Ãœldained";
-				const groupNames = groupsForDivision.map((group) => String(group.name ?? group.id)).join("/");
+				const displaySubject = subjects.length > 0 ? subjects[0] : "Üldained";
+				
 				const divisionTitle = isLanguageDivision
-					? `Keelegrupp (${groupNames}) - ${displaySubject}`
-					: `${groupNames} - ${displaySubject}`;
+					? `${displaySubject}`
+					: `${displaySubject}`;
 				const groupOptions = groupsForDivision.map((group) => ({
 					title: isLanguageGroupName(String(group.name ?? ""))
 						? String(group.name).replace(/\s+/g, "")

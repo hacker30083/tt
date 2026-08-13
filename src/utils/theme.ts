@@ -16,7 +16,7 @@ export function applyThemeVariables(nextTheme: number): void {
 	const variables: Array<[string, string | number, string | number]> = [
 		["--bg-brightness", 0.5, 2],
 		["--bg", "#000", "#fff"],
-		["--bg-m", "#222", "#eee"],
+		["--bg-m", "#222", "#e0e0e0"],
 		["--gray-bg", "#333", "#ccc"],
 		["--gray", "#666", "#999"],
 		["--lighter-gray", "#888", "#666"],

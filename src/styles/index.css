@@ -1,84 +1,85 @@
+/* ============================================================
+   FONT FACES
+   ============================================================ */
 @font-face {
 	font-family: "Inter";
-	src:
-		url("../../assets/font/Inter/InterVariable.ttf") format("truetype"),
+	src: url("../../assets/font/Inter/InterVariable.ttf") format("truetype");
 }
-
 @font-face {
 	font-family: "Exo_2";
-	src:
-		url("../../assets/font/Exo_2/Exo2-VariableFont_wght.ttf") format("truetype"),
+	src: url("../../assets/font/Exo_2/Exo2-VariableFont_wght.ttf") format("truetype");
 }
 
+/* ============================================================
+   ROOT VARIABLES
+   `:root` font-size is the single scale driver for every `rem`
+   value in the file — it grows with viewport width via clamp().
+   ============================================================ */
 :root {
-	font-size: max(min(24px, 8vw), 2vw);
-	--max-safe-width: calc(100vw - 2rem);
+	font-size: clamp(1rem, 1.8vw, 3rem);
 	font-family: Inter;
-	
 }
 
+/* ============================================================
+   GLOBAL BODY & TYPOGRAPHIC DEFAULTS
+   Note: body sets its own fixed font-size (16px), separate from
+   the :root clamp() above — :root's font-size only matters for
+   elements that size themselves in rem relative to the root,
+   while `em`-based children of body inherit from this 16px.
+   ============================================================ */
 body {
 	background-color: var(--bg);
 	color: var(--fg);
 	font-family: Inter, system-ui;
 	margin: 0;
 	padding: 0;
-	/*display: flex;
-	justify-content: center;
-	align-items: center;*/
-	width: 100vw;
+	width: 100%;
 	overflow-x: hidden;
-	text-overflow: clip;
-	/*flex-direction: column;*/
 	font-size: 16px;
 	--qo: cubic-bezier(.25, 1, .5, 1); /* quadratic ease-out */
 	--qs: cubic-bezier(0.4, 0.1, 0.5, 1);
 }
-
 h1 { font-size: 1.75rem; }
 h2 { font-size: 1.5rem; }
 h3 { font-size: 1.375rem; }
 p { font-size: 1rem; }
-
 h1, h2, h3, p {
 	padding: .25rem 0;
 	margin: 0;
 }
-
 hr {
 	width: 100%;
 	margin: 1rem 0;
 	border: .04rem solid var(--gray);
 }
 
+/* ============================================================
+   LINKS & INLINE TEXT
+   ============================================================ */
 a {
 	color: var(--purple);
 }
-
-.lnk {
+.link {
 	color: var(--ltrans);
 	font-weight: 600;
 	text-decoration: none;
 }
-
-.lnk:hover {
+.link:hover {
 	text-decoration: underline;
 }
-
 .is {
 	min-width: 24rem;
 	width: 80%;
 	max-width: 32rem;
 }
 
-/* Site banner */
-
+/* ============================================================
+   SITE BANNER
+   ============================================================ */
 .site-banner {
 	position: relative;
 	width: 100%;
 	height: fit-content;
-
-
 	top: 0;
 	z-index: 20;
 	display: flex;
@@ -90,29 +91,24 @@ a {
 	box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
 	background: var(--bg-m);
 }
-
 .site-banner[data-level="warning"] {
 	background: linear-gradient(90deg, #e2e612 0%,#feffae  100%);
 	color: var(--fg);
 }
-
 .site-banner[data-level="info"] {
 	background: linear-gradient(90deg, var(--darksky) 0%, var(--bg-m) 100%);
 	color: var(--fg);
 }
-
 .site-banner[data-level="error"] {
 	background: linear-gradient(90deg, #a33 0%, #511 100%);
 	color: var(--fg);
 }
-
 .site-banner__content {
 	flex: 1 1 auto;
 	min-width: 0;
 	overflow-wrap: anywhere;
 	text-wrap: pretty;
 }
-
 .site-banner__eyebrow {
 	font-size: 0.62rem;
 	font-weight: 700;
@@ -120,18 +116,19 @@ a {
 	text-transform: uppercase;
 	opacity: 0.85;
 }
-
 .site-banner__message {
 	font-size: 0.74rem;
 	line-height: 1.15;
 	padding-top: 0;
 }
 
+/* ============================================================
+   WARNING BANNER (#share-warning)
+   ============================================================ */
 #share-warning {
 	position: relative;
 	padding: 1rem 2.5rem 1rem 1rem;
 }
-
 #share-warning .warning-close {
 	position: absolute;
 	top: 0.35rem;
@@ -147,13 +144,15 @@ a {
 	place-items: center;
 	text-align: center;
 }
-
 #share-warning .warning-close span {
 	display: block;
 	line-height: 1;
 	transform: translateY(-0.04em);
 }
 
+/* ============================================================
+   FORM & CONTROL INPUTS (generic)
+   ============================================================ */
 input {
 	font-family: inherit;
 	background-color: var(--bg);
@@ -161,61 +160,78 @@ input {
 	border-radius: 4px;
 }
 
+/* ============================================================
+   PAGE LAYOUT
+   ============================================================ */
 .page {
 	display: flex;
 	width: 100vw;
-	min-height: 100vh;
-	flex-wrap: wrap;
+	height: 100vh;
+	justify-content: center;
 }
-
 .page-panel {
 	display: flex;
-	min-width: min(20rem, var(--max-safe-width));
-	max-width: var(--max-safe-width);
-	flex: 1 1;
+	height: 100%;
+	width: 50%;
+	padding: 0% 3%;
 	color: var(--fg);
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding: 1rem;
 }
-
 .page-panel:is(:first-child) {
 	background-color: var(--bg);
 	align-items: baseline;
 }
-
 .page-panel:is(:last-child) {
 	background-color: var(--bg-m);
 }
-
 #timetable-page {
 	display: flex;
-	justify-content: center;
+	height: 100%;
+	flex-direction: column;
 }
-
-
-
 #pre p {
-	color: var(--lighter-gray)
+	color: var(--lighter-gray);
+	word-wrap: break-word;
+	word-break: break-all;
 }
 
-.flex {
+/* ============================================================
+   UTILITY FLEX HELPERS
+   ============================================================ */
+.flex-container {
 	display: flex;
 	/*flex-direction: row;*/
 	flex-wrap: wrap;
 	gap: 0.5rem;
 }
+.flex-container button {
+	flex: 1 1;
+	text-wrap: nowrap;
+}
 
-.toolbar-grid {
+/* ============================================================
+   TOOLBAR CONTROLS
+   Previously defined twice ("Toolbar controls layout" +
+   "Responsive toolbar overrides"). Merged to the effective
+   cascade result: the second block's `width`/`margin` won
+   (same specificity, declared later); `font-size`/`padding`/
+   `line-height` on the button only ever existed in the first
+   block, so they still applied and are kept here.
+   ============================================================ */
+.toolbar-controls {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
 	gap: 0.75rem;
-	width: min(100%, 70rem);
-	align-self: stretch;
-}
+	align-self: center;
+	justify-self: center;
 
-.toolbar-grid button {
+	width: min(97%, 78rem);
+	margin-inline: auto;   /* centers it instead of adding to its footprint */
+	margin-top: 2%; 
+}
+.toolbar-controls button {
 	width: 100%;
 	margin: 0;
 	font-size: 0.92rem;
@@ -223,6 +239,19 @@ input {
 	line-height: 1.2;
 }
 
+/* ============================================================
+   SITE FOOTER
+   Previously defined twice ("Site footer" + "Responsive footer
+   overrides"). Merged to the effective cascade result:
+   - .site-footer: identical in both blocks except `margin-top`,
+     which only existed in the second block and now applies.
+   - .site-footer__grid: column count differed (2 vs 3); the
+     second block's `repeat(3, ...)` wins.
+   - .site-footer__title / __copyright / p: font-size differed
+     between blocks; the second block's value wins in each case.
+   - The duplicate `@media (max-width: 40rem)` block (identical
+     in both places) is now declared once.
+   ============================================================ */
 .site-footer {
 	width: 100%;
 	margin-top: 1.5rem;
@@ -233,154 +262,106 @@ input {
 	gap: 1rem;
 	align-self: stretch;
 }
-
-.site-footer_grid {
+.site-footer__grid {
 	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 1rem;
 	padding-left: 1rem;
-	
 }
-
 .site-footer__section {
 	min-width: 0;
 }
-
 .site-footer__title {
 	padding-bottom: 0.35rem;
 	font-weight: 700;
 	color: var(--fg);
-	font-size: 200%;
-
+	font-size: 1.5rem;
 }
-
 .site-footer__copyright {
 	text-align: center;
-	font-size: small;
+	font-size: 0.4rem;
 	font-weight: 300;
 	padding-top: 0.5rem;
 	border-top: 0.04rem solid var(--gray);
 }
-
-.site-footer p{
+.site-footer p {
 	padding: 0.15rem 0;
 	color: var(--light-fg);
 	font-weight: 300;
-	font-size: 125%;
+	font-size: 1rem;
+	word-break: break-word;
 }
-
 @media (max-width: 40rem) {
-	.site-footer_grid {
+	.site-footer__grid {
 		grid-template-columns: 1fr;
 	}
 }
 
+/* ============================================================
+   SMALL-VIEWPORT OVERRIDES (banner + .is)
+   ============================================================ */
 @media (max-width: 700px) {
 	.is {
 		min-width: 0;
 		width: 100%;
 		max-width: 100%;
 	}
-
 	.site-banner {
 		box-sizing: border-box;
 		padding: 0.25rem 0.5rem;
 		font-size: 0.82rem;
 	}
-
 	.site-banner__message {
 		line-height: 1.1;
 	}
 }
 
-.toolbar-grid {
+/* ============================================================
+   OPTION GRID
+   ============================================================ */
+.options-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-	gap: 0.75rem;
-	width: min(100%, 78rem);
-	align-self: stretch;
-	margin: 2%;
-}
-
-.toolbar-grid button {
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 	width: 100%;
-	margin: 0;
+	align-self: center;
 }
-
-.site-footer {
-	width: 100%;
-	margin-top: 1.5rem;
-	padding-top: 1rem;
-	border-top: 0.04rem solid var(--gray);
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-	align-self: stretch;
+.options-grid button {
+	padding: 20%;
 }
-
-.site-footer_grid {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 1rem;
-	padding-left: 1rem;
-	
-}
-
-.site-footer__section {
-	min-width: 0;
-}
-
-.site-footer__title {
-	padding-bottom: 0.35rem;
-	font-weight: 700;
+.option-button {
+	border: 1px solid var(--gray);
+	background: rgba(255, 255, 255, 0.015);
 	color: var(--fg);
-	font-size: 200%;
-
+	transition: transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.option-button:hover,
+.option-button:focus-visible {
+	border-color: var(--purple);
+	box-shadow: 0 0 0 1px rgba(149, 140, 255, 0.18);
+	transform: translateY(-1px);
+}
+.option-button--selected {
+	background: var(--purple-fg);
+	border-color: transparent;
+	color: var(--bg);
+	box-shadow: 0 0.4rem 0.9rem rgba(123, 97, 255, 0.25);
+}
+button#abort {
+	min-width: 4rem;
+	padding-inline: 1rem;
+	background: transparent;
+	border: 1px solid var(--gray);
+	color: var(--fg);
+}
+button#abort:hover,
+button#abort:focus-visible {
+	background: var(--bg);
+	border-color: var(--purple);
 }
 
-.site-footer__copyright {
-	text-align: center;
-	font-size: small;
-	font-weight: 300;
-	padding-top: 0.5rem;
-	border-top: 0.04rem solid var(--gray);
-}
-
-.site-footer p{
-	padding: 0.15rem 0;
-	color: var(--light-fg);
-	font-weight: 300;
-	font-size: 125%;
-	word-break: break-word;
-}
-
-@media (max-width: 40rem) {
-	.site-footer_grid {
-		grid-template-columns: 1fr;
-	}
-}
-
-.flex button {
-	flex: 1 1;
-	text-wrap: nowrap;
-}
-
-.opt {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-	row-gap: 0.5rem;
-	column-gap: 0.75rem;
-	width: 100%;
-	flex-grow: 1;
-	height: min-content;
-	align-items: stretch;
-}
-
-.opt button {
-	width: 100%;
-	margin: 0;
-}
-
+/* ============================================================
+   BUTTONS (generic)
+   ============================================================ */
 button {
 	cursor: pointer;
 	border: none;
@@ -397,50 +378,45 @@ button {
 	transition: 0.3s var(--qo);
 	box-sizing: content-box;
 }
-
 button:is(.large) {
 	font-size: 1.125rem;
 	padding: .4rem .8rem;
 	border-radius: .6rem;
 }
-
 button:is(.primary) {
 	background-color: var(--purple-fg);
 	color: var(--bg);
 }
-
 button:focus {
 	background: var(--bg-m);
 	color: var(--fg);
 }
-
 button:hover {
 	background: var(--bg);
 	color: var(--fg);
 	scale: 1.025;
 	transition-duration: .2s;
 }
-
 button:hover, button:focus {
 	box-shadow: -0.25rem -0.0625rem 0.75rem #8bfc, 0.25rem 0.0625rem 0.75rem #cafc;
 }
-
 button:active {
 	box-shadow: 0 0 0.75rem var(--ltrans);
 	scale: 0.985;
 }
-
 button:disabled {
 	color: var(--light-fg);
 	background: var(--gray-bg);
 	scale: 1;
 }
-
 button:disabled:hover {
 	background: var(--bg);
 	box-shadow: 0 0 0.75rem var(--ltrans);
 }
 
+/* ============================================================
+   RANGE INPUT (native)
+   ============================================================ */
 input[type=range] {
 	padding: -5rem;
 	min-width: 12rem;
@@ -451,7 +427,6 @@ input[type=range] {
 	border-radius: .5rem;
 	margin: .5rem;
 }
-
 input[type=range]::-moz-range-thumb {
 	border: .05rem solid var(--gray);
 	height: .8rem;
@@ -462,12 +437,14 @@ input[type=range]::-moz-range-thumb {
 	cursor: pointer;
 	transition-duration: 100ms;
 }
-
 input[type=range]:active::-moz-range-thumb {
 	border: .05rem solid #888;
 	background-color: #444;
 }
 
+/* ============================================================
+   CUSTOM SLIDER (JS-driven, replaces native range visually)
+   ============================================================ */
 .slider {
 	position: relative;
 	min-width: min(var(--max-safe-width) - 1rem, 12rem);
@@ -478,7 +455,6 @@ input[type=range]:active::-moz-range-thumb {
 	user-select: none;
 	background: linear-gradient(to right, #000 0%, #fff 100%);
 }
-
 .slider p {
 	min-width: 1rem;
 	text-align: center;
@@ -494,6 +470,9 @@ input[type=range]:active::-moz-range-thumb {
 	cursor: grab;
 }
 
+/* ============================================================
+   RANGE INDICATOR LABELS (tick/scale text under a slider)
+   ============================================================ */
 .ril {
 	height: 0;
 	display: grid;
@@ -504,145 +483,142 @@ input[type=range]:active::-moz-range-thumb {
 	top: -2.5rem;
 	user-select: none;
 }
-
 .ril div {
 	text-align: center;
 	height: 0;
 }
 
-.gradient-text {
+/* ============================================================
+   GRADIENT HEADING
+   ============================================================ */
+.gradient-heading {
 	background: linear-gradient(9rad, var(--c1), var(--c2));
 	background-clip: text;
 	color: transparent;
 }
 
-/* Timetable */
-
+/* ============================================================
+   TIMETABLE
+   Scales as one rigid unit: `--w` is a clamp() tied to the same
+   width formula as the grid's own `width`, set once as
+   #timetable's font-size. Every measurement below is em-based
+   (converted from a prior rem/em mismatch) so it all resizes
+   together and keeps its proportions at any viewport width.
+   ============================================================ */
 #timetable {
 	font-family: Exo_2;
 	text-wrap: nowrap;
-	text-rendering: geometricPrecision;
-	--w: 0.96vw;
-	font-size: var(--w);
-	margin: 1rem;
-	width: 100em;
-	height: 50em;
+	margin: 1rem auto;
+	width: min(100%, calc(100vw - 2rem));
+	max-width: 1500px;
+	aspect-ratio: 16 / 9;
 	outline: var(--gray-bg) .2em solid;
 	display: grid;
 	position: relative;
 	padding: 0 0.7em 0.7em 0;
 	grid-template-rows: 2em repeat(5, 1fr);
-	grid-template-columns: 3em repeat(10, 1fr);
+	grid-template-columns: 3em repeat(10, minmax(0, 1fr));
 	row-gap: 1em;
+	box-sizing: border-box;
+	--w: clamp(9px, calc((100vw - 2rem) / 93.75), 16px);
+	font-size: var(--w);
 }
-
 #timetable:empty {
 	display: none;
 }
-
 #timetable .num {
 	color: var(--light-fg);
 	display: block;
 	grid-row: 1;
 	text-align: center;
-	font-size: 2.5em;
+	font-size: 2em;
 	font-weight: 600;
 	position: relative;
-	top: calc(-0.04 * var(--w));
+	top: calc(-0.04 * 1em);
 }
-
 #timetable .num:is(.s) {
-	font-size: 2.2em;
+	font-size: 1.5em;
 }
-
 #timetable .wkd {
 	color: var(--light-fg);
-	padding-top: 130%;
-	font-size: 3.5em;
+	align-self: center;
+	font-size: 3em;
 	line-height: 0;
 	grid-column: 1;
 	text-align: center;
 }
-
 #timetable .item {
 	text-align: center;
 	position: relative;
 	display: block;
 	outline-offset: -0.06em;
 }
-
 #timetable .item label {
-	padding: 0;
+	padding: 0 0.2em;
 	position: absolute;
 	translate: -50% -50%;
 	left: 50%;
 	top: 22%;
 	font-weight: 600;
-	font-size: calc(3 * var(--w));
+	font-size: 3em;
 	transform-origin: center center;
 	white-space: pre;
 }
-
 #timetable .item time {
 	padding: 0;
 	position: absolute;
 	top: 59%;
-	font-size: calc(1.55 * var(--w));
+	font-size: calc(1.55 * 1em);
 	left: 50%;
 	font-weight: 450;
 	translate: -50% -50%;
 }
-
 #timetable .item .bottom {
-	padding: 0;
+	padding: 0 0.2em;
 	margin: 0;
 	position: absolute;
 	bottom: 16%;
-	font-size: calc(1 * var(--w));
+	font-size: calc(5 * 1em);
 	translate: -70%;
 	white-space: pre;
 	font-weight: 350;
-	line-height: 0;
+	line-height: 1.1;
 	transform-origin: center center;
+	max-width: 90%;
 }
-
 #timetable .item.wide .bottom {
-	font-size: calc(1.5 * var(--w));
+	font-size: calc(1.2 * 1em);
 }
-
 #timetable .bottom:is(.left) { left: 25%; }
 #timetable .bottom:is(.center) { left: 50%; }
 #timetable .bottom:is(.right) { left: 75%; }
-	
 #timetable .item:is(.lesson) {
-	outline: var(--lighter-gray) calc(0.12 * var(--w)) solid;
+	outline: var(--lighter-gray) calc(0.12 * 1em) solid;
 }
-
 #timetable .item:is(.break) {
 	color: var(--light-fg);
-	border: var(--gray) calc(0.12 * var(--w)) dashed;
+	border: var(--gray) 0.12em dashed;
 }
-
 #timetable .item:not(.last) {
 	border-right: none;
 }
-
 #timetable .item:not(.first) {
 	border-left: none;
 }
-
 #timetable .item:is(.first) {
-	border-radius: var(--w) 0 0 var(--w);
+	border-radius: 1em 0 0 1em;
 }
-
 #timetable .item:is(.last) {
-	border-radius: 0 var(--w) var(--w) 0;
+	border-radius: 0 1em 1em 0;
 }
-
 #timetable .unhilighted {
 	opacity: 0.5;
 }
-
 #timetable[data-exporting="true"] .unhilighted {
 	opacity: 1;
 }
+
+
+/* ==================================================================
+	Claude, mk4i and Kaspar Aun
+   ================================================================== */

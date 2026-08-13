@@ -33,22 +33,28 @@ export function TimetablePage({
 	onDownload
 }: TimetablePageProps) {
 	return (
-		<div className="page" id="timetable-page">
+		<main className="page page--timetable" id="timetable-page">
+			
 			{banner.level === "info" && <SiteBanner banner={banner} />}
-			<TimetableGrid items={items} highlighting={highlighting} />
-
-			<div className="flex toolbar-grid">
-				<button type="button" onClick={onSetup}>Genereeri tunniplaan</button>
-				<button type="button" onClick={onClearAll}>Kustuta küpsised</button>
-				<button type="button" onClick={onShare}>Kopeeri link</button>
-				<button type="button" onClick={onThemeToggle}>
-					Taust: <span style={{ fontWeight: "bold" }}>{themeLabel}</span>
-				</button>
-				<button type="button" onClick={onHighlightingToggle}>
-					Markeeri tänane tunniplaan: <span style={{ fontWeight: "bold" }}>{highlighting ? "jah" : "ei"}</span>
-				</button>
-				<button type="button" onClick={onDownload}>Laadi alla</button>
+			<div className="timetable-card">
+				<TimetableGrid items={items} highlighting={highlighting} />
 			</div>
-		</div>
+
+			<div className="toolbar-panel">
+				<div className="toolbar-controls">
+					<button type="button" onClick={onSetup}>Genereeri tunniplaan</button>
+					<button type="button" onClick={onClearAll}>Kustuta küpsised</button>
+					<button type="button" onClick={onShare}>Kopeeri link</button>
+					<button type="button" onClick={onThemeToggle}>
+						Taust: <span style={{ fontWeight: "bold" }}>{themeLabel}</span>
+					</button>
+					<button type="button" onClick={onHighlightingToggle}>
+						Markeeri tänane tunniplaan: <span style={{ fontWeight: "bold" }}>{highlighting ? "jah" : "ei"}</span>
+					</button>
+					<button type="button" onClick={onDownload}>Laadi alla</button>
+				</div>
+			</div>
+		
+		</main>
 	);
 }
