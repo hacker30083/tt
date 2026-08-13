@@ -5,4 +5,4 @@ build
 *.tmp
 .env
 .env.*
-firebase-config.json
+

@@ -4,7 +4,7 @@
   "description": "",
   "main": "generate-data.mjs",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "generate": "node generate-data.mjs",

@@ -1,0 +1,14 @@
+{
+  "firebaseConfig": {
+    "apiKey": "AIzaSyDoOKGn_u-XK-1lfsrxY6siX4gT7qsr_2M",
+    "authDomain": "timetablegenerator-6359b.firebaseapp.com",
+    "projectId": "timetablegenerator-6359b",
+    "storageBucket": "timetablegenerator-6359b.firebasestorage.app",
+    "messagingSenderId": "730125036406",
+    "appId": "1:730125036406:web:c354401223a989bdeb2857"
+  },
+  "warningDoc": {
+    "collection": "siteBanner",
+    "document": "current"
+  }
+}
