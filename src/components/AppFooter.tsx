@@ -11,19 +11,19 @@ export function AppFooter() {
 				<div className="site-footer__section">
 					<h2 className="site-footer__title">GitHub</h2>
 					<p>
-						<a className="link" href="https://github.com/hacker30083/tt">Repository</a>
+						<a className="link" href="https://github.com/hacker30083/tunniplaan">Repository</a>
 					</p>
 					<p>
-						<a className="link" href="https://github.com/hacker30083/tt/blob/main/README.md">README</a>
+						<a className="link" href="https://github.com/hacker30083/tunniplaan/blob/main/README.md">README</a>
 					</p>
 				</div>
 				<div className="site-footer__section">
 					<h2 className="site-footer__title">Kontakt</h2>
 					<p>
-						<a className="link" href="mailto:hacker30083+github@hotmail.com">hacker30083+github@hotmail.com</a>
+						<a className="link" href="mailto:kaspar@kasparaun.com">kaspar@kasparaun.com</a>
 					</p>
 					<p>
-						<a className="link" href="https://github.com/hacker30083/tt/issues">Issues</a>
+						<a className="link" href="https://github.com/hacker30083/tunniplaan/issues">Issues</a>
 					</p>
 				</div>
 				<div className="site-footer__section">
@@ -34,7 +34,7 @@ export function AppFooter() {
 				</div>
 			</div>
 			<div className="site-footer__copyright">
-				<p>&copy; 2024-{COPYRIGHT_YEAR} mk4i and Kaspar Aun (hacker30083)</p>
+				<p>&copy; 2024-{COPYRIGHT_YEAR} mk4i and Kaspar Aun</p>
 				<p>All rights reserved.</p>
 			</div>
 		</footer>
