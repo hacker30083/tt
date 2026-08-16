@@ -20,6 +20,10 @@
 	font-family: Inter;
 }
 
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
 /* ============================================================
    GLOBAL BODY & TYPOGRAPHIC DEFAULTS
    Note: body sets its own fixed font-size (16px), separate from
@@ -28,6 +32,9 @@
    while `em`-based children of body inherit from this 16px.
    ============================================================ */
 body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
 	background-color: var(--bg);
 	color: var(--fg);
 	font-family: Inter, system-ui;
@@ -78,6 +85,8 @@ a {
    ============================================================ */
 .site-banner {
 	position: relative;
+	flex: none;
+
 	width: 100%;
 	height: fit-content;
 	top: 0;
@@ -165,20 +174,33 @@ input {
    ============================================================ */
 .page {
 	display: flex;
-	width: 100vw;
-	height: 100vh;
+	flex: 1 1 auto;
+	width: 100%;
+	min-height: 0;
 	justify-content: center;
 }
 .page-panel {
 	display: flex;
 	height: 100%;
 	width: 50%;
-	padding: 0% 3%;
+	padding: 3% 3%;
 	color: var(--fg);
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	min-width: 0;      /* let it actually shrink to fit */
+  	overflow-x: auto
 }
+
+@media (max-width: 600px) {
+  .page {
+    flex-direction: column;
+  }
+  .page-panel {
+    width: 100%;
+  }
+}
+
 .page-panel:is(:first-child) {
 	background-color: var(--bg);
 	align-items: baseline;
@@ -520,7 +542,7 @@ input[type=range]:active::-moz-range-thumb {
 	grid-template-columns: 3em repeat(10, minmax(0, 1fr));
 	row-gap: 1em;
 	box-sizing: border-box;
-	--w: clamp(9px, calc((100vw - 2rem) / 93.75), 16px);
+	--w: calc((100vw - 2rem) / 93.75);
 	font-size: var(--w);
 }
 #timetable:empty {
