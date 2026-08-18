@@ -20,6 +20,9 @@ export function AppFooter() {
 				<div className="site-footer__section">
 					<h2 className="site-footer__title">Kontakt</h2>
 					<p>
+						<a className="link" href="https://kasparaun.com">kasparaun.com</a>
+					</p>
+					<p>
 						<a className="link" href="mailto:kaspar@kasparaun.com">kaspar@kasparaun.com</a>
 					</p>
 					<p>
