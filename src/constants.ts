@@ -17,8 +17,13 @@ export const COPYRIGHT_YEAR = 2026;
 export const PAGE_HOME = "home" as const;
 export const PAGE_SETUP = "setup" as const;
 export const PAGE_TIMETABLE = "timetable" as const;
+export const PAGE_CONFIRM = "confirm" as const;
 
-export type Page = typeof PAGE_HOME | typeof PAGE_SETUP | typeof PAGE_TIMETABLE;
+export type Page =
+  | typeof PAGE_HOME
+  | typeof PAGE_SETUP
+  | typeof PAGE_CONFIRM
+  | typeof PAGE_TIMETABLE;
 
 // Theme values
 export const THEME_AUTO = 0;

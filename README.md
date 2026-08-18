@@ -68,6 +68,7 @@ The app can display a banner from Firestore when the Firebase configuration is a
 - [docs/architecture.md](docs/architecture.md) – project structure and data flow
 - [docs/development.md](docs/development.md) – development workflow
 - [docs/api.md](docs/api.md) – Edupage integration and generated data format
+- [docs/v1.1.md](docs/v1.1.md) – V1.1 release changes
 
 ## License
 

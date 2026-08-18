@@ -22,7 +22,15 @@ export function isValidSelectionData(parsed: unknown): parsed is SelectionData {
 		return false;
 	}
 
-	return Boolean(value.groups && typeof value.groups === "object");
+	if (!value.groups || typeof value.groups !== "object" || Array.isArray(value.groups)) {
+		return false;
+	}
+
+	return Object.entries(value.groups).every(
+		([selectionKey, groupID]) =>
+			typeof selectionKey === "string" && selectionKey.length > 0 &&
+			typeof groupID === "string" && groupID.length > 0,
+	);
 }
 
 /**
