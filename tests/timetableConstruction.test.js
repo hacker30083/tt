@@ -47,6 +47,30 @@ describe("timetableConstruction", () => {
 		});
 	});
 
+	it("renders only the selected subject for a subject-based group selection", () => {
+		getLessonsForGroup.mockReturnValue([
+			{
+				lesson: { subject: { id: "s1", name: "Math" }, teacher: "Teacher" },
+				time: { day: 1, period: 1, length: 1 },
+				room: ["201"]
+			},
+			{
+				lesson: { subject: { id: "s2", name: "History" }, teacher: "Teacher" },
+				time: { day: 1, period: 2, length: 1 },
+				room: ["202"]
+			}
+		]);
+
+		const result = buildTimetableFromLiveData({
+			structuredData: {},
+			groups: { "division-1::s1": "g1" },
+			useProTERATimeRules: false
+		});
+
+		expect(result).toHaveLength(1);
+		expect(result[0]).toMatchObject({ title: "Math", location: "201" });
+	});
+
 	it("applies ProTERA rules for third lesson and break insertion", () => {
 		getLessonsForGroup.mockReturnValue([
 			{

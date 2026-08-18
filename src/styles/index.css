@@ -224,6 +224,52 @@ input {
 	height: 100%;
 	flex-direction: column;
 }
+.action-feedback {
+	position: fixed;
+	top: 1rem;
+	left: 50%;
+	z-index: 100;
+	transform: translateX(-50%);
+	padding: 0.65rem 1rem;
+	border: 1px solid var(--gray);
+	border-radius: 0.5rem;
+	background: var(--bg-m);
+	box-shadow: 0 0.35rem 1rem #0005;
+	color: var(--fg);
+	font-size: 0.9rem;
+	font-weight: 600;
+	pointer-events: none;
+}
+.timetable-card {
+	width: min(100%, calc(100vw - 2rem));
+	max-width: 1500px;
+	margin: 1rem auto 0;
+}
+.timetable-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+	margin-bottom: 0.5rem;
+	position: relative;
+	z-index: 1;
+}
+.icon-button {
+	display: grid;
+	width: 2.25rem;
+	height: 2.25rem;
+	place-items: center;
+	padding: 0;
+	margin: 0;
+}
+.icon-button svg {
+	width: 1.2rem;
+	height: 1.2rem;
+	fill: none;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 2;
+}
 #pre p {
 	color: var(--lighter-gray);
 	word-wrap: break-word;
@@ -371,6 +417,7 @@ input {
 .options-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 0.4rem;
 	width: 100%;
 	align-self: center;
 }
@@ -557,9 +604,9 @@ input[type=range]:active::-moz-range-thumb {
 #timetable {
 	font-family: Exo_2;
 	text-wrap: nowrap;
-	margin: 1rem auto;
-	width: min(100%, calc(100vw - 2rem));
-	max-width: 1500px;
+	margin: 0 auto;
+	width: 100%;
+	max-width: none;
 	aspect-ratio: 16 / 9;
 	outline: var(--gray-bg) .2em solid;
 	display: grid;
@@ -665,6 +712,85 @@ input[type=range]:active::-moz-range-thumb {
 }
 #timetable[data-exporting="true"] .unhilighted {
 	opacity: 1;
+}
+
+/* ============================================================
+   CONFIRM PAGE SPECIFIC
+   ============================================================ */
+.confirm-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+}
+#confirm .page-panel:first-child {
+	justify-content: flex-start;
+	overflow-y: auto;
+}
+.confirm-list-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.6rem 0.8rem;
+	border-radius: 0.5rem;
+	background: rgba(255,255,255,0.02);
+	border: 1px solid rgba(255,255,255,0.03);
+}
+.confirm-left {
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	min-width: 0;
+}
+.confirm-subject {
+	font-weight: 600;
+	font-size: 1rem
+}
+.confirm-selected {
+	color: var(--lighter-gray);
+	font-size: 0.95rem;
+}
+.confirm-right {
+	display: flex;
+	gap: 0.5rem;
+}
+.panel-edit {
+	width: 100%;
+}
+.panel-edit h2 {
+	margin-top: 0;
+}
+.edit-options {
+	margin-top: 0.5rem;
+}
+.edit-subject {
+	font-weight: 700;
+	margin-bottom: 0.5rem;
+}
+
+button.small {
+	padding: 0.2rem 0.5rem;
+	font-size: 0.9rem;
+}
+
+.confirm-actions {
+	display: flex;
+	gap: 0.5rem;
+	margin-top: 1rem;
+}
+
+@media (max-width: 700px) {
+	.page {
+		flex-direction: column;
+	}
+	.page-panel {
+		width: 100%;
+		padding: 4% 5%;
+	}
 }
 
 

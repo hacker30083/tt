@@ -80,7 +80,13 @@ export function buildTimetableFromLiveData(grData: GroupSelectionState | null): 
 	}
 
 	const allLessons = Object.entries(groups).flatMap(([selectionID, groupID]) => {
-		const [, subjectID] = String(selectionID).split("::");
+		// Subject-based selections use `<division id>::<subject id>`.  The
+		// division scopes a subject selection in the setup UI; the subject ID
+		// is what identifies the lessons to render.
+		const separatorIndex = String(selectionID).lastIndexOf("::");
+		const subjectID = separatorIndex === -1
+			? ""
+			: String(selectionID).slice(separatorIndex + 2);
 		const lessons = getLessonsForGroup(structuredData, groupID);
 		return subjectID
 			? lessons.filter((lessonData) => String(lessonData.lesson.subject?.id ?? "") === subjectID)

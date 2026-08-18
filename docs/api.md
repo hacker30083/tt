@@ -1,75 +1,64 @@
 # API and data format
 
-This project does not call Edupage from the browser at runtime. Instead, the repository contains a generator script that downloads timetable data ahead of time and stores it as JSON files in [data](../data).
+## Runtime Cloudflare Worker API
 
-## Edupage endpoints used by the generator
-
-The generator in [generate-data.mjs](../generate-data.mjs) uses two POST endpoints:
-
-### 1. List available timetables
+The browser obtains all timetable data from this Cloudflare Worker endpoint:
 
 ```text
-https://{subdomain}.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData
+https://tera-edupage-data-store.hacker30083.workers.dev/
 ```
 
-Request body:
+The endpoint is currently a constant in [src/lib/timetableHelper.ts](../src/lib/timetableHelper.ts). The frontend sends a `GET` request with `cache: "no-store"`, checks for a successful HTTP response, and validates the response before using it.
 
-```json
-{
-  "__args": [null, 2025],
-  "__gsh": "00000000"
-}
+### Response contract
+
+The worker returns one JSON object:
+
+```ts
+type RemoteTimetableData = {
+  timetables: TimetableMeta[];
+  details: Record<string, StructuredTimetableData>;
+  lastUpdated?: string;
+};
 ```
 
-The response contains the metadata for the available timetables, including fields such as `tt_num`, `text`, `datefrom`, and `hidden`.
+- `timetables` contains the timetable metadata used in setup, such as `tt_num`, `text`, `datefrom`, and `hidden`.
+- `details` maps each timetable ID to its structured data.
+- `lastUpdated`, when present, is informational; the current frontend does not display or otherwise use it.
 
-### 2. Fetch one timetable in detail
+The frontend requests this payload when timetable metadata or detail is first needed and retains the resulting promise in memory. Both `fetchTimetables` and `fetchTimetableByID` read from that shared payload, so selecting a timetable does not trigger a second request.
 
-```text
-https://tera.edupage.org/timetable/server/regulartt.js?__func=regularttGetData
-```
+If the request fails, the payload is malformed, or the selected ID is absent from `details`, the helper throws an error. There is no runtime fallback to the repository's `data/` directory.
 
-Request body:
+### Structured timetable data
 
-```json
-{
-  "__args": [null, "68"],
-  "__gsh": "00000000"
-}
-```
-
-The response is a nested structure from Edupage. The generator normalizes it into the form used by the frontend.
-
-## Generated data files
-
-### [data/timetables.json](../data/timetables.json)
-
-Contains the filtered list of available timetables. The frontend uses this file to present the setup dialog.
-
-### [data/{tt_num}.json](../data)
-
-Contains the detailed timetable definition for one timetable ID. The structure includes maps such as:
+Each `details` value is a `StructuredTimetableData` object with lookup maps and lesson arrays, including:
 
 - `teachersMap`
 - `classroomsMap`
 - `classesMap`
 - `groupsMap`
+- `divisionsMap` and `divisionsJSON`
 - `subjectsMap`
-- `daysMap`
-- `periodsMap`
+- `daysMap` and `periodsMap`
 - `lessonsJSON`
-- `lessonsCards`
-- `lessonsCardsMap`
+- `lessonsCards` and `lessonsCardsMap`
 
-The frontend reads these files through the helpers in [src/lib/timetableDataLoading.ts](../src/lib/timetableDataLoading.ts) and [src/lib/timetableHelper.ts](../src/lib/timetableHelper.ts).
+The timetable construction code uses these structures to resolve a selected class and groups into displayed lessons.
 
-## Request behaviour
+## Legacy Edupage generator
 
-The generator uses retry logic and browser-like headers to reduce failures when Edupage is slow or temporarily unavailable. It also falls back to any existing cached timetable data if the network request fails and a local cache is already present.
+[generate-data.mjs](../generate-data.mjs) is a retained repository utility, not the browser's data source. It uses Edupage POST endpoints to generate files under [data](../data):
 
-## Notes for contributors
+```text
+https://{subdomain}.edupage.org/timetable/server/ttviewer.js?__func=getTTViewerData
+https://tera.edupage.org/timetable/server/regulartt.js?__func=regularttGetData
+```
 
-- Keep the generated files in sync with Edupage data by running `npm run generate` when needed.
-- When the Edupage response shape changes, update both the generator and the frontend data expectations.
-</content>
-<parameter name="filePath">/Users/kasparaun/Documents/GitHub/tt/docs/api.md
+It retries retryable network failures and preserves an existing generated-data cache if Edupage is unavailable. Its output and the scheduled GitHub Actions workflow do not supply data to the running frontend; the Cloudflare Worker does.
+
+## Contributor notes
+
+- Update the worker endpoint or response handling in [src/lib/timetableHelper.ts](../src/lib/timetableHelper.ts), and update this document in the same change.
+- Keep the remote-data tests in [tests/timetableHelper.remote.test.js](../tests/timetableHelper.remote.test.js) aligned with the endpoint and response contract.
+- Treat `generate-data.mjs` and `data/` as legacy tooling unless the worker integration is intentionally changed.
