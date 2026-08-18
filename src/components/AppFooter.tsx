@@ -16,6 +16,9 @@ export function AppFooter() {
 					<p>
 						<a className="link" href="https://github.com/hacker30083/tunniplaan/blob/main/README.md">README</a>
 					</p>
+					<p>
+						<a className="link" href="https://github.com/hacker30083/tunniplaan/releases">Väljalaskemärkmed</a>
+					</p>
 				</div>
 				<div className="site-footer__section">
 					<h2 className="site-footer__title">Kontakt</h2>

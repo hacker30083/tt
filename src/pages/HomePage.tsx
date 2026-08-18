@@ -19,6 +19,7 @@ export function HomePage({ onSetup }: HomePageProps) {
 					<a className="link" href="https://kasparaun.com">Kaspar Aun</a><br />
 					<a className="link" href="https://github.com/hacker30083/tunniplaan/blob/main/README.md">README.md</a><br />
 					<a className="link" href="https://github.com/hacker30083/tunniplaan">GitHub</a><br />
+					<a className="link" href="https://github.com/hacker30083/tunniplaan/releases">Väljalaskemärkmed</a><br />
 					<a className="link" href="https://tera.edupage.org/timetable/">Alginfo</a><br />
 				</p>
 			</div>
