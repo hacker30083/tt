@@ -104,7 +104,7 @@ export function sortTimetables(timetablesList: TimetablesResponse): TimetableMet
 
 	return Object.values(groups)
 		.map((group) => group
-			.filter((item) => new Date(item.datefrom) <= now)
+			.filter((item) => new Date(item.datefrom) <= new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000))
 			.reduce<TimetableMeta | null>((latest, item) => {
 				if (!latest || new Date(item.datefrom) > new Date(latest.datefrom)) {
 					return item;
